@@ -3,16 +3,6 @@ import { Screen } from '../Screen';
 export class World {
 
   /**
-   * Game width
-   */
-  private width: number;
-
-  /**
-   * Game height
-   */
-  private height: number;
-
-  /**
    * Game screen
    */
   private screen: Screen;
@@ -21,9 +11,7 @@ export class World {
    * @param width Game width
    * @param height Game height
    */
-  constructor(screen: Screen, width: number, height: number) {
-    this.width = width;
-    this.height = height;
+  constructor(screen: Screen) {
     this.screen = screen;
   }
 
