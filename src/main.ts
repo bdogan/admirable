@@ -1,4 +1,7 @@
-import { Screen } from './Admirable/Screen';
-import { World } from './Admirable/World';
+import { Screen } from './Engine/Screen';
+import { DemoLayer } from './Engine/Layers/DemoLayer';
+import { Scene } from './Engine/Scene';
 
-const world = new World(new Screen(100, 100));
+const screen = new Screen(64, 32);
+
+screen.setScene(new Scene([ new DemoLayer(screen.dimensions()) ]));

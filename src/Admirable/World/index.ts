@@ -1,18 +1,5 @@
-import { Screen } from '../Screen';
+import { Layer } from '../../Engine/Layer';
 
-export class World {
-
-  /**
-   * Game screen
-   */
-  private screen: Screen;
-
-  /**
-   * @param width Game width
-   * @param height Game height
-   */
-  constructor(screen: Screen) {
-    this.screen = screen;
-  }
+export class World extends Layer {
 
 }
