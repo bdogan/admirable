@@ -24,7 +24,7 @@ export class Layer implements ILayer {
   }
 
   // tslint:disable-next-line: no-empty
-  public draw(): void {
+  public update(): void {
 
   }
 

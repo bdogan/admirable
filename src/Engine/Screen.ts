@@ -82,6 +82,7 @@ export class Screen {
     // Attach layers
     this.scene.layers
       .forEach((l) => l.sprites
+        .filter((s) => !!s && !!s.graphics)
         .forEach((s) => p.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height)));
 
   }
