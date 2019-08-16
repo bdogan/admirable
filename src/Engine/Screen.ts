@@ -1,5 +1,7 @@
 import p5, { Graphics } from 'p5';
 import { Scene } from './Scene';
+import { Global } from './Global';
+import { Glob } from 'glob';
 
 export class Screen {
 
@@ -44,6 +46,8 @@ export class Screen {
    * @param devicePixel Device Pixel Ratio
    */
   constructor(width: number, height: number, frameRate: number = 25, background: any = 255) {
+    Global.Screen = this;
+
     this.width = width;
     this.height = height;
     this.frameRate = frameRate;

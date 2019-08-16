@@ -1,9 +1,10 @@
 
 import { Graphics } from 'p5';
+import { ISprite } from './ISprite';
 
 export interface ILayer {
 
-  sprites: Array<{ x: number, y: number, graphics: Graphics }>;
+  sprites: ISprite[];
   setup(): void;
   update(): void;
 

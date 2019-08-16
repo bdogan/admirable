@@ -1,4 +1,3 @@
-
 import { IScene } from './IScene';
 import { Screen } from './Screen';
 import { Layer } from './Layer';
