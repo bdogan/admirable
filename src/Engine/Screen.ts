@@ -77,8 +77,8 @@ export class Screen {
 
   public draw(p: p5) {
     p.background(this.background);
-    // Draw scene
-    this.scene.draw();
+    // Scene update
+    this.scene.update();
     // Attach layers
     this.scene.layers
       .forEach((l) => l.sprites
