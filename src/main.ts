@@ -1,7 +1,6 @@
 import { Screen } from './Engine/Screen';
-import { DemoLayer } from './Engine/Layers/DemoLayer';
-import { Scene } from './Engine/Scene';
+import { DemoScene } from './Engine/Scene/DemoScene';
 
-const screen = new Screen(64, 32);
+const screen = new Screen(800, 600);
 
-screen.setScene(new Scene([ new DemoLayer(screen.dimensions()) ]));
+screen.setScene(new DemoScene());

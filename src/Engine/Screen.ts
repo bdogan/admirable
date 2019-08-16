@@ -1,4 +1,4 @@
-import p5 from 'p5';
+import p5, { Graphics } from 'p5';
 import { Scene } from './Scene';
 
 export class Screen {
@@ -6,7 +6,7 @@ export class Screen {
   /**
    * p5 Lib
    */
-  private p5Instance: p5;
+  public p: p5;
 
   /**
    * Width
@@ -21,51 +21,41 @@ export class Screen {
   /**
    * Screen scene
    */
-  private scene: Scene;
+  private scene!: Scene;
 
   /**
-   * Unit pixel
+   * Background
    */
-  private gridSize: { x: number, y: number } = {
-    x: 8,
-    y: 8,
-  };
+  private background: any;
 
   /**
-   * Unit pixel multipler
+   * Framerate
    */
-  private gridSizeMultipler: { x: number, y: number } = {
-    x: 1 * 0.8,
-    y: 0.93 * 0.8,
-  };
+  private frameRate: number;
 
   /**
-   * Pixel per grid
+   * Dimensions
    */
-  private pixelPerGrid: number;
+  public get dimensions(): { width: number, height: number } {
+    return { width: this.width, height: this.height };
+  }
 
   /**
    * @param devicePixel Device Pixel Ratio
    */
-  constructor(width: number, height: number, pixelPerGrid: number = 3) {
+  constructor(width: number, height: number, frameRate: number = 25, background: any = 255) {
     this.width = width;
     this.height = height;
-    this.pixelPerGrid = pixelPerGrid;
-
-    // Create empty scene
-    this.scene = new Scene([]);
+    this.frameRate = frameRate;
+    this.background = background;
 
     /**
      * p5 builder
      */
-    this.p5Instance = new p5((p: p5) => {
+    this.p = new p5((p: p5) => {
       p.setup = () => this.setup(p);
       p.draw = () => this.draw(p);
     });
-  }
-
-  public dimensions(): { width: number, height: number } {
-    return { width: this.width, height: this.height };
   }
 
   /**
@@ -73,56 +63,27 @@ export class Screen {
    * @param scene Scene
    */
   public setScene(scene: Scene) {
+    scene.screen = this;
+    scene.setup();
     this.scene = scene;
   }
 
   public setup(p: p5) {
-    console.info(`Screen generated at ${this.width} x ${this.height} tiles.`);
-    p.createCanvas(this.toDevicePixelX(this.width), this.toDevicePixelY(this.height));
-    p.background(0);
-    p.frameRate(30);
+    console.info(`Screen canvas generated at ${this.width} x ${this.height} dimensions.`);
+    p.createCanvas(this.width, this.height);
+    p.background(this.background);
+    p.frameRate(this.frameRate);
   }
 
   public draw(p: p5) {
-    // For each layer
-    let tiles, tile, pixels, pixel, xOffsetOuter, yOffsetOuter, xOffsetInner, yOffsetInner;
-    this.scene.layers.forEach((l) => {
-      // Generate tiles
-      tiles = l.generateTiles();
-      // Scan screen
-      for (let i = 0; i < this.width * this.height; i++) {
-        tile = tiles[i];
-        if (!tile) {
-          continue;
-        }
-        pixels = tile.pixels;
-        xOffsetOuter = this.toDevicePixelX(i % this.width);
-        yOffsetOuter = this.toDevicePixelY(Math.floor(i / this.width));
-        for (let a = 0; a < this.gridSize.x * this.gridSize.y; a++) {
-          pixel = pixels[a];
-          if (!pixel) {
-            continue;
-          }
-          xOffsetInner = this.toDevicePixelX(a % this.gridSize.x);
-          yOffsetInner = this.toDevicePixelY(Math.floor(a / this.gridSize.x));
-          p.fill(pixel.toRGBAString());
-          p.rect(xOffsetOuter + xOffsetInner, yOffsetOuter + yOffsetInner,
-            this.toDevicePixelX(this.gridSize.x), this.toDevicePixelY(this.gridSize.y));
-        }
-      }
-    });
-  }
+    p.background(this.background);
+    // Draw scene
+    this.scene.draw();
+    // Attach layers
+    this.scene.layers
+      .forEach((l) => l.sprites
+        .forEach((s) => p.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height)));
 
-  /**
-   * Converts given number to device pixel
-   * @param val Number
-   */
-  public toDevicePixelX(val: number): number {
-    return this.pixelPerGrid * this.gridSize.x * val * this.gridSizeMultipler.x;
-  }
-
-  public toDevicePixelY(val: number): number {
-    return this.pixelPerGrid * this.gridSize.y * val * this.gridSizeMultipler.y;
   }
 
 }
