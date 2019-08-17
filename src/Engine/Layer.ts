@@ -2,9 +2,9 @@ import { ILayer } from './ILayer';
 import { Graphics } from 'p5';
 import { Scene } from './Scene';
 import { Screen } from './Screen';
-import p5 = require('p5');
 import { ISprite } from './ISprite';
-import { Char } from './Sprites/Text';
+import { Text } from './Sprites/Text';
+import p5 = require('p5');
 
 export class Layer implements ILayer {
 
@@ -38,8 +38,8 @@ export class Layer implements ILayer {
     return this.screen.p.createGraphics(w, h);
   }
 
-  public createChar(char: string | number, size: number, color?: any, background?: any): ISprite {
-    return new Char(char, size, color, background);
+  public createText(text: string, size: number, width: number, height?: number): Text {
+    return new Text(text, size, width, height);
   }
 
   public setSpritePosition(sprite: ISprite, x: number, y: number) {

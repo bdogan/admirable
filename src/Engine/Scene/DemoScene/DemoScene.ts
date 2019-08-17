@@ -1,6 +1,5 @@
-import { Scene } from '../Scene';
+import { Scene } from '../../Scene';
 import { DemoLayer } from './Layer/DemoLayer';
-import { Screen } from '../Screen';
 import { DemoTextLayer } from './Layer/DemoTextLayer';
 
 export class DemoScene extends Scene {

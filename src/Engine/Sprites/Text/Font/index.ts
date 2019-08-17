@@ -1,0 +1,1 @@
+export const MunroFontPath = require('./munro.ttf');
