@@ -2,6 +2,8 @@ import p5, { Graphics } from 'p5';
 import { Scene } from './Scene';
 import { Global } from './Global';
 import { Glob } from 'glob';
+import {Layer} from './Layer';
+import {InfoLayer} from './Layer/InfoLayer';
 
 export class Screen {
 
@@ -21,9 +23,14 @@ export class Screen {
   private height: number;
 
   /**
-   * Screen scene
+   * Scene
    */
   private scene!: Scene;
+
+  /**
+   * Layers
+   */
+  private layers: Layer[] = [];
 
   /**
    * Background
@@ -45,7 +52,7 @@ export class Screen {
   /**
    * @param devicePixel Device Pixel Ratio
    */
-  constructor(width: number, height: number, frameRate: number = 25, background: any = 255) {
+  constructor(width: number, height: number, frameRate: number = 60, background: any = 255) {
     Global.Screen = this;
 
     this.width = width;
@@ -63,6 +70,14 @@ export class Screen {
   }
 
   /**
+   * Set Background given value
+   * @param background
+   */
+  public setBackground(background: any) {
+    this.background = background;
+  }
+
+  /**
    * Set scene
    * @param scene Scene
    */
@@ -72,22 +87,39 @@ export class Screen {
     this.scene = scene;
   }
 
+  public addLayer(layer: Layer) {
+    layer.setup();
+    this.layers.push(layer);
+  }
+
   public setup(p: p5) {
     console.info(`Screen canvas generated at ${this.width} x ${this.height} dimensions.`);
     p.createCanvas(this.width, this.height);
     p.background(this.background);
     p.frameRate(this.frameRate);
+    // Add info layer
+    this.addLayer(new InfoLayer());
   }
 
   public draw(p: p5) {
     p.background(this.background);
+
     // Scene update
     this.scene.update();
+
+    // Layers update
+    this.layers.forEach((l) => l.update());
+
     // Attach layers
     this.scene.layers
       .forEach((l) => l.sprites
         .filter((s) => !!s && !!s.graphics)
         .forEach((s) => p.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height)));
+
+    // Attach static layers
+    this.layers.forEach((l) => l.sprites
+      .filter((s) => !!s && !!s.graphics)
+      .forEach((s) => p.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height)));
 
   }
 

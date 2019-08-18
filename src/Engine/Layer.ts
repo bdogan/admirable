@@ -5,15 +5,16 @@ import { Screen } from './Screen';
 import { ISprite } from './ISprite';
 import { Text } from './Sprites/Text';
 import p5 = require('p5');
+import { Global } from './Global';
 
 export class Layer implements ILayer {
 
   public sprites: ISprite[] = [];
 
-  public scene!: Scene;
+  public scene?: Scene;
 
   public get screen(): Screen {
-    return this.scene.screen;
+    return (Global.Screen as Screen);
   }
 
   public get p(): p5 {
