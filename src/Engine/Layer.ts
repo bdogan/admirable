@@ -36,11 +36,15 @@ export class Layer implements ILayer {
   }
 
   public createGraphics(w: number, h: number): Graphics {
-    return this.screen.p.createGraphics(w, h);
+    let graphic = this.screen.p.createGraphics(w, h);
+    graphic.remove();
+    return graphic;
   }
 
   public createText(text: string, size: number, width: number, height?: number): Text {
-    return new Text(text, size, width, height);
+    let txt = new Text(text, size, width, height);
+    txt.graphics.remove();
+    return txt;
   }
 
   public setSpritePosition(sprite: ISprite, x: number, y: number) {
