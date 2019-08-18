@@ -19,7 +19,7 @@ export class Scene implements IScene {
 
   // tslint:disable-next-line: no-empty
   public update() {
-    this.layers.forEach((l) => setTimeout(() => l.update(), 0));
+    this.layers.forEach((l) => l.update());
   }
 
 }

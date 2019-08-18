@@ -3,7 +3,7 @@ import { Layer } from '../../../Layer';
 export class DemoLayer extends Layer {
 
   public setup(): void {
-    const im = this.p.createGraphics(20, 20);
+    const im = this.createGraphics(20, 20);
     im.background(50);
     this.addSprite({
       graphics: im,
