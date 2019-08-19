@@ -6,6 +6,7 @@ import { ISprite } from './ISprite';
 import { Text } from './Sprites/Text';
 import p5 = require('p5');
 import { Global } from './Global';
+import { Button } from './Buttons/Button';
 
 export class Layer implements ILayer {
 
@@ -45,6 +46,13 @@ export class Layer implements ILayer {
     let txt = new Text(text, size, width, height);
     txt.graphics.remove();
     return txt;
+  }
+
+  public createButton(x:number, y:number, w:number, h:number){
+    const button = new Button(x, y, w, h);
+    button.graphics.remove();
+    this.addSprite(button);
+    return button;
   }
 
   public setSpritePosition(sprite: ISprite, x: number, y: number) {

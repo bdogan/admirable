@@ -15,6 +15,7 @@ export class InfoLayer extends Layer {
     this.fpsCounterText.hAlign = 'center';
     this.fpsCounterText.x = this.screen.dimensions.width - this.fpsCounterText.width;
     this.fpsCounterText.y = this.screen.dimensions.height - this.fpsCounterText.height;
+    this.fpsCounterText.color = 'rgba(255,255,255,0.8)';
     this.fpsCounterText.background = 'rgba(0, 0, 0, .2)';
     this.addSprite(this.fpsCounterText);
   }

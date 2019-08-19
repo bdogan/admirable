@@ -91,18 +91,18 @@ export class Screen {
     layer.setup();
     this.layers.push(layer);
   }
-
+  
   public setup(p: p5) {
     console.info(`Screen canvas generated at ${this.width} x ${this.height} dimensions.`);
     p.createCanvas(this.width, this.height);
-    p.background(this.background);
+    // p.background(this.background);
     p.frameRate(this.frameRate);
     // Add info layer
-    this.addLayer(new InfoLayer());
+    // this.addLayer(new InfoLayer());
   }
 
   public draw(p: p5) {
-    p.background(this.background);
+    // p.background(0,50);
 
     // Scene update
     this.scene.update();
