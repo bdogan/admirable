@@ -32,27 +32,23 @@ export class Layer implements ILayer {
 
   }
 
-  public addSprite(sprite: ISprite) {
+  public addSprite<T>(sprite: ISprite): T {
     this.sprites.push(sprite);
+    return (sprite as any) as T;
   }
 
   public createGraphics(w: number, h: number): Graphics {
-    let graphic = this.screen.p.createGraphics(w, h);
+    const graphic = this.screen.p.createGraphics(w, h);
     graphic.remove();
     return graphic;
   }
 
   public createText(text: string, size: number, width: number, height?: number): Text {
-    let txt = new Text(text, size, width, height);
-    txt.graphics.remove();
-    return txt;
+    return new Text(text, size, width, height);
   }
 
-  public createButton(x:number, y:number, w:number, h:number){
-    const button = new Button(x, y, w, h);
-    button.graphics.remove();
-    this.addSprite(button);
-    return button;
+  public createButton(x: number, y: number, w: number, h: number){
+    return new Button(x, y, w, h);
   }
 
   public setSpritePosition(sprite: ISprite, x: number, y: number) {

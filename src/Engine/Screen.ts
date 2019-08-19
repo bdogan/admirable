@@ -1,11 +1,13 @@
-import p5, { Graphics } from 'p5';
+import p5, { Graphics, Renderer } from 'p5';
 import { Scene } from './Scene';
 import { Global } from './Global';
-import { Glob } from 'glob';
-import {Layer} from './Layer';
-import {InfoLayer} from './Layer/InfoLayer';
+import { Layer } from './Layer';
+import { InfoLayer } from './Layer/InfoLayer';
+import { EventEmitter } from 'events';
+import { flatten, orderBy } from 'lodash';
+import { ISprite } from './ISprite';
 
-export class Screen {
+export class Screen extends EventEmitter {
 
   /**
    * p5 Lib
@@ -28,9 +30,32 @@ export class Screen {
   private scene!: Scene;
 
   /**
+   * Debug state
+   */
+  private debug: boolean = false;
+
+  /**
+   * Root canvas
+   */
+  private pRootCanvas!: Renderer;
+  public get rootCanvas(): Renderer {
+    return this.pRootCanvas;
+  }
+
+  /**
    * Layers
    */
-  private layers: Layer[] = [];
+  private pLayers: Layer[] = [];
+  public get layers(): Layer[] {
+    return (this.scene.layers || []).concat(this.pLayers);
+  }
+
+  /**
+   * Sprites
+   */
+  public get sprites(): ISprite[] {
+    return flatten(this.layers.map((l) => l.sprites));
+  }
 
   /**
    * Background
@@ -52,17 +77,19 @@ export class Screen {
   /**
    * @param devicePixel Device Pixel Ratio
    */
-  constructor(width: number, height: number, frameRate: number = 60, background: any = 255) {
+  constructor(width: number, height: number, debug: boolean = false, frameRate: number = 60, background: any = 255) {
+    super();
+
     Global.Screen = this;
 
+    // Set properties
+    this.debug = debug || false;
     this.width = width;
     this.height = height;
     this.frameRate = frameRate;
     this.background = background;
 
-    /**
-     * p5 builder
-     */
+    // Create p5 Instance
     this.p = new p5((p: p5) => {
       p.setup = () => this.setup(p);
       p.draw = () => this.draw(p);
@@ -78,6 +105,14 @@ export class Screen {
   }
 
   /**
+   * Check sprite is attached
+   * @param sprite ISprite
+   */
+  public isAttachedSprite(sprite: ISprite): boolean {
+    return this.sprites.findIndex((s) => s === sprite) > -1;
+  }
+
+  /**
    * Set scene
    * @param scene Scene
    */
@@ -85,41 +120,50 @@ export class Screen {
     scene.screen = this;
     scene.setup();
     this.scene = scene;
+    console.log(scene);
+  }
+  public getScene(): Scene {
+    return this.scene;
   }
 
   public addLayer(layer: Layer) {
     layer.setup();
-    this.layers.push(layer);
+    this.pLayers.push(layer);
   }
-  
+
   public setup(p: p5) {
     console.info(`Screen canvas generated at ${this.width} x ${this.height} dimensions.`);
-    p.createCanvas(this.width, this.height);
-    // p.background(this.background);
+
+    // Create root canvas
+    this.pRootCanvas = p.createCanvas(this.width, this.height);
+
+    // Attach listeners
+    this.emit('ready.canvas', this.pRootCanvas);
+    this.pRootCanvas.mouseClicked((e) => this.emit('click', e));
+
+    // Set canvas properties
+    p.background(this.background);
     p.frameRate(this.frameRate);
+
     // Add info layer
-    // this.addLayer(new InfoLayer());
+    if (this.debug) {
+      this.addLayer(new InfoLayer());
+    }
   }
 
   public draw(p: p5) {
-    // p.background(0,50);
+    p.background(this.background);
 
     // Scene update
     this.scene.update();
 
     // Layers update
-    this.layers.forEach((l) => l.update());
+    this.pLayers.forEach((l) => l.update());
 
-    // Attach layers
-    this.scene.layers
-      .forEach((l) => l.sprites
+    // Attach sprites
+    orderBy(this.sprites, 'zIndex')
         .filter((s) => !!s && !!s.graphics)
-        .forEach((s) => p.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height)));
-
-    // Attach static layers
-    this.layers.forEach((l) => l.sprites
-      .filter((s) => !!s && !!s.graphics)
-      .forEach((s) => p.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height)));
+        .forEach((s) => p.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height));
 
   }
 

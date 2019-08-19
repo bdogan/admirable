@@ -1,35 +1,70 @@
-import { Layer } from "../../../../Engine/Layer";
+import { Layer } from '../../../../Engine/Layer';
+import { ISprite } from '../../../../Engine/ISprite';
+import { Graphics } from 'p5';
 
-export class GridLayer extends Layer{
-  private walk:number = 0;
-  private animate:boolean = true;
-  public setup(): void{
-    this.walk = 0;
-    this.animate = true;
+export class GridLayer extends Layer {
+
+  private walk: number = 0;
+
+  private gridSprite: ISprite;
+  private gridGraphics: Graphics;
+  private gridOptions: any = {
+    animate: true,
+    gridGap: 25,
+    gridX: 0,
+    gridY: 0,
+  };
+
+  public constructor(animate: boolean = true, gap: number = 25) {
+    // parent call
+    super();
+
+    // Grid Options
+    this.gridOptions.animate = animate;
+    this.gridOptions.gridGap = gap;
+    this.gridOptions.gridX = Math.ceil(this.screen.dimensions.width / this.gridOptions.gridGap);
+    this.gridOptions.gridY = Math.ceil(this.screen.dimensions.height / this.gridOptions.gridGap);
+
+    // Create grid sprite
+    this.gridGraphics = this.createGraphics(this.screen.dimensions.width, this.screen.dimensions.height);
+    this.gridSprite = {
+      graphics: this.gridGraphics,
+      x: 0,
+      y: 0,
+    };
+
+    // Add sprite to registry
+    this.addSprite(this.gridSprite);
   }
-  
-  public update(): void{
-    this.p.background(0,30);
-    let p = this.p,
-        gap = 25,
-        gx = Math.ceil(p.width/gap),
-        gy = Math.ceil(p.height/gap);
-    for(let x = 0; x<gx; x++){
-      p.stroke(0,255,255,10);
-      p.line((x*gap), 0, (x*gap), p.height);
+
+  public setup(): void {
+    this.walk = 0;
+  }
+
+  public update(): void {
+    this.gridGraphics.background(0, 50);
+
+    // Draw horizontal lines
+    for (let x = 0; x < this.gridOptions.gridX; x++) {
+      this.gridGraphics.stroke(0, 255, 255, 10);
+      this.gridGraphics.line((x * this.gridOptions.gridGap), 0,
+        (x * this.gridOptions.gridGap), this.gridGraphics.height);
     }
 
-    for(let y = 0; y<gy; y++){
-      if(y<gy/2){
-        p.stroke(0,255,255,y*(200/gy*2));
+    // Draw vertical lines
+    for (let y = 0; y < this.gridOptions.gridY; y++) {
+      if (y < (this.gridOptions.gridY / 2)) {
+        this.gridGraphics.stroke(0, 255, 255, y * ((200 / this.gridOptions.gridY) * 2));
       }
 
-      p.line(0, (y*gap)+this.walk, p.width, (y*gap)+this.walk);
+      this.gridGraphics.line(0, (y * this.gridOptions.gridGap) + this.walk,
+        this.gridGraphics.width, (y * this.gridOptions.gridGap) + this.walk);
     }
 
-    //random boxes to walk with y grid
-
-    if(this.animate) this.walk = (this.walk+1)%gap;
+    // Animate lines
+    if (this.gridOptions.animate) {
+      this.walk = (this.walk + 1) % this.gridOptions.gridGap;
+    }
   }
-  
+
 }

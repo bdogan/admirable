@@ -155,6 +155,7 @@ export class Text implements ISprite {
 
         // Create graphics
         this.graphics = this.p.createGraphics(this.width, this.height);
+        this.graphics.remove();
 
         // Load font
         this.loadFont();

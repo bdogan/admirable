@@ -4,4 +4,5 @@ export interface ISprite {
   x: number;
   y: number;
   graphics: Graphics | Image;
+  zIndex?: number;
 }

@@ -5,12 +5,17 @@ export class InfoLayer extends Layer {
 
   private fpsCounterText!: Text;
 
+  private get infoText(): string {
+    // tslint:disable-next-line: max-line-length
+    return `${this.p.frameRate().toFixed(0)} FPS / ${this.screen.layers.length} LAYERS / ${this.screen.sprites.length} SPRITES / ActiveScene: ${this.screen.getScene() ? this.screen.getScene().constructor.name : 'null'}`;
+  }
+
   /**
    * @inheritDoc
    */
   public setup(): void {
     // FPS Counter
-    this.fpsCounterText = this.createText(`${this.p.frameRate().toFixed(0)} FPS`, 24, 80, 30);
+    this.fpsCounterText = this.createText(this.infoText, 24, this.screen.dimensions.width, 30);
     this.fpsCounterText.vAlign = 'center';
     this.fpsCounterText.hAlign = 'center';
     this.fpsCounterText.x = this.screen.dimensions.width - this.fpsCounterText.width;
@@ -24,7 +29,7 @@ export class InfoLayer extends Layer {
    * @inheritDoc
    */
   public update(): void {
-    this.fpsCounterText.text = `${this.p.frameRate().toFixed(0)} FPS`;
+    this.fpsCounterText.text = this.infoText;
   }
 
 }
