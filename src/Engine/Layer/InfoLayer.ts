@@ -15,13 +15,13 @@ export class InfoLayer extends Layer {
    */
   public setup(): void {
     // FPS Counter
-    this.fpsCounterText = this.createText(this.infoText, 24, this.screen.dimensions.width, 30);
+    this.fpsCounterText = this.createText(this.infoText, 24, this.screen.dimensions.width, 40);
     this.fpsCounterText.vAlign = 'center';
     this.fpsCounterText.hAlign = 'center';
     this.fpsCounterText.x = this.screen.dimensions.width - this.fpsCounterText.width;
     this.fpsCounterText.y = this.screen.dimensions.height - this.fpsCounterText.height;
-    this.fpsCounterText.color = 'rgba(0,0,0,0.8)';
-    this.fpsCounterText.background = 'rgba(0, 0, 0, .2)';
+    this.fpsCounterText.color = 'rgba(255, 255, 255, .8)';
+    this.fpsCounterText.background = 'rgba(0, 0, 0, .7)';
     this.addSprite(this.fpsCounterText);
   }
 
