@@ -47,7 +47,7 @@ export class Screen extends EventEmitter {
    */
   private pLayers: Layer[] = [];
   public get layers(): Layer[] {
-    return (this.scene.layers || []).concat(this.pLayers);
+    return (this.scene ? this.scene.layers : []).concat(this.pLayers);
   }
 
   /**
@@ -155,7 +155,9 @@ export class Screen extends EventEmitter {
     p.background(this.background);
 
     // Scene update
-    this.scene.update();
+    if (this.scene) {
+      this.scene.update();
+    }
 
     // Layers update
     this.pLayers.forEach((l) => l.update());
