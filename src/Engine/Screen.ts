@@ -118,10 +118,16 @@ export class Screen extends EventEmitter {
    */
   public setScene(scene: Scene) {
     scene.screen = this;
+    // remove the event listeners registered by the previous scene
+    // this.removeAllListeners();
+    // clean layers array when scene set.
+    scene.layers = [];
+
     scene.setup();
+
     this.scene = scene;
-    console.log(scene);
   }
+
   public getScene(): Scene {
     return this.scene;
   }
@@ -141,6 +147,8 @@ export class Screen extends EventEmitter {
     this.emit('ready.canvas', this.pRootCanvas);
     this.pRootCanvas.mouseClicked((e) => this.emit('click', e));
     this.pRootCanvas.mouseMoved((e) => this.emit('hover', e));
+    this.pRootCanvas.mousePressed((e) => this.emit('down', e));
+    this.pRootCanvas.mouseReleased((e) => this.emit('up', e));
 
     // Set canvas properties
     p.background(this.background);

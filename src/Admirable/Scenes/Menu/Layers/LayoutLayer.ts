@@ -2,10 +2,14 @@ import { Layer } from '../../../../Engine/Layer';
 import { Button } from '../../../../Engine/Buttons/Button';
 import { Text } from '../../../../Engine/Sprites/Text/Text';
 import { DemoScene } from '../../../../Engine/Scene/DemoScene/DemoScene';
+import { MenuScene } from '../Menu';
+import { demoS } from '../../../../main';
+// import { menu, demoS } from '../../../../main';
 
 export class LayoutLayer extends Layer {
 
   private button: Button;
+  private restart: Button;
   private logo: Text;
   private easeing: number = 0.05;
 
@@ -14,9 +18,20 @@ export class LayoutLayer extends Layer {
 
     // Start button.
     this.button = this.createButton(0, 0, 256, 64);
+
     this.button.onClick = () => {
-      this.screen.setScene(new DemoScene());
+      this.screen.setScene(demoS);
     };
+
+    this.restart = this.createButton(25, 25, 25, 25);
+    this.restart.onClick = () => {
+      console.log('another button');
+    };
+    this.addSprite(this.restart);
+
+    // this.button.onHover = (t) => {
+    //   console.log(t);
+    // };
 
     this.addSprite(this.button);
     this.button.x = (this.screen.dimensions.width / 2) - (this.button.width / 2);
@@ -35,7 +50,7 @@ export class LayoutLayer extends Layer {
     // Animate the logo.
     const deltaY =  this.p.round((this.screen.dimensions.height / 3) - (this.logo.height / 2) - this.logo.y);
     // this.logo.y = this.logo.y + 1 * (this.p.deltaTime / 10);
-    this.logo.y += deltaY * this.easeing;
+    this.logo.y += deltaY * this.easeing; // * ( this.p.deltaTime / 10);
   }
 
 }

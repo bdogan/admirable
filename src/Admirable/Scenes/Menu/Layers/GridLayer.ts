@@ -5,6 +5,15 @@ import { transcode } from 'buffer';
 
 export class GridLayer extends Layer {
 
+  // private static instance: GridLayer;
+
+  // static get getInstance(): GridLayer {
+  //   if (!GridLayer.instance) {
+  //     GridLayer.instance = new GridLayer();
+  //   }
+  //   return GridLayer.instance;
+  // }
+
   private angle: number = 0;
 
   private gridSprite: ISprite;
