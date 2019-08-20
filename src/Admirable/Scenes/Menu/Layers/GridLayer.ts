@@ -1,6 +1,7 @@
 import { Layer } from '../../../../Engine/Layer';
 import { ISprite } from '../../../../Engine/ISprite';
 import { Graphics } from 'p5';
+import { transcode } from 'buffer';
 
 export class GridLayer extends Layer {
 
@@ -10,9 +11,11 @@ export class GridLayer extends Layer {
   private gridGraphics: Graphics;
   private gridOptions: any = {
     animate: true,
+    frequency: 50,
     gridGap: 25,
     gridX: 0,
     gridY: 0,
+    shiftY: -150,
   };
 
   public constructor(animate: boolean = true, gap: number = 25) {
@@ -37,33 +40,36 @@ export class GridLayer extends Layer {
     this.addSprite(this.gridSprite);
   }
 
-  public setup(): void {
-    this.walk = 0;
+  public update(): void {
+    this.gridGraphics.background(0, 25);
+    this.gridGraphics.stroke(0, 255, 255, 25);
+
+    this.perspectiveGrid(this.walk);
+    // can't use this.gridGraphics.deltaTime here.
+    this.walk = this.walk + (this.p.deltaTime / 100000);
   }
 
-  public update(): void {
-    this.gridGraphics.background(0, 50);
+  /**
+   * Creates horizontal lines with given angle.
+   * @param a angle at a specific time.
+   */
+  private perspectiveGrid(a: number) {
+    const width = this.screen.dimensions.width;
+    const da = this.gridGraphics.TWO_PI / width;
 
-    // Draw horizontal lines
-    for (let x = 0; x < this.gridOptions.gridX; x++) {
-      this.gridGraphics.stroke(0, 255, 255, 10);
-      this.gridGraphics.line((x * this.gridOptions.gridGap), 0,
-        (x * this.gridOptions.gridGap), this.gridGraphics.height);
-    }
+    for (let i = 0; i < width / 2; i++) {
+      const x1 = (i * 4),
+            y1 = 0,
+            x2 = x1,
+            y2 = this.gridOptions.shiftY + this.gridGraphics.tan(a) * this.gridOptions.frequency;
 
-    // Draw vertical lines
-    for (let y = 0; y < this.gridOptions.gridY; y++) {
-      if (y < (this.gridOptions.gridY / 2)) {
-        this.gridGraphics.stroke(0, 255, 255, y * ((200 / this.gridOptions.gridY) * 2));
-      }
+      // Debug graphic;
+      // this.gridGraphics.line(x1, y1, x2, y2);
 
-      this.gridGraphics.line(0, (y * this.gridOptions.gridGap) + this.walk,
-        this.gridGraphics.width, (y * this.gridOptions.gridGap) + this.walk);
-    }
+      // Perspectve lines
+      this.gridGraphics.line(0, y2, width, y2);
 
-    // Animate lines
-    if (this.gridOptions.animate) {
-      this.walk = (this.walk + 1) % this.gridOptions.gridGap;
+      a = (a + da) % this.gridGraphics.HALF_PI;
     }
   }
 
