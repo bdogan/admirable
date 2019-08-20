@@ -13,6 +13,9 @@ export class Button implements ISprite {
 
   public graphics: Graphics;
 
+  public onClick: () => void;
+  public onHover: () => void;
+
   private screen: Screen;
 
   private get p(): p5 {
@@ -31,7 +34,11 @@ export class Button implements ISprite {
     this.graphics.remove();
     this.graphics.background(125);
 
-    this.screen.on('click', this.onClick.bind(this));
+    this.onClick = () => false;
+    this.onHover = () => false;
+
+    this.screen.on('click', this.eventClick.bind(this));
+    this.screen.on('hover', this.eventHover.bind(this));
   }
 
   /**
@@ -42,11 +49,22 @@ export class Button implements ISprite {
     return event.x > this.x && event.x < this.width + this.x && event.y > this.y && event.y < this.height + this.y;
   }
 
-  public onClick(event: MouseEvent): void {
+  public eventClick(event: MouseEvent): void {
     if (!this.screen.isAttachedSprite(this) || !this.isOver(event)) {
       return;
     }
+    this.onClick();
     console.log('clicked', event.x, event.y);
+  }
+
+  public eventHover(event: MouseEvent): void {
+
+    if (!this.screen.isAttachedSprite(this) || !this.isOver(event)) {
+      this.p.cursor('default');
+      return;
+    }
+
+    this.p.cursor('pointer');
   }
 
 }
