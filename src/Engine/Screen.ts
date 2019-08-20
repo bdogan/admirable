@@ -120,8 +120,6 @@ export class Screen extends EventEmitter {
    */
   public setScene(scene: Scene) {
     scene.screen = this;
-    // remove the event listeners registered by the previous scene
-    // this.removeAllListeners();
     // clean layers array when scene set.
     scene.layers = [];
 

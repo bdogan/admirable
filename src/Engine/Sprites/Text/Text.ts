@@ -163,7 +163,7 @@ export class Text extends EventEmitter implements ISprite {
         // Load font
         this.loadFont();
 
-        this.on('mousePressed', console.log)
+        // this.on('mousePressed', console.log)
     }
 
     private refreshGraphics() {

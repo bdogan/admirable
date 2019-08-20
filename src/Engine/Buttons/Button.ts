@@ -11,6 +11,7 @@ export class Button extends EventEmitter implements ISprite {
   public y: number = 0;
   public width: number = 0;
   public height: number = 0;
+  public graphics: Graphics;
 
   private pBackground: any = 'rgba(10, 10, 10, 255)';
   public get background(): any {
@@ -31,12 +32,10 @@ export class Button extends EventEmitter implements ISprite {
     this.pOverBackground = b;
   }
 
-  public graphics: Graphics;
-
-  public onClick: (e?: any) => void;
-  public onHover: (e?: any) => void;
-  public onMouseDown: (e?: any) => void;
-  public onMouseUp: (e?: any) => void;
+  // public onClick: (e?: any) => void;
+  // public onHover: (e?: any) => void;
+  // public onMouseDown: (e?: any) => void;
+  // public onMouseUp: (e?: any) => void;
 
   private screen: Screen;
 
@@ -57,10 +56,10 @@ export class Button extends EventEmitter implements ISprite {
     this.graphics = this.screen.p.createGraphics(this.width, this.height);
     this.graphics.remove();
 
-    this.onClick = (e) => false;
-    this.onHover = (e) => false;
-    this.onMouseDown = (e) => false;
-    this.onMouseUp = (e) => false;
+    // this.onClick = (e) => false;
+    // this.onHover = (e) => false;
+    // this.onMouseDown = (e) => false;
+    // this.onMouseUp = (e) => false;
 
     // Background
     this.graphics.background(this.background);
