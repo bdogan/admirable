@@ -141,9 +141,6 @@ export class Screen extends EventEmitter {
     this.emit('ready.canvas', this.pRootCanvas);
     this.pRootCanvas.mouseClicked((e) => this.emit('click', e));
     this.pRootCanvas.mouseMoved((e) => this.emit('hover', e));
-=======
-    this.pRootCanvas.mouseOver((e) => this.emit('hover', e));
->>>>>>> c4b15ae2fc10676d16d2ddbddc79c88f30bb02e5
 
     // Set canvas properties
     p.background(this.background);
