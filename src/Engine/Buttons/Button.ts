@@ -8,8 +8,8 @@ export class Button implements ISprite {
 
   public x: number = 0;
   public y: number = 0;
-  public w: number = 0;
-  public h: number = 0;
+  public width: number = 0;
+  public height: number = 0;
 
   public graphics: Graphics;
 
@@ -24,10 +24,10 @@ export class Button implements ISprite {
 
     this.x = x;
     this.y = y;
-    this.w = w;
-    this.h = h;
+    this.width = w;
+    this.height = h;
 
-    this.graphics = this.screen.p.createGraphics(this.w, this.h);
+    this.graphics = this.screen.p.createGraphics(this.width, this.height);
     this.graphics.remove();
     this.graphics.background(125);
 
@@ -39,7 +39,7 @@ export class Button implements ISprite {
    * @param event boolean
    */
   public isOver(event: MouseEvent): boolean {
-    return event.x > this.x && event.x < this.w + this.x && event.y > this.y && event.y < this.h + this.y;
+    return event.x > this.x && event.x < this.width + this.x && event.y > this.y && event.y < this.height + this.y;
   }
 
   public onClick(event: MouseEvent): void {

@@ -47,7 +47,7 @@ export class Layer implements ILayer {
     return new Text(text, size, width, height);
   }
 
-  public createButton(x: number, y: number, w: number, h: number){
+  public createButton(x: number, y: number, w: number, h: number) {
     return new Button(x, y, w, h);
   }
 
