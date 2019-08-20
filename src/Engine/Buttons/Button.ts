@@ -12,6 +12,25 @@ export class Button extends EventEmitter implements ISprite {
   public width: number = 0;
   public height: number = 0;
 
+  private pBackground: any = 'rgba(10, 10, 10, 255)';
+  public get background(): any {
+    return this.pBackground;
+  }
+  public set background(b: any) {
+    this.graphics.background(this.pBackground = b);
+    this.oOverBackground = undefined;
+  }
+
+  private pOverBackground: any;
+  private oOverBackground: any;
+  public get overBackground(): any {
+    return this.pOverBackground || this.oOverBackground
+      || (this.oOverBackground = this.screen.p.brightness(this.background));
+  }
+  public set overBackground(b: any) {
+    this.pOverBackground = b;
+  }
+
   public graphics: Graphics;
 
   public onClick: (e?: any) => void;
@@ -37,56 +56,24 @@ export class Button extends EventEmitter implements ISprite {
 
     this.graphics = this.screen.p.createGraphics(this.width, this.height);
     this.graphics.remove();
-    this.graphics.background(255, 0, 0);
 
     this.onClick = (e) => false;
     this.onHover = (e) => false;
     this.onMouseDown = (e) => false;
     this.onMouseUp = (e) => false;
 
-    this.screen.on('click', this.eventClick.bind(this));
-    this.screen.on('hover', this.eventHover.bind(this));
-    this.screen.on('down', this.eventDown.bind(this));
-    this.screen.on('up', this.eventUp.bind(this));
-  }
+    // Background
+    this.graphics.background(this.background);
+    this.on('mouseOut', () => this.graphics.background(this.background));
+    this.on('mouseIn', () => this.graphics.background(this.overBackground));
 
-  /**
-   * Check position is over
-   * @param event boolean
-   */
-  public isOver(event: MouseEvent): boolean {
-    // console.log(this.x, this.y);
-    return this.p.mouseX > this.x && this.p.mouseX < this.width + this.x &&
-    this.p.mouseY > this.y && this.p.mouseY < this.height + this.y;
-  }
+    // Maintain cursor pointer
+    this.screen.on('mouseMoved', () => {
+      // tslint:disable-next-line: max-line-length
+      const currButton = this.screen.sprites.find((s) => s instanceof Button && this.screen.isAttachedSprite(s) && this.screen.isOverSprite(s));
+      this.p.cursor(currButton ? 'pointer' : 'default');
+    });
 
-  public eventClick(event: MouseEvent): void {
-    if (!this.screen.isAttachedSprite(this) || !this.isOver(event)) {
-      return;
-    }
-    this.onClick(this);
-    console.log(this);
-    // console.log('clicked', event.x, event.y);
-  }
-
-  public eventHover(event: MouseEvent): void {
-
-    if (!this.screen.isAttachedSprite(this) || !this.isOver(event)) {
-      this.p.cursor('default');
-      return;
-    }
-    // console.log(event);
-    this.onHover(this);
-    // console.log(this);
-    this.p.cursor('pointer');
-  }
-
-  public eventDown(event: MouseEvent): void {
-    this.onMouseDown(this);
-  }
-
-  public eventUp(event: MouseEvent): void {
-    this.onMouseUp(this);
   }
 
 }

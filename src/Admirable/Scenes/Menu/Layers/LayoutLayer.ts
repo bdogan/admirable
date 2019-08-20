@@ -3,8 +3,8 @@ import { Button } from '../../../../Engine/Buttons/Button';
 import { Text } from '../../../../Engine/Sprites/Text/Text';
 import { DemoScene } from '../../../../Engine/Scene/DemoScene/DemoScene';
 import { MenuScene } from '../Menu';
-import { demoS } from '../../../../main';
-// import { menu, demoS } from '../../../../main';
+// import { demoS } from '../../../../main';
+import { menu, demoS } from '../../../../main';
 
 export class LayoutLayer extends Layer {
 
@@ -19,13 +19,16 @@ export class LayoutLayer extends Layer {
     // Start button.
     this.button = this.createButton(0, 0, 256, 64);
 
-    this.button.onClick = () => {
-      this.screen.setScene(demoS);
-    };
+    this.button.background = 'red';
+
+    this.button.on('mousePressed', (e) => {
+      console.log('main button');
+      this.screen.setScene(menu);
+    });
 
     this.restart = this.createButton(25, 25, 25, 25);
     this.restart.onClick = () => {
-      console.log('another button');
+      console.log('restart button');
     };
     this.addSprite(this.restart);
 
@@ -44,6 +47,10 @@ export class LayoutLayer extends Layer {
     // this.logo.y = (this.screen.dimensions.height / 3) - (this.logo.height / 2);
     this.logo.y = -1 * (this.logo.height);
     this.addSprite(this.logo);
+  }
+
+  public setup(): void {
+    this.logo.y = -1 * (this.logo.height);
   }
 
   public  update(): void {

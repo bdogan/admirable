@@ -4,10 +4,11 @@ import { Graphics, Image, Font } from 'p5';
 import { Screen } from '../../Screen';
 import { Global } from '../../Global';
 import p5 = require('p5');
+import { EventEmitter } from 'events';
 
 let pFont: Font;
 
-export class Text implements ISprite {
+export class Text extends EventEmitter implements ISprite {
 
     // ISprite variables
     public x: number = 0;
@@ -139,6 +140,8 @@ export class Text implements ISprite {
     }
 
     public constructor(text: string, size: number, width: number, height?: number) {
+        super();
+
         // Get screen from global scope
         this.screen = Global.Screen as Screen;
 
@@ -159,6 +162,8 @@ export class Text implements ISprite {
 
         // Load font
         this.loadFont();
+
+        this.on('mousePressed', console.log)
     }
 
     private refreshGraphics() {

@@ -1,4 +1,4 @@
-import p5, { Graphics, Renderer } from 'p5';
+import p5, { Graphics, Renderer, Element } from 'p5';
 import { Scene } from './Scene';
 import { Global } from './Global';
 import { Layer } from './Layer';
@@ -6,6 +6,8 @@ import { InfoLayer } from './Layer/InfoLayer';
 import { EventEmitter } from 'events';
 import { flatten, orderBy } from 'lodash';
 import { ISprite } from './ISprite';
+
+const activeEvents = [ 'mouseClicked', 'mousePressed', 'mouseReleased' ];
 
 export class Screen extends EventEmitter {
 
@@ -137,6 +139,11 @@ export class Screen extends EventEmitter {
     this.pLayers.push(layer);
   }
 
+  public isOverSprite(sprite: ISprite): boolean {
+    return this.p.mouseX > sprite.x && this.p.mouseX < sprite.graphics.width + sprite.x &&
+      this.p.mouseY > sprite.y && this.p.mouseY < sprite.graphics.height + sprite.y;
+  }
+
   public setup(p: p5) {
     console.info(`Screen canvas generated at ${this.width} x ${this.height} dimensions.`);
 
@@ -145,10 +152,22 @@ export class Screen extends EventEmitter {
 
     // Attach listeners
     this.emit('ready.canvas', this.pRootCanvas);
-    this.pRootCanvas.mouseClicked((e) => this.emit('click', e));
-    this.pRootCanvas.mouseMoved((e) => this.emit('hover', e));
-    this.pRootCanvas.mousePressed((e) => this.emit('down', e));
-    this.pRootCanvas.mouseReleased((e) => this.emit('up', e));
+
+    // Attach active events
+    activeEvents.forEach((eventName) => {
+      const eventHandler: (fxn: ((...args: any[]) => any) | boolean) => Element = (this.pRootCanvas as any)[eventName];
+      eventHandler.call(this.pRootCanvas, (e) => {
+        this.sprites
+          .filter((s) => s instanceof EventEmitter && this.isAttachedSprite(s) && this.isOverSprite(s))
+          .forEach((s) => (s as any).emit(eventName, e));
+      });
+      this.pRootCanvas.mouseMoved((e) => {
+        this.emit('mouseMoved', e);
+        this.sprites
+          .filter((s) => s instanceof EventEmitter && this.isAttachedSprite(s))
+          .forEach((s) => (s as any).emit(!this.isOverSprite(s) ? 'mouseOut' : 'mouseIn', e));
+      });
+    });
 
     // Set canvas properties
     p.background(this.background);
