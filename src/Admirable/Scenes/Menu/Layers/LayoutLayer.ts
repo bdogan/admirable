@@ -1,6 +1,7 @@
 import { Layer } from '../../../../Engine/Layer';
 import { Button } from '../../../../Engine/Buttons/Button';
 import { Text } from '../../../../Engine/Sprites/Text/Text';
+import { DemoScene } from '../../../../Engine/Scene/DemoScene/DemoScene';
 
 export class LayoutLayer extends Layer {
 
@@ -13,6 +14,10 @@ export class LayoutLayer extends Layer {
 
     // Start button.
     this.button = this.createButton(0, 0, 256, 64);
+    this.button.onClick = () => {
+      this.screen.setScene(new DemoScene());
+    };
+
     this.addSprite(this.button);
     this.button.x = (this.screen.dimensions.width / 2) - (this.button.width / 2);
     this.button.y = (this.screen.dimensions.height / 2) - (this.button.height / 2);
