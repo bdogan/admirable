@@ -93,6 +93,7 @@ export class Screen extends EventEmitter {
 
     // Create p5 Instance
     this.p = new p5((p: p5) => {
+      // p.preload = ()=> this.preload(p);
       p.setup = () => this.setup(p);
       p.draw = () => this.draw(p);
     });

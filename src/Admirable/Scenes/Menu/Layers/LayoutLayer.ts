@@ -20,6 +20,11 @@ export class LayoutLayer extends Layer {
     const but = new Butt('tester', 16, 16, 256, 64);
     this.addSprite(but);
 
+    but.on('mousePressed', (e) => {
+      but.background = 'red';
+      // console.log(but.background);
+    });
+
     this.button = this.createButton(0, 0, 256, 64);
 
     this.button.background = 'red';

@@ -33,15 +33,11 @@ export class GridLayer extends Layer {
     this.gridOptions.animate = animate;
     this.gridOptions.frequency = frequency;
     this.gridOptions.shiftY = shiftY;
+
     // Create grid sprite
     this.gridGraphics = this.createGraphics(this.screen.dimensions.width, this.screen.dimensions.height);
-    // this.gridSprite = {
-    //   graphics: this.gridGraphics,
-    //   x: 0,
-    //   y: 0,
-    // };
-    this.gridSprite =  Sprite.fromObject(0, 0, this.gridGraphics);
 
+    this.gridSprite =  Sprite.fromObject(0, 0, this.gridGraphics);
     // Add sprite to registry
     this.addSprite(this.gridSprite);
   }

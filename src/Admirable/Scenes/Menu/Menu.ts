@@ -7,12 +7,12 @@ export class MenuScene extends Scene {
 
   private static instance: MenuScene;
 
-  public static get getInstance(): MenuScene {
-    if (!MenuScene.instance ) {
-      MenuScene.instance = new MenuScene();
-    }
-    return MenuScene.instance;
-  }
+  // public static get getInstance(): MenuScene {
+  //   if (!MenuScene.instance ) {
+  //     MenuScene.instance = new MenuScene();
+  //   }
+  //   return MenuScene.instance;
+  // }
 
   private layout: LayoutLayer;
   private grid: GridLayer;

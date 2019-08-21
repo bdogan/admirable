@@ -10,7 +10,6 @@ import { Sprite } from '../../Sprite';
 let pFont: Font;
 
 export class Text extends Sprite {
-
     public graphics: Graphics;
     // Font
     private fontPath: string = MunroFontPath;
@@ -152,20 +151,21 @@ export class Text extends Sprite {
         this.loadFont();
 
         // this.on('mousePressed', console.log)
+        this.refreshGraphics();
     }
 
     private refreshGraphics() {
-        if (this.font) {
-            this.graphics.background(0);
-            this.graphics.resizeCanvas(this.width, this.height);
+        // if (this.font) {
+            // Clear the canvas to prevent over print.
+            this.graphics.clear();
             this.graphics.background(this.background);
-            this.graphics.textFont(this.font);
+            // this.graphics.textFont(this.font);
             this.graphics.textLeading(this.leading);
             this.graphics.fill(this.color);
             this.graphics.textSize(this.size);
             this.graphics.textAlign(this.hAlign, this.vAlign);
             this.graphics.text(this.text, this.textX, this.textY);
-        }
+        // }
     }
 
     private loadFont() {
