@@ -6,6 +6,8 @@ import { MenuScene } from '../Menu';
 // import { demoS } from '../../../../main';
 import { menu, demoS } from '../../../../main';
 
+import { Button as Butt } from '../../../../Engine/Sprites/Button/Button';
+
 export class LayoutLayer extends Layer {
 
   private button: Button;
@@ -14,6 +16,9 @@ export class LayoutLayer extends Layer {
 
   constructor() {
     super();
+
+    const but = new Butt('tester', 16, 16, 256, 64);
+    this.addSprite(but);
 
     this.button = this.createButton(0, 0, 256, 64);
 

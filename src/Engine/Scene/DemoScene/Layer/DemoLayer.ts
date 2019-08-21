@@ -7,7 +7,7 @@ export class DemoLayer extends Layer {
     const im = this.createGraphics(20, 20);
     im.background(50);
     // tslint:disable-next-line: max-line-length
-    const sprt = new Sprite(Math.floor(Math.random() * this.screen.dimensions.width), Math.floor(Math.random() * this.screen.dimensions.height), im);
+    const sprt = Sprite.fromObject(Math.floor(Math.random() * this.screen.dimensions.width), Math.floor(Math.random() * this.screen.dimensions.height), im);
     this.addSprite(sprt);
   }
 

@@ -40,7 +40,7 @@ export class GridLayer extends Layer {
     //   x: 0,
     //   y: 0,
     // };
-    this.gridSprite = new Sprite(0, 0, this.gridGraphics);
+    this.gridSprite =  Sprite.fromObject(0, 0, this.gridGraphics);
 
     // Add sprite to registry
     this.addSprite(this.gridSprite);

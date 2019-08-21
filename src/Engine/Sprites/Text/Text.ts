@@ -5,22 +5,13 @@ import { Screen } from '../../Screen';
 import { Global } from '../../Global';
 import p5 = require('p5');
 import { EventEmitter } from 'events';
+import { Sprite } from '../../Sprite';
 
 let pFont: Font;
 
-export class Text extends EventEmitter implements ISprite {
+export class Text extends Sprite {
 
-    // ISprite variables
-    public x: number = 0;
-    public y: number = 0;
     public graphics: Graphics;
-
-    // Variables
-    private screen: Screen;
-    private get p(): p5 {
-        return this.screen.p;
-    }
-
     // Font
     private fontPath: string = MunroFontPath;
     private get font(): Font {
@@ -142,9 +133,6 @@ export class Text extends EventEmitter implements ISprite {
     public constructor(text: string, size: number, width: number, height?: number) {
         super();
 
-        // Get screen from global scope
-        this.screen = Global.Screen as Screen;
-
         // Set variables
         this.pText = text;
         this.pSize = size;
@@ -181,7 +169,7 @@ export class Text extends EventEmitter implements ISprite {
     }
 
     private loadFont() {
-        this.p.loadFont(this.fontPath, (f) => this.font = f);
+      this.p.loadFont(this.fontPath, (f) => this.font = f);
     }
 
 }
