@@ -2,6 +2,7 @@ import { Layer } from '../../../../Engine/Layer';
 import { ISprite } from '../../../../Engine/ISprite';
 import { Graphics } from 'p5';
 import { transcode } from 'buffer';
+import { Sprite } from '../../../../Engine/Sprite';
 
 export class GridLayer extends Layer {
 
@@ -34,11 +35,12 @@ export class GridLayer extends Layer {
     this.gridOptions.shiftY = shiftY;
     // Create grid sprite
     this.gridGraphics = this.createGraphics(this.screen.dimensions.width, this.screen.dimensions.height);
-    this.gridSprite = {
-      graphics: this.gridGraphics,
-      x: 0,
-      y: 0,
-    };
+    // this.gridSprite = {
+    //   graphics: this.gridGraphics,
+    //   x: 0,
+    //   y: 0,
+    // };
+    this.gridSprite = new Sprite(0, 0, this.gridGraphics);
 
     // Add sprite to registry
     this.addSprite(this.gridSprite);

@@ -1,15 +1,14 @@
 import { Layer } from '../../../Layer';
+import { Sprite } from '../../../Sprite';
 
 export class DemoLayer extends Layer {
 
   public setup(): void {
     const im = this.createGraphics(20, 20);
     im.background(50);
-    this.addSprite({
-      graphics: im,
-      x: Math.floor(Math.random() * this.screen.dimensions.width),
-      y: Math.floor(Math.random() * this.screen.dimensions.height),
-    });
+    // tslint:disable-next-line: max-line-length
+    const sprt = new Sprite(Math.floor(Math.random() * this.screen.dimensions.width), Math.floor(Math.random() * this.screen.dimensions.height), im);
+    this.addSprite(sprt);
   }
 
   public update(): void {
