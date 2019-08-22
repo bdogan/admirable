@@ -9,16 +9,25 @@ import { menu, demoS } from '../../../../main';
 import { Button as Butt } from '../../../../Engine/Sprites/Button/Button';
 
 import { Sprite} from '../../../../Engine/Sprite';
-import { AdmiralLogo } from '../Images';
+import {AdmirableLogo, AdmirableLogoType} from '../Images';
 
 export class LayoutLayer extends Layer {
 
   private button: Button;
-  private logo: Text;
+  private logo: Sprite;
   private easeing: number = 0.05;
+  private admirableLogo: Sprite;
 
   constructor() {
     super();
+
+    this.admirableLogo = this.imageToSprite(AdmirableLogo);
+
+    this.admirableLogo.x = 0;
+
+    this.admirableLogo.y = this.screen.dimensions.height - this.admirableLogo.graphics.height;
+
+    this.addSprite(this.admirableLogo);
 
     const but = new Butt('tester', 16, 16, 256, 64);
     this.addSprite(but);
@@ -42,26 +51,28 @@ export class LayoutLayer extends Layer {
     this.button.y = (this.screen.dimensions.height / 2) - (this.button.height / 2);
 
     // Logo
+    /*
     this.logo = this.createText('Admirable', 64, 256);
     this.logo.color = this.p.color(0, 255, 255, 255);
     this.logo.x = (this.screen.dimensions.width / 2) - (this.logo.width / 2);
     this.logo.y = -1 * (this.logo.height);
     this.addSprite(this.logo);
+     */
 
-    const admiralLogo = this.imageToSprite(AdmiralLogo);
-
-    this.addSprite(admiralLogo);
+    this.logo = this.imageToSprite(AdmirableLogoType);
+    this.logo.x = (this.screen.dimensions.width / 2) - (this.logo.graphics.width / 2);
+    this.logo.y = -1 * (this.logo.graphics.height);
+    this.addSprite(this.logo);
   }
 
   public setup(): void {
-    this.logo.y = -1 * (this.logo.height);
+    this.logo.y = -1 * (this.logo.graphics.height);
   }
 
   public  update(): void {
     // Animate the logo.
-    const deltaY =  this.p.round((this.screen.dimensions.height / 3) - (this.logo.height / 2) - this.logo.y);
+    const deltaY =  this.p.round((this.screen.dimensions.height / 3) - (this.logo.graphics.height / 2) - this.logo.y);
     // this.logo.y = this.logo.y + 1 * (this.p.deltaTime / 10);
     this.logo.y += deltaY * this.easeing; // * ( this.p.deltaTime / 10);
   }
-
 }
