@@ -1,198 +1,181 @@
 import p5, { Graphics, Renderer, Element } from 'p5';
 import { Scene } from './Scene';
-import { Global } from './Global';
 import { Layer } from './Layer';
 import { InfoLayer } from './Layer/InfoLayer';
-import { EventEmitter } from 'events';
 import { flatten, orderBy } from 'lodash';
-import { ISprite } from './ISprite';
+import { BaseObj } from './BaseObj';
+import { Sprite } from './Sprite';
 
 const activeEvents = [ 'mouseClicked', 'mousePressed', 'mouseReleased' ];
 
-export class Screen extends EventEmitter {
+export class Screen extends BaseObj {
 
   /**
-   * p5 Lib
+   * Public Properties
    */
-  public p: p5;
+  public p5: p5;
+  public RootCanvas!: Renderer;
+  public get dimensions(): { width: number, height: number } {
+    return {
+      height: this.height,
+      width: this.width,
+    };
+  }
 
   /**
-   * Width
+   * Private Properties
    */
   private width: number;
-
-  /**
-   * Height
-   */
   private height: number;
+  private background: any = 255;
+  private frameRate: number = 60;
 
   /**
-   * Scene
+   * ActiveScene
    */
-  private scene!: Scene;
-
-  /**
-   * Debug state
-   */
-  private debug: boolean = false;
-
-  /**
-   * Root canvas
-   */
-  private pRootCanvas!: Renderer;
-  public get rootCanvas(): Renderer {
-    return this.pRootCanvas;
-  }
+  private scene?: Scene;
 
   /**
    * Layers
    */
-  private pLayers: Layer[] = [];
   public get layers(): Layer[] {
-    return (this.scene ? this.scene.layers : []).concat(this.pLayers);
+    return (this.scene ? this.scene.layers : []).concat(this.Engine.Options.Debug ? [ new InfoLayer() ] : []);
   }
 
   /**
    * Sprites
    */
-  public get sprites(): ISprite[] {
+  public get sprites(): Sprite[] {
     return flatten(this.layers.map((l) => l.sprites));
-  }
-
-  /**
-   * Background
-   */
-  private background: any;
-
-  /**
-   * Framerate
-   */
-  private frameRate: number;
-
-  /**
-   * Dimensions
-   */
-  public get dimensions(): { width: number, height: number } {
-    return { width: this.width, height: this.height };
   }
 
   /**
    * @param devicePixel Device Pixel Ratio
    */
-  constructor(width: number, height: number, debug: boolean = false, frameRate: number = 60, background: any = 255) {
+  constructor(width: number, height: number, frameRate: number = 60, background: any = 255) {
     super();
 
-    Global.Screen = this;
-
-    // Set properties
-    this.debug = debug || false;
+    // Set private properties
     this.width = width;
     this.height = height;
     this.frameRate = frameRate;
     this.background = background;
 
-    // Create p5 Instance
-    this.p = new p5((p: p5) => {
-      // p.preload = ()=> this.preload(p);
-      p.setup = () => this.setup(p);
-      p.draw = () => this.draw(p);
-    });
-  }
+    // Listen p5 init state
+    this.on('init.p5', (p) => this.onInitP5());
 
-  /**
-   * Set Background given value
-   * @param background
-   */
-  public setBackground(background: any) {
-    this.background = background;
+    // Create p5 Instance
+    this.p5 = new p5((p: p5) => this.emit('init.p5', p));
   }
 
   /**
    * Check sprite is attached
-   * @param sprite ISprite
+   * @param sprite Sprite
    */
-  public isAttachedSprite(sprite: ISprite): boolean {
+  public isAttachedSprite(sprite: Sprite): boolean {
     return this.sprites.findIndex((s) => s === sprite) > -1;
   }
 
   /**
-   * Set scene
-   * @param scene Scene
+   * Check sprite is over
+   * @param sprite Sprite
    */
-  public setScene(scene: Scene) {
-    scene.screen = this;
-    // clean layers array when scene set.
-    scene.layers = [];
-
-    scene.setup();
-
-    this.scene = scene;
+  public isOverSprite(sprite: Sprite): boolean {
+    return this.p5.mouseX > sprite.x && this.p5.mouseX < sprite.graphics.width + sprite.x &&
+      this.p5.mouseY > sprite.y && this.p5.mouseY < sprite.graphics.height + sprite.y;
   }
 
-  public getScene(): Scene {
-    return this.scene;
-  }
-
-  public addLayer(layer: Layer) {
-    layer.setup();
-    this.pLayers.push(layer);
-  }
-
-  public isOverSprite(sprite: ISprite): boolean {
-    return this.p.mouseX > sprite.x && this.p.mouseX < sprite.graphics.width + sprite.x &&
-      this.p.mouseY > sprite.y && this.p.mouseY < sprite.graphics.height + sprite.y;
-  }
-
-  public setup(p: p5) {
-    console.info(`Screen canvas generated at ${this.width} x ${this.height} dimensions.`);
+  /**
+   * On init p5
+   */
+  private onInitP5() {
 
     // Create root canvas
-    this.pRootCanvas = p.createCanvas(this.width, this.height);
-
-    // Attach listeners
-    this.emit('ready.canvas', this.pRootCanvas);
-
-    // Attach active events
-    activeEvents.forEach((eventName) => {
-      const eventHandler: (fxn: ((...args: any[]) => any) | boolean) => Element = (this.pRootCanvas as any)[eventName];
-      eventHandler.call(this.pRootCanvas, (e) => {
-        this.sprites
-          .filter((s) => s instanceof EventEmitter && this.isAttachedSprite(s) && this.isOverSprite(s))
-          .forEach((s) => (s as any).emit(eventName, e));
-      });
-      this.pRootCanvas.mouseMoved((e) => {
-        this.emit('mouseMoved', e);
-        this.sprites
-          .filter((s) => s instanceof EventEmitter && this.isAttachedSprite(s))
-          .forEach((s) => (s as any).emit(!this.isOverSprite(s) ? 'mouseOut' : 'mouseIn', e));
-      });
-    });
+    this.RootCanvas = this.p5.createCanvas(this.width, this.height);
 
     // Set canvas properties
-    p.background(this.background);
-    p.frameRate(this.frameRate);
+    this.p5.background(this.background);
+    this.p5.frameRate(this.frameRate);
 
-    // Add info layer
-    if (this.debug) {
-      this.addLayer(new InfoLayer());
-    }
+    // Info
+    this.Engine.Log('info', `Screen canvas generated at ${this.width} x ${this.height} dimensions.`);
+
+    // Emit event
+    this.emit('ready.canvas', this.RootCanvas);
+
+    // Mouse clicked event
+    this.RootCanvas.mouseClicked((event) => {
+      this.sprites
+        .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
+        .forEach((s) => s.emit('click', event));
+    });
+
+    // Mouse pressed
+    this.RootCanvas.mousePressed((event) => {
+      this.sprites
+        .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
+        .forEach((s) => s.emit('mousedown', event));
+    });
+
+    // Mouse released
+    this.RootCanvas.mouseReleased((event) => {
+      this.sprites
+        .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
+        .forEach((s) => s.emit('mouseup', event));
+    });
+
+    // Mouse over
+    this.RootCanvas.mouseMoved((event) => {
+      this.sprites
+        .filter((s) => this.isAttachedSprite(s))
+        .forEach((s) => s.emit(this.isOverSprite(s) ? 'mouseover' : 'mouseout', event));
+    });
+
+    // Listen active scene old -> new
+    this.Engine.Router.onChange((activeRoute, oldRoute) => {
+
+      // Variables
+      let detachOldScene: Promise<void> | void;
+      let attachNewScene: Promise<void> | void;
+
+      // Check old scene
+      if (!!this.Engine.Router.ActiveRoute) {
+        detachOldScene = oldRoute.scene.beforeDetach();
+      }
+
+      // Attach new scene
+      attachNewScene = activeRoute.scene.beforeAttach();
+
+      // Start change process
+      Promise.all([
+        (detachOldScene && detachOldScene instanceof Promise ? detachOldScene : Promise.resolve(detachOldScene)),
+        // tslint:disable-next-line: max-line-length
+        (attachNewScene && attachNewScene instanceof Promise ? attachNewScene : Promise.resolve(attachNewScene)).then(() => {
+          this.scene = activeRoute.scene;
+          // tslint:disable-next-line: max-line-length
+          this.Engine.Log('info', `Route switch ${(oldRoute || {}).route} -> ${(activeRoute || {}).route}`);
+          return Promise.resolve();
+        }),
+      ])
+        .then(() => this.Engine.Log('info', `Route ${(oldRoute || {}).route} detached!`));
+    });
+
   }
 
-  public draw(p: p5) {
-    p.background(this.background);
+  private draw() {
+
+    // Clear screen
+    this.p5.background(this.background);
 
     // Scene update
     if (this.scene) {
       this.scene.update();
     }
 
-    // Layers update
-    this.pLayers.forEach((l) => l.update());
-
     // Attach sprites
     orderBy(this.sprites, 'zIndex')
         .filter((s) => !!s && !!s.graphics)
-        .forEach((s) => p.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height));
+        .forEach((s) => this.p5.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height));
 
   }
 

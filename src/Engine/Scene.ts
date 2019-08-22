@@ -1,12 +1,9 @@
-import { IScene } from './IScene';
-import { Screen } from './Screen';
 import { Layer } from './Layer';
+import { BaseObj } from './BaseObj';
 
-export class Scene implements IScene {
+export class Scene extends BaseObj {
 
   public layers: Layer[] = [];
-
-  public screen!: Screen;
 
   public addLayer(layer: Layer) {
     layer.scene = this;
@@ -14,12 +11,11 @@ export class Scene implements IScene {
     this.layers.push(layer);
   }
 
-  // tslint:disable-next-line: no-empty
-  public setup() { }
-
-  // tslint:disable-next-line: no-empty
-  public update() {
-    this.layers.forEach((l) => l.update());
-  }
+  /**
+   * Hooks
+   */
+  public beforeAttach(): Promise<void> | void { return; }
+  public beforeDetach(): Promise<void> | void { return; }
+  public update(): Promise<void> | void { return; }
 
 }

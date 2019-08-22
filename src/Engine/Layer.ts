@@ -11,7 +11,7 @@ import {Sprite} from './Sprite';
 
 export class Layer implements ILayer {
 
-  public sprites: ISprite[] = [];
+  public sprites: Sprite[] = [];
 
   public scene?: Scene;
 
@@ -33,7 +33,7 @@ export class Layer implements ILayer {
 
   }
 
-  public addSprite<T>(sprite: ISprite): T {
+  public addSprite<T>(sprite: Sprite): T {
     this.sprites.push(sprite);
     return (sprite as any) as T;
   }
@@ -52,7 +52,7 @@ export class Layer implements ILayer {
     return new Button(x, y, w, h);
   }
 
-  public setSpritePosition(sprite: ISprite, x: number, y: number) {
+  public setSpritePosition(sprite: Sprite, x: number, y: number) {
     sprite.x = x;
     sprite.y = y;
   }
