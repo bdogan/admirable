@@ -68,7 +68,7 @@ export class Layer implements ILayer {
 
     image.updatePixels();
 
-    const spr = Sprite.fromObject(0, this.screen.dimensions.height - image.height, image);
+    const spr = Sprite.fromObject(0, 0, image);
 
     return spr;
   }
