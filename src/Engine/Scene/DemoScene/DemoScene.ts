@@ -4,7 +4,7 @@ import { DemoTextLayer } from './Layer/DemoTextLayer';
 
 export class DemoScene extends Scene {
 
-  public setup() {
+  public onBeforeAttach() {
     for (let i = 0; i <= 100; i++) {
       this.addLayer(new DemoLayer());
     }

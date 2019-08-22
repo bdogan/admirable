@@ -3,7 +3,7 @@ import { Sprite } from '../../../Sprite';
 
 export class DemoLayer extends Layer {
 
-  public setup(): void {
+  public beforeAttach() {
     const im = this.createGraphics(20, 20);
     im.background(50);
     // tslint:disable-next-line: max-line-length
@@ -11,7 +11,7 @@ export class DemoLayer extends Layer {
     this.addSprite(sprt);
   }
 
-  public update(): void {
+  public update() {
     this.sprites[0].x = ((this.sprites[0].x + 1) % this.Engine.Screen.dimensions.width);
     this.sprites[0].y = ((this.sprites[0].y + 1) % this.Engine.Screen.dimensions.height);
   }

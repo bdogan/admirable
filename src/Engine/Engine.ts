@@ -73,14 +73,19 @@ export class Engine extends EventEmitter {
       return;
     }
     switch (type) {
-      case 'log': console.log(message);
-      case 'warn': console.warn(message);
-      case 'dir': console.dir(message);
-      case 'info': console.info(message);
-      case 'error': console.error(message);
+      case 'log': return console.log(message);
+      case 'warn': return console.warn(message);
+      case 'dir': return console.dir(message);
+      case 'info': return console.info(message);
+      case 'error': return console.error(message);
       default: this.Log('error', `Log type ${type} not found!`);
     }
   }
+
+  public Run() {
+    this.Screen.run();
+  }
+
 }
 
 /**

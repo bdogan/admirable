@@ -1,16 +1,13 @@
 import p5, { Graphics, Image, Font } from 'p5';
 import { MunroFontPath } from './Font';
 import { Sprite } from '../../Sprite';
-// import { ISprite } from '../../ISprite';
-// import { Screen } from '../../Screen';
-// import { Global } from '../../Global';
-// import p5 = require('p5');
-// import { EventEmitter } from 'events';
 
 let pFont: Font;
 
 export class Text extends Sprite {
+
     public graphics: Graphics;
+
     // Font
     private fontPath: string = MunroFontPath;
     private get font(): Font {
@@ -155,21 +152,27 @@ export class Text extends Sprite {
     }
 
     private refreshGraphics() {
-        // if (this.font) {
+        if (this.font) {
             // Clear the canvas to prevent over print.
             this.graphics.clear();
             this.graphics.background(this.background);
-            // this.graphics.textFont(this.font);
+            this.graphics.textFont(this.font);
             this.graphics.textLeading(this.leading);
             this.graphics.fill(this.color);
             this.graphics.textSize(this.size);
             this.graphics.textAlign(this.hAlign, this.vAlign);
             this.graphics.text(this.text, this.textX, this.textY);
-        // }
+        }
     }
 
     private loadFont() {
-      this.Engine.p5.loadFont(this.fontPath, (f) => this.font = f);
+      if (this.font) {
+        return;
+      }
+      this.Engine.p5.loadFont(this.fontPath, (f) => {
+        this.font = f;
+        this.refreshGraphics();
+      });
     }
 
 }

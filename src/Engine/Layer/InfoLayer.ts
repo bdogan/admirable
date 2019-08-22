@@ -6,21 +6,14 @@ export class InfoLayer extends Layer {
   private fpsCounterText!: Text;
 
   private get infoText(): string {
-    // return '';
     // tslint:disable-next-line: max-line-length
-    // return this.Engine.Router.ActiveRoute
-    return `${this.Engine.p5.frameRate().toFixed(0)} FPS /
-    ${this.Engine.Screen.layers.length} LAYERS /
-    ${this.Engine.Screen.sprites.length} SPRITES
-    `;
-    // tslint:disable-next-line: max-line-length
-    // return `${this.Engine.p5.frameRate().toFixed(0)} FPS / ${this.Engine.Screen.layers.length} LAYERS / ${this.Engine.Screen.sprites.length} SPRITES / ActiveScene: ${this.Engine.Screen.getScene() ? this.Engine.Screen.getScene().constructor.name : 'null'}`;
+    return `${this.Engine.p5.frameRate().toFixed(0)} FPS / ${this.Engine.Screen.layers.length} LAYERS / ${this.Engine.Screen.sprites.length} SPRITES / ActiveRoute: ${(this.Engine.Router.ActiveRoute || { route: 'Empty' }).route}`;
   }
 
   /**
    * @inheritDoc
    */
-  public setup(): void {
+  public beforeAttach() {
     // FPS Counter
     this.fpsCounterText = this.createText(this.infoText, 24, this.Engine.Screen.dimensions.width, 40);
     this.fpsCounterText.vAlign = 'center';
@@ -35,7 +28,7 @@ export class InfoLayer extends Layer {
   /**
    * @inheritDoc
    */
-  public update(): void {
+  public update() {
     this.fpsCounterText.text = this.infoText;
   }
 

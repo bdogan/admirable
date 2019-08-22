@@ -1,7 +1,5 @@
 import { Layer } from '../../../../Engine/Layer';
-import { ISprite } from '../../../../Engine/ISprite';
 import { Graphics } from 'p5';
-import { transcode } from 'buffer';
 import { Sprite } from '../../../../Engine/Sprite';
 
 export class GridLayer extends Layer {

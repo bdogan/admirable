@@ -1,10 +1,4 @@
 import { Graphics } from 'p5';
-import { Screen } from '../Screen';
-import { ISprite } from '../ISprite';
-// import { Global } from '../Global';
-import p5 = require('p5');
-import { EventEmitter } from 'events';
-// import { BaseObj } from '../BaseObj';
 import { Sprite } from '../Sprite';
 
 export class Button extends Sprite {
@@ -34,17 +28,6 @@ export class Button extends Sprite {
     this.pOverBackground = b;
   }
 
-  // public onClick: (e?: any) => void;
-  // public onHover: (e?: any) => void;
-  // public onMouseDown: (e?: any) => void;
-  // public onMouseUp: (e?: any) => void;
-
-  // private screen: Screen;
-
-  // private get p(): p5 {
-  //   return this.screen.p;
-  // }
-
   public constructor(x: number, y: number, w: number, h: number) {
     super();
 
@@ -57,11 +40,6 @@ export class Button extends Sprite {
 
     this.graphics = this.Engine.p5.createGraphics(this.width, this.height);
     this.graphics.remove();
-
-    // this.onClick = (e) => false;
-    // this.onHover = (e) => false;
-    // this.onMouseDown = (e) => false;
-    // this.onMouseUp = (e) => false;
 
     // Background
     this.graphics.background(this.background);

@@ -1,27 +1,20 @@
 import { BaseObj } from './BaseObj';
-import p5, { Graphics } from 'p5';
-import { Scene } from './Scene';
-import { Screen } from './Screen';
+import { Graphics } from 'p5';
 import {Sprite} from './Sprite';
 import { Text } from './Sprites/Text';
 import { Button } from './Buttons/Button';
-
 
 export class Layer extends BaseObj {
 
   public sprites: Sprite[] = [];
 
-  public scene?: Scene;
-
-  // tslint:disable-next-line: no-empty
-  public setup(): void {
-
-  }
-
-  // tslint:disable-next-line: no-empty
-  public update(): void {
-
-  }
+  /**
+   * Hooks
+   */
+  public setup() { return; }
+  public beforeAttach(): Promise<any> | any { return; }
+  public beforeDetach(): Promise<any> | any { return; }
+  public update(): Promise<any> | any { return; }
 
   public addSprite<T>(sprite: Sprite): T {
     this.sprites.push(sprite);
