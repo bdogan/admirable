@@ -9,7 +9,7 @@ import { menu, demoS } from '../../../../main';
 import { Button as Butt } from '../../../../Engine/Sprites/Button/Button';
 
 import { Sprite} from '../../../../Engine/Sprite';
-import { Test, AdmiralLogo } from '../Images';
+import { AdmiralLogo } from '../Images';
 
 export class LayoutLayer extends Layer {
 
