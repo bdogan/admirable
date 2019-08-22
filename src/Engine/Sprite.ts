@@ -7,7 +7,7 @@ import p5 = require('p5');
 
 export class Sprite extends EventEmitter implements ISprite {
 
-  public static fromObject(x: number, y: number, graphics: Graphics): Sprite {
+  public static fromObject(x: number, y: number, graphics: Graphics | Image): Sprite {
     const sprite = new Sprite();
     sprite.x = x;
     sprite.y = y;
@@ -25,7 +25,7 @@ export class Sprite extends EventEmitter implements ISprite {
     return this.screen.p;
   }
 
-  constructor() {
+   constructor() {
     super();
     this.screen = Global.Screen as Screen;
   }

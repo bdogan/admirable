@@ -7,6 +7,15 @@ module.exports = {
   devServer: {
       open: true
   },
+  node: {
+    __filename: true
+  },
+  resolveLoader: {
+    modules: [
+      'node_modules',
+      path.resolve(__dirname, 'loaders')
+    ]
+  },
   module: {
     rules: [
       {
@@ -15,13 +24,21 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.(png|jpe?g|gif|ttf)$/i,
+        test: /\.(jpe?g|gif|ttf)$/i,
         use: [
           {
             loader: 'file-loader',
           },
         ],
       },
+      {
+        test: /\.png$/,
+        use: [
+          {
+            loader: 'p5-image-loader',
+          }
+        ]
+      }
     ]
   },
   resolve: {

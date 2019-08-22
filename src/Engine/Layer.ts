@@ -7,6 +7,7 @@ import { Text } from './Sprites/Text';
 import p5 = require('p5');
 import { Global } from './Global';
 import { Button } from './Buttons/Button';
+import {Sprite} from './Sprite';
 
 export class Layer implements ILayer {
 
@@ -54,6 +55,22 @@ export class Layer implements ILayer {
   public setSpritePosition(sprite: ISprite, x: number, y: number) {
     sprite.x = x;
     sprite.y = y;
+  }
+
+  public imageToSprite(source: any) {
+    const image = this.p.createImage(source.default.info.width, source.default.info.height);
+
+    image.loadPixels();
+
+    for (let i = 0; i < source.default.pixels.data.length; i++) {
+      image.pixels[i] = source.default.pixels.data[i];
+    }
+
+    image.updatePixels();
+
+    const spr = Sprite.fromObject(0, this.screen.dimensions.height - image.height, image);
+
+    return spr;
   }
 
 }

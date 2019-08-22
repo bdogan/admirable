@@ -8,6 +8,9 @@ import { menu, demoS } from '../../../../main';
 
 import { Button as Butt } from '../../../../Engine/Sprites/Button/Button';
 
+import { Sprite} from '../../../../Engine/Sprite';
+import { Test, AdmiralLogo } from '../Images';
+
 export class LayoutLayer extends Layer {
 
   private button: Button;
@@ -44,6 +47,10 @@ export class LayoutLayer extends Layer {
     this.logo.x = (this.screen.dimensions.width / 2) - (this.logo.width / 2);
     this.logo.y = -1 * (this.logo.height);
     this.addSprite(this.logo);
+
+    const admiralLogo = this.imageToSprite(AdmiralLogo);
+
+    this.addSprite(admiralLogo);
   }
 
   public setup(): void {
