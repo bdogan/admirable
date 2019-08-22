@@ -15,7 +15,7 @@ export class InfoLayer extends Layer {
    */
   public beforeAttach() {
     // FPS Counter
-    this.fpsCounterText = this.createText(this.infoText, 24, this.Engine.Screen.dimensions.width, 40);
+    this.fpsCounterText = new Text(this.infoText, 24, this.Engine.Screen.dimensions.width, 40);
     this.fpsCounterText.vAlign = 'center';
     this.fpsCounterText.hAlign = 'center';
     this.fpsCounterText.x = this.Engine.Screen.dimensions.width - this.fpsCounterText.width;

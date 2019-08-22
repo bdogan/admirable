@@ -2,8 +2,14 @@ import { BaseObj } from './BaseObj';
 import { Scene } from './Scene';
 
 export interface IRoute {
-  scene: Scene;
+  scene: typeof Scene;
   route: string;
+}
+
+export interface IActiveRoute {
+  route: string;
+  scene: Scene;
+  params?: any[];
 }
 
 /**
@@ -19,11 +25,11 @@ export class Router extends BaseObj {
   /**
    * Active scene
    */
-  private pActiveRoute?: IRoute;
-  public get ActiveRoute(): IRoute | undefined {
+  private pActiveRoute?: IActiveRoute;
+  public get ActiveRoute(): IActiveRoute | undefined {
     return this.pActiveRoute;
   }
-  public set ActiveRoute(route: IRoute | undefined) {
+  public set ActiveRoute(route: IActiveRoute | undefined) {
     this.emit('change', route, this.pActiveRoute);
     this.pActiveRoute = route;
   }
@@ -33,32 +39,54 @@ export class Router extends BaseObj {
    * @param routeConfig IRoute[]
    */
   constructor(routeConfig: IRoute[]) {
+
+    // Call parent constructor
     super();
+
     // Route config
     this.routeConfig = routeConfig;
+
   }
 
   /**
    * On Change Router
    * @param fxn Onchange
    */
-  public onChange(fxn: ((activeRoute: IRoute, oldRoute: IRoute) => void)) {
+  public onChange(fxn: ((activeRoute: IActiveRoute, oldRoute: IActiveRoute) => void)) {
     this.on('change', (r, o) => fxn(r, o));
   }
 
-  public navigate(route: string, ...args: any[]) {
+  /**
+   * Navigate Route
+   * @param route string
+   * @param args arguments
+   */
+  public navigate(route: string, ...args: any[]): Promise<IActiveRoute> {
+
     // Get route config
     const routeConfig = this.routeConfig.find((r) => r.route === route);
 
     // Check route
     if (!routeConfig) {
-      return this.Engine.Log('error', new Error(`Not Found suitable route for ${route}!`));
+      const err = new Error(`Not Found suitable route for ${route}!`);
+      this.Engine.Log('error', err);
+      return Promise.reject(err);
     }
 
-    // Set active route
-    routeConfig.scene.params = args;
-    this.ActiveRoute = routeConfig;
+    // Detach old scene
+    if (!!this.ActiveRoute) {
+      this.ActiveRoute.scene.detach().then(() => this.Engine.Log('info', `Route ${this.ActiveRoute!.route} detached!`));
+    }
 
+    // Create scene
+    const newScene = new routeConfig.scene(args);
+    newScene.setup();
+    return newScene.attach()
+      .then(() => {
+        const activeRoute = { route: routeConfig.route, scene: newScene };
+        this.Engine.Log('info', `Route ${activeRoute.route} attached!`);
+        return this.ActiveRoute = activeRoute;
+      });
   }
 
 }

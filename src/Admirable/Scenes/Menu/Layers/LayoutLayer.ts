@@ -14,14 +14,14 @@ import {AdmirableLogo, AdmirableLogoType} from '../Images';
 export class LayoutLayer extends Layer {
 
   private button: Button;
-  private logo: Sprite;
+  private logo!: Sprite;
   private easeing: number = 0.05;
-  private admirableLogo: Sprite;
+  private admirableLogo!: Sprite;
 
   constructor() {
     super();
 
-    this.admirableLogo = this.imageToSprite(AdmirableLogo);
+    Sprite.fromFile(AdmirableLogo).then((l) => this.admirableLogo = l);
 
     this.admirableLogo.x = 0;
 
@@ -37,7 +37,7 @@ export class LayoutLayer extends Layer {
     //   // console.log(but.background);
     // });
 
-    this.button = this.createButton(0, 0, 256, 64);
+    this.button = new Button(0, 0, 256, 64);
 
     this.button.background = 'red';
 
@@ -59,10 +59,13 @@ export class LayoutLayer extends Layer {
     this.addSprite(this.logo);
      */
 
-    this.logo = this.imageToSprite(AdmirableLogoType);
-    this.logo.x = (this.Engine.Screen.dimensions.width / 2) - (this.logo.graphics.width / 2);
-    this.logo.y = -1 * (this.logo.graphics.height);
-    this.addSprite(this.logo);
+    Sprite.fromFile(AdmirableLogoType)
+      .then((l) => {
+        this.logo = l;
+        this.logo.x = (this.Engine.Screen.dimensions.width / 2) - (this.logo.graphics.width / 2);
+        this.logo.y = -1 * (this.logo.graphics.height);
+        this.addSprite(this.logo);
+      });
   }
 
   public setup(): void {

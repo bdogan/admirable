@@ -3,11 +3,11 @@ import { Sprite } from '../../../Sprite';
 
 export class DemoLayer extends Layer {
 
-  public beforeAttach() {
-    const im = this.createGraphics(20, 20);
+  public setup() {
+    const im = this.Engine.p5.createGraphics(20, 20);
     im.background(50);
     // tslint:disable-next-line: max-line-length
-    const sprt = Sprite.fromObject(Math.floor(Math.random() * this.Engine.Screen.dimensions.width), Math.floor(Math.random() * this.Engine.Screen.dimensions.height), im);
+    const sprt = Sprite.New(Math.floor(Math.random() * this.Engine.Screen.dimensions.width), Math.floor(Math.random() * this.Engine.Screen.dimensions.height), im);
     this.addSprite(sprt);
   }
 

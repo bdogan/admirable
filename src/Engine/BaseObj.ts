@@ -9,6 +9,6 @@ export class BaseObj extends EventEmitter {
   /**
    * Root Engine
    */
-  protected Engine: Engine = AppEngine;
+  public Engine: Engine = AppEngine;
 
 }

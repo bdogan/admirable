@@ -33,9 +33,10 @@ export class GridLayer extends Layer {
     this.gridOptions.shiftY = shiftY;
 
     // Create grid sprite
-    this.gridGraphics = this.createGraphics(this.Engine.Screen.dimensions.width, this.Engine.Screen.dimensions.height);
+    this.gridGraphics = this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width,
+      this.Engine.Screen.dimensions.height);
 
-    this.gridSprite =  Sprite.fromObject(0, 0, this.gridGraphics);
+    this.gridSprite =  Sprite.New(0, 0, this.gridGraphics);
     // Add sprite to registry
     this.addSprite(this.gridSprite);
   }

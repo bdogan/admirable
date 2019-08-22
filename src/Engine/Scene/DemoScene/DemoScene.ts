@@ -4,11 +4,11 @@ import { DemoTextLayer } from './Layer/DemoTextLayer';
 
 export class DemoScene extends Scene {
 
-  public onBeforeAttach() {
+  public beforeAttach() {
     for (let i = 0; i <= 100; i++) {
-      this.addLayer(new DemoLayer());
+      this.addLayer(DemoLayer);
     }
-    this.addLayer(new DemoTextLayer());
+    this.addLayer(DemoTextLayer);
   }
 
 }

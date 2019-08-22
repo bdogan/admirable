@@ -1,12 +1,80 @@
 import { BaseObj } from './BaseObj';
-import { Graphics } from 'p5';
 import {Sprite} from './Sprite';
-import { Text } from './Sprites/Text';
-import { Button } from './Buttons/Button';
 
+// Promise resolved
+const r = Promise.resolve();
+
+/**
+ * Layer
+ */
 export class Layer extends BaseObj {
 
-  public sprites: Sprite[] = [];
+  /**
+   * Layer Sprites
+   */
+  private pSprites: Sprite[] = [];
+  public get sprites(): Sprite[] {
+    return this.pSprites;
+  }
+
+  /**
+   * Adds a new sprite
+   * @param sprite Sprite
+   */
+  public addSprite(sprite: Sprite): Promise<Sprite> {
+    sprite.setup();
+    return sprite.attach()
+      .then(() => this.pSprites.push(sprite))
+      .then(() => sprite);
+  }
+
+  /**
+   * Remove a sprite
+   * @param sprite Sprite
+   */
+  public removeSprite(sprite: Sprite): Promise<any> {
+    const index = this.pSprites.indexOf(sprite);
+    if (index === -1) {
+      return Promise.resolve(sprite);
+    }
+    return sprite.detach()
+      .then(() => this.pSprites.splice(index, 1))
+      .then(() => sprite.destroy());
+  }
+
+  /**
+   * Destroy
+   */
+  public destroy() {
+    delete(this.pSprites);
+  }
+
+  /**
+   * Detach
+   */
+  public detach(): Promise<any> {
+    return Promise.all(this.pSprites.map((s) => this.removeSprite(s)))
+      .then(() => (this.beforeDetach() || r))
+      .then(() => this.destroy());
+  }
+
+  /**
+   * Attach
+   */
+  public attach(): Promise<Layer> {
+    return Promise.all(this.pSprites.map((s) => s.attach()))
+      .then(() => (this.beforeAttach() || r))
+      .then(() => this);
+  }
+
+  /**
+   * Update
+   */
+  public doUpdate(): Promise<Layer> {
+    return Promise.all(this.pSprites.map((s) => s.doUpdate()))
+      .then(() => (this.update() || r))
+      .then(() => this);
+  }
 
   /**
    * Hooks
@@ -15,45 +83,5 @@ export class Layer extends BaseObj {
   public beforeAttach(): Promise<any> | any { return; }
   public beforeDetach(): Promise<any> | any { return; }
   public update(): Promise<any> | any { return; }
-
-  public addSprite<T>(sprite: Sprite): T {
-    this.sprites.push(sprite);
-    return (sprite as any) as T;
-  }
-
-  public createGraphics(w: number, h: number): Graphics {
-    const graphic = this.Engine.p5.createGraphics(w, h);
-    graphic.remove();
-    return graphic;
-  }
-
-  public createText(text: string, size: number, width: number, height?: number): Text {
-    return new Text(text, size, width, height);
-  }
-
-  public createButton(x: number, y: number, w: number, h: number) {
-    return new Button(x, y, w, h);
-  }
-
-  public setSpritePosition(sprite: Sprite, x: number, y: number) {
-    sprite.x = x;
-    sprite.y = y;
-  }
-
-  public imageToSprite(source: any) {
-    const image = this.Engine.p5.createImage(source.default.info.width, source.default.info.height);
-
-    image.loadPixels();
-
-    for (let i = 0; i < source.default.pixels.data.length; i++) {
-      image.pixels[i] = source.default.pixels.data[i];
-    }
-
-    image.updatePixels();
-
-    const spr = Sprite.fromObject(0, 0, image);
-
-    return spr;
-  }
 
 }

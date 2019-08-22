@@ -6,8 +6,12 @@ import { flatten, orderBy } from 'lodash';
 import { BaseObj } from './BaseObj';
 import { Sprite } from './Sprite';
 
-const activeEvents = [ 'mouseClicked', 'mousePressed', 'mouseReleased' ];
+// Promise resolver
+const r = Promise.resolve();
 
+/**
+ * Screen
+ */
 export class Screen extends BaseObj {
 
   /**
@@ -33,7 +37,10 @@ export class Screen extends BaseObj {
   /**
    * ActiveScene
    */
-  private scene?: Scene;
+  private get scene(): Scene | undefined {
+    return this.Engine && this.Engine.Router
+      && this.Engine.Router.ActiveRoute ? this.Engine.Router.ActiveRoute.scene : undefined;
+  }
 
   /**
    * Layers
@@ -62,8 +69,10 @@ export class Screen extends BaseObj {
   /**
    * Add layer
    */
-  public addLayer(layer: Layer): Promise<Layer> {
-    return (layer.beforeAttach() || Promise.resolve())
+  public addLayer(layerType: typeof Layer): Promise<Layer> {
+    const layer = new layerType();
+    layer.setup();
+    return layer.attach()
       .then(() => this.pLayers.push(layer))
       .then(() => layer);
   }
@@ -90,35 +99,6 @@ export class Screen extends BaseObj {
    */
   public run() {
 
-    // Listen active scene old -> new
-    this.Engine.Router.onChange((activeRoute, oldRoute) => {
-
-      // Variables
-      let detachOldScene: Promise<void> | void;
-      let attachNewScene: Promise<void> | void;
-
-      // Check old scene
-      if (!!this.Engine.Router.ActiveRoute) {
-        detachOldScene = oldRoute.scene.beforeDetach();
-      }
-
-      // Attach new scene
-      attachNewScene = activeRoute.scene.beforeAttach();
-
-      // Start change process
-      Promise.all([
-        (detachOldScene && detachOldScene instanceof Promise ? detachOldScene : Promise.resolve(detachOldScene)),
-        // tslint:disable-next-line: max-line-length
-        (attachNewScene && attachNewScene instanceof Promise ? attachNewScene : Promise.resolve(attachNewScene)).then(() => {
-          this.scene = activeRoute.scene;
-          // tslint:disable-next-line: max-line-length
-          this.Engine.Log('info', `Route switch ${(oldRoute || {}).route} -> ${(activeRoute || {}).route}`);
-          return Promise.resolve();
-        }),
-      ])
-        .then(() => this.Engine.Log('info', `Route ${(oldRoute || {}).route} detached!`));
-    });
-
     // Create p5 Instance
     this.p5 = new p5((sketch) => {
       sketch.setup = () => this.setup();
@@ -127,7 +107,7 @@ export class Screen extends BaseObj {
 
     // Add info layer
     if (this.Engine.Options.Debug) {
-      this.addLayer(new InfoLayer());
+      this.addLayer(InfoLayer);
     }
 
   }
@@ -183,17 +163,11 @@ export class Screen extends BaseObj {
     // Clear screen
     this.p5.background(this.background);
 
-    // Scene update
-    const sceneUpdate = this.scene ? this.scene.update() : undefined;
-
-    // Static layers update
-    const staticLayersUpdate = Promise.all(this.pLayers.map((l) => l.update() || Promise.resolve()));
-
     // Update scenes
     this.p5.noLoop();
     Promise.all([
-      (sceneUpdate instanceof Promise ? sceneUpdate : Promise.resolve(sceneUpdate)),
-      staticLayersUpdate,
+      (this.scene ? this.scene.doUpdate() : r),
+      Promise.all((this.pLayers.map((l) => l.doUpdate()))),
     ])
       .then(() => {
         // Attach sprites
