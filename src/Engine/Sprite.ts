@@ -1,11 +1,12 @@
 import { ISprite } from './ISprite';
 import { Graphics, Image } from 'p5';
 import { EventEmitter } from 'events';
-import { Global } from './Global';
+// import { Global } from './Global';
 import { Screen } from '../Engine/Screen';
 import p5 = require('p5');
+import { BaseObj } from './BaseObj';
 
-export class Sprite extends EventEmitter implements ISprite {
+export class Sprite extends BaseObj {
 
   public static fromObject(x: number, y: number, graphics: Graphics | Image): Sprite {
     const sprite = new Sprite();
@@ -20,14 +21,14 @@ export class Sprite extends EventEmitter implements ISprite {
   public graphics!: Graphics | Image;
   public zIndex?: number;
 
-  private screen: Screen;
-  public get p(): p5 {
-    return this.screen.p;
-  }
+  // private screen: Screen;
+  // public get p(): p5 {
+  //   return this.screen.p;
+  // }
 
    constructor() {
     super();
-    this.screen = Global.Screen as Screen;
+    // this.screen = Global.Screen as Screen;
   }
 
 }

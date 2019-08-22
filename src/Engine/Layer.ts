@@ -1,27 +1,17 @@
-import { ILayer } from './ILayer';
-import { Graphics } from 'p5';
+import { BaseObj } from './BaseObj';
+import p5, { Graphics } from 'p5';
 import { Scene } from './Scene';
 import { Screen } from './Screen';
-import { ISprite } from './ISprite';
-import { Text } from './Sprites/Text';
-import p5 = require('p5');
-import { Global } from './Global';
-import { Button } from './Buttons/Button';
 import {Sprite} from './Sprite';
+import { Text } from './Sprites/Text';
+import { Button } from './Buttons/Button';
 
-export class Layer implements ILayer {
+
+export class Layer extends BaseObj {
 
   public sprites: Sprite[] = [];
 
   public scene?: Scene;
-
-  public get screen(): Screen {
-    return (Global.Screen as Screen);
-  }
-
-  public get p(): p5 {
-    return this.screen.p;
-  }
 
   // tslint:disable-next-line: no-empty
   public setup(): void {
@@ -39,7 +29,7 @@ export class Layer implements ILayer {
   }
 
   public createGraphics(w: number, h: number): Graphics {
-    const graphic = this.screen.p.createGraphics(w, h);
+    const graphic = this.Engine.p5.createGraphics(w, h);
     graphic.remove();
     return graphic;
   }
@@ -58,7 +48,7 @@ export class Layer implements ILayer {
   }
 
   public imageToSprite(source: any) {
-    const image = this.p.createImage(source.default.info.width, source.default.info.height);
+    const image = this.Engine.p5.createImage(source.default.info.width, source.default.info.height);
 
     image.loadPixels();
 

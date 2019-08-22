@@ -17,7 +17,7 @@ export class GridLayer extends Layer {
 
   private angle: number = 0;
 
-  private gridSprite: ISprite;
+  private gridSprite: Sprite;
   private gridGraphics: Graphics;
   private gridOptions: any = {
     animate: true,
@@ -35,7 +35,7 @@ export class GridLayer extends Layer {
     this.gridOptions.shiftY = shiftY;
 
     // Create grid sprite
-    this.gridGraphics = this.createGraphics(this.screen.dimensions.width, this.screen.dimensions.height);
+    this.gridGraphics = this.createGraphics(this.Engine.Screen.dimensions.width, this.Engine.Screen.dimensions.height);
 
     this.gridSprite =  Sprite.fromObject(0, 0, this.gridGraphics);
     // Add sprite to registry
@@ -48,7 +48,7 @@ export class GridLayer extends Layer {
 
     this.perspectiveGrid(this.angle);
     // can't use this.gridGraphics.deltaTime here.
-    this.angle = this.angle + (this.p.deltaTime / 100000);
+    this.angle = this.angle + (this.Engine.p5.deltaTime / 100000);
   }
 
   /**
@@ -56,7 +56,7 @@ export class GridLayer extends Layer {
    * @param angle angle at a specific time.
    */
   private perspectiveGrid(angle: number) {
-    const width = this.screen.dimensions.width;
+    const width = this.Engine.Screen.dimensions.width;
     const da = this.gridGraphics.TWO_PI / width;
 
     for (let i = 0; i < width / 4; i++) {

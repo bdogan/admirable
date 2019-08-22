@@ -6,7 +6,7 @@ export class DemoTextLayer extends Layer {
 
   public setup(): void {
     const text = this.createText('Awesome Graphics Engine\nBased on p5.js', 30,
-    this.screen.dimensions.width, this.screen.dimensions.height);
+    this.Engine.Screen.dimensions.width, this.Engine.Screen.dimensions.height);
     text.background = 'rgba(0,0,0,.2)';
     this.addSprite(text);
   }

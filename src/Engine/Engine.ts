@@ -8,15 +8,15 @@ export interface IEngineOptions {
 }
 
 export interface IEngineElements {
-  Screen: Screen;
-  Router: Router;
   Options: IEngineOptions;
+  Router: Router;
+  Screen: Screen;
 }
 
 /**
  * Engine
  */
-export class Engine extends EventEmitter{
+export class Engine extends EventEmitter {
 
   /**
    * Screen
@@ -63,6 +63,7 @@ export class Engine extends EventEmitter{
    * @param elements IEngineElements
    */
   public Init(elements: IEngineElements): void {
+    // console.log(elements);
     this.elements = elements;
     this.emit('init.engine', this);
   }
@@ -77,7 +78,7 @@ export class Engine extends EventEmitter{
       case 'dir': console.dir(message);
       case 'info': console.info(message);
       case 'error': console.error(message);
-      default: this.log('error', `Log type ${type} not found!`);
+      default: this.Log('error', `Log type ${type} not found!`);
     }
   }
 }

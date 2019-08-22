@@ -1,14 +1,17 @@
-import { AppEngine } from './Engine/Engine';
+import { AppEngine, IEngineOptions } from './Engine/Engine';
 import { Router } from './Engine/Router';
 import { Screen } from './Engine/Screen';
 
 /**
  * App Engine Init
  */
+
+const options: IEngineOptions = {
+  Debug: true,
+};
+
 AppEngine.Init({
-  Options: {
-    Debug: true,
-  },
+  Options: options,
   Router: new Router(),
   Screen: new Screen(800, 600),
 });

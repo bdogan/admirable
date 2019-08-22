@@ -7,13 +7,13 @@ export class DemoLayer extends Layer {
     const im = this.createGraphics(20, 20);
     im.background(50);
     // tslint:disable-next-line: max-line-length
-    const sprt = Sprite.fromObject(Math.floor(Math.random() * this.screen.dimensions.width), Math.floor(Math.random() * this.screen.dimensions.height), im);
+    const sprt = Sprite.fromObject(Math.floor(Math.random() * this.Engine.Screen.dimensions.width), Math.floor(Math.random() * this.Engine.Screen.dimensions.height), im);
     this.addSprite(sprt);
   }
 
   public update(): void {
-    this.sprites[0].x = ((this.sprites[0].x + 1) % this.screen.dimensions.width);
-    this.sprites[0].y = ((this.sprites[0].y + 1) % this.screen.dimensions.height);
+    this.sprites[0].x = ((this.sprites[0].x + 1) % this.Engine.Screen.dimensions.width);
+    this.sprites[0].y = ((this.sprites[0].y + 1) % this.Engine.Screen.dimensions.height);
   }
 
 }

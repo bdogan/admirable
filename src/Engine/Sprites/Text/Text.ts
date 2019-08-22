@@ -1,11 +1,11 @@
+import p5, { Graphics, Image, Font } from 'p5';
 import { MunroFontPath } from './Font';
-import { ISprite } from '../../ISprite';
-import { Graphics, Image, Font } from 'p5';
-import { Screen } from '../../Screen';
-import { Global } from '../../Global';
-import p5 = require('p5');
-import { EventEmitter } from 'events';
 import { Sprite } from '../../Sprite';
+// import { ISprite } from '../../ISprite';
+// import { Screen } from '../../Screen';
+// import { Global } from '../../Global';
+// import p5 = require('p5');
+// import { EventEmitter } from 'events';
 
 let pFont: Font;
 
@@ -114,17 +114,17 @@ export class Text extends Sprite {
     // Text position
     private get textX(): number {
         switch (this.hAlign) {
-            case this.p.RIGHT: return this.width;
-            case this.p.CENTER: return this.width / 2;
-            case this.p.LEFT:
+            case this.Engine.p5.RIGHT: return this.width;
+            case this.Engine.p5.CENTER: return this.width / 2;
+            case this.Engine.p5.LEFT:
             default: return 0;
         }
     }
     private get textY(): number {
         switch (this.vAlign) {
-            case this.p.BOTTOM: return this.height;
-            case this.p.CENTER: return this.height / 2;
-            case this.p.TOP:
+            case this.Engine.p5.BOTTOM: return this.height;
+            case this.Engine.p5.CENTER: return this.height / 2;
+            case this.Engine.p5.TOP:
             default: return 0;
         }
     }
@@ -139,12 +139,12 @@ export class Text extends Sprite {
         this.pHeight = height || size;
         this.pColor = 'rgb(0, 0, 0)';
         this.pBackground = 'rgba(255, 255, 255, 0)';
-        this.pHAlign = this.p.CENTER;
-        this.pVAlign = this.p.CENTER;
+        this.pHAlign = this.Engine.p5.CENTER;
+        this.pVAlign = this.Engine.p5.CENTER;
         this.pLeading = this.size;
 
         // Create graphics
-        this.graphics = this.p.createGraphics(this.width, this.height);
+        this.graphics = this.Engine.p5.createGraphics(this.width, this.height);
         this.graphics.remove();
 
         // Load font
@@ -169,7 +169,7 @@ export class Text extends Sprite {
     }
 
     private loadFont() {
-      this.p.loadFont(this.fontPath, (f) => this.font = f);
+      this.Engine.p5.loadFont(this.fontPath, (f) => this.font = f);
     }
 
 }

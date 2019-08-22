@@ -62,10 +62,10 @@ export class Screen extends BaseObj {
     this.background = background;
 
     // Listen p5 init state
-    this.on('init.p5', (p) => this.onInitP5());
+    this.on('init.p5', (sketch) => this.onInitP5(sketch));
 
     // Create p5 Instance
-    this.p5 = new p5((p: p5) => this.emit('init.p5', p));
+    this.p5 = new p5((sketch) => this.emit('init.p5', sketch));
   }
 
   /**
@@ -88,77 +88,123 @@ export class Screen extends BaseObj {
   /**
    * On init p5
    */
-  private onInitP5() {
+  private onInitP5(sketch: p5) {
 
+    this.on('ready.canvas', this.onCanvasReady);
+
+    // createCanvas only works in p5 instances setup function.
+    sketch.setup = () => {
+      this.RootCanvas = sketch.createCanvas(this.width, this.height);
+      sketch.background(this.background);
+      // console.log(this);
+
+      this.emit('ready.canvas', this.RootCanvas);
+    };
     // Create root canvas
-    this.RootCanvas = this.p5.createCanvas(this.width, this.height);
-
+    // this.p5 = sketch;
+    // console.log(this.p5);
+    // this.RootCanvas = this.p5.createCanvas(0, 0);
+    // console.log(this.RootCanvas);
     // Set canvas properties
-    this.p5.background(this.background);
-    this.p5.frameRate(this.frameRate);
-
+    // this.p5.background(this.background);
+    // this.p5.frameRate(this.frameRate);
     // Info
-    this.Engine.Log('info', `Screen canvas generated at ${this.width} x ${this.height} dimensions.`);
+    // this.Engine.Log('info', `Screen canvas generated at ${this.width} x ${this.height} dimensions.`);
 
     // Emit event
-    this.emit('ready.canvas', this.RootCanvas);
+    // this.emit('ready.canvas', this.RootCanvas);
 
-    // Mouse clicked event
-    this.RootCanvas.mouseClicked((event) => {
-      this.sprites
-        .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
-        .forEach((s) => s.emit('click', event));
-    });
+    // // Mouse clicked event
+    // this.RootCanvas.mouseClicked((event) => {
+    //   this.sprites
+    //     .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
+    //     .forEach((s) => s.emit('click', event));
+    // });
+
+    // // Mouse pressed
+    // this.RootCanvas.mousePressed((event) => {
+    //   this.sprites
+    //     .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
+    //     .forEach((s) => s.emit('mousedown', event));
+    // });
+
+    // // Mouse released
+    // this.RootCanvas.mouseReleased((event) => {
+    //   this.sprites
+    //     .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
+    //     .forEach((s) => s.emit('mouseup', event));
+    // });
+
+    // // Mouse over
+    // this.RootCanvas.mouseMoved((event) => {
+    //   this.sprites
+    //     .filter((s) => this.isAttachedSprite(s))
+    //     .forEach((s) => s.emit(this.isOverSprite(s) ? 'mouseover' : 'mouseout', event));
+    // });
+
+    // // Listen active scene old -> new
+    // this.Engine.Router.onChange((activeRoute, oldRoute) => {
+
+    //   // Variables
+    //   let detachOldScene: Promise<void> | void;
+    //   let attachNewScene: Promise<void> | void;
+
+    //   // Check old scene
+    //   if (!!this.Engine.Router.ActiveRoute) {
+    //     detachOldScene = oldRoute.scene.beforeDetach();
+    //   }
+
+    //   // Attach new scene
+    //   attachNewScene = activeRoute.scene.beforeAttach();
+
+    //   // Start change process
+    //   Promise.all([
+    //     (detachOldScene && detachOldScene instanceof Promise ? detachOldScene : Promise.resolve(detachOldScene)),
+    //     // tslint:disable-next-line: max-line-length
+    //     (attachNewScene && attachNewScene instanceof Promise ? attachNewScene : Promise.resolve(attachNewScene)).then(() => {
+    //       this.scene = activeRoute.scene;
+    //       // tslint:disable-next-line: max-line-length
+    //       this.Engine.Log('info', `Route switch ${(oldRoute || {}).route} -> ${(activeRoute || {}).route}`);
+    //       return Promise.resolve();
+    //     }),
+    //   ])
+    //     .then(() => this.Engine.Log('info', `Route ${(oldRoute || {}).route} detached!`));
+    // });
+
+  }
+
+  private onCanvasReady() {
+      // console.log(rc);
+      console.log(this.Engine.Screen.p5);
+      console.log(this);
+
+      // Mouse clicked event
+      this.RootCanvas.mouseClicked((event) => {
+        this.sprites
+          .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
+          .forEach((s) => s.emit('click', event));
+      });
 
     // Mouse pressed
-    this.RootCanvas.mousePressed((event) => {
-      this.sprites
-        .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
-        .forEach((s) => s.emit('mousedown', event));
-    });
+      this.RootCanvas.mousePressed((event) => {
+        this.sprites
+          .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
+          .forEach((s) => s.emit('mousedown', event));
+      });
 
     // Mouse released
-    this.RootCanvas.mouseReleased((event) => {
-      this.sprites
-        .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
-        .forEach((s) => s.emit('mouseup', event));
-    });
+      this.RootCanvas.mouseReleased((event) => {
+        this.sprites
+          .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
+          .forEach((s) => s.emit('mouseup', event));
+      });
 
     // Mouse over
-    this.RootCanvas.mouseMoved((event) => {
-      this.sprites
-        .filter((s) => this.isAttachedSprite(s))
-        .forEach((s) => s.emit(this.isOverSprite(s) ? 'mouseover' : 'mouseout', event));
-    });
-
-    // Listen active scene old -> new
-    this.Engine.Router.onChange((activeRoute, oldRoute) => {
-
-      // Variables
-      let detachOldScene: Promise<void> | void;
-      let attachNewScene: Promise<void> | void;
-
-      // Check old scene
-      if (!!this.Engine.Router.ActiveRoute) {
-        detachOldScene = oldRoute.scene.beforeDetach();
-      }
-
-      // Attach new scene
-      attachNewScene = activeRoute.scene.beforeAttach();
-
-      // Start change process
-      Promise.all([
-        (detachOldScene && detachOldScene instanceof Promise ? detachOldScene : Promise.resolve(detachOldScene)),
-        // tslint:disable-next-line: max-line-length
-        (attachNewScene && attachNewScene instanceof Promise ? attachNewScene : Promise.resolve(attachNewScene)).then(() => {
-          this.scene = activeRoute.scene;
-          // tslint:disable-next-line: max-line-length
-          this.Engine.Log('info', `Route switch ${(oldRoute || {}).route} -> ${(activeRoute || {}).route}`);
-          return Promise.resolve();
-        }),
-      ])
-        .then(() => this.Engine.Log('info', `Route ${(oldRoute || {}).route} detached!`));
-    });
+      this.RootCanvas.mouseMoved((event) => {
+        this.sprites
+          .filter((s) => this.isAttachedSprite(s))
+          .forEach((s) => s.emit(this.isOverSprite(s) ? 'mouseover' : 'mouseout', event));
+      });
 
   }
 

@@ -1,10 +1,10 @@
 // import { Sprite } from '../../Sprite';
-import { ISprite } from '../../ISprite';
-import p5 = require('p5');
-import { Graphics, Image } from 'p5';
-import { EventEmitter } from 'events';
-import { Text } from '../Text';
+// import { ISprite } from '../../ISprite';
+// import p5 = require('p5');
+// import { EventEmitter } from 'events';
+import p5, { Graphics, Image } from 'p5';
 import { Sprite } from '../../Sprite';
+import { Text } from '../Text';
 
 export class Button extends Sprite {
   public width: number;
@@ -31,7 +31,7 @@ export class Button extends Sprite {
     this.height = height;
     this.text = new Text(txt, 32, width);
     console.log(this.text, this.text.text);
-    this.pButtonGraphics = this.p.createGraphics(width, height);
+    this.pButtonGraphics = this.Engine.p5.createGraphics(width, height);
     this.pButtonGraphics.background(255, 0, 0, 120);
     this.refreshGraphics();
   }
@@ -39,7 +39,7 @@ export class Button extends Sprite {
   private refreshGraphics() {
     // this.text.text = Math.ceil(Math.random() * 256).toString();
 
-    const ghost = this.p.createGraphics(this.width, this.height);
+    const ghost = this.Engine.p5.createGraphics(this.width, this.height);
     ghost.remove();
     ghost.background(Math.ceil(Math.random() * 255));
     ghost.image(this.pButtonGraphics, 0, 0);
