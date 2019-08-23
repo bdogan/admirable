@@ -54,7 +54,6 @@ export class LayoutLayer extends Layer {
 
   public beforeAttach(): Promise<any> {
 
-
     return Promise.all([
       this.addSprite(this.admirableLogo),
       this.addSprite(this.battleShip),
