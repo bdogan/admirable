@@ -4,15 +4,6 @@ import { Sprite } from '../../../../Engine/Sprite';
 
 export class GridLayer extends Layer {
 
-  // private static instance: GridLayer;
-
-  // static get getInstance(): GridLayer {
-  //   if (!GridLayer.instance) {
-  //     GridLayer.instance = new GridLayer();
-  //   }
-  //   return GridLayer.instance;
-  // }
-
   private angle: number = 0;
 
   private gridSprite: Sprite;
@@ -47,7 +38,7 @@ export class GridLayer extends Layer {
 
     this.perspectiveGrid(this.angle);
     // can't use this.gridGraphics.deltaTime here.
-    this.angle = this.angle + (this.Engine.p5.deltaTime / 100000);
+    this.angle = (this.angle + (this.Engine.p5.deltaTime / 100000));
   }
 
   /**

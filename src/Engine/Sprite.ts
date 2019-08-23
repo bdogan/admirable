@@ -44,7 +44,7 @@ export class Sprite extends BaseObj {
       image.updatePixels();
 
       // Create sprite
-      return Sprite.New(x, y, image);
+      resolve(Sprite.New(x, y, image));
 
     }));
   }

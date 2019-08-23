@@ -7,7 +7,7 @@ export class InfoLayer extends Layer {
 
   private get infoText(): string {
     // tslint:disable-next-line: max-line-length
-    return `${this.Engine.p5.frameRate().toFixed(0)} FPS / ${this.Engine.Screen.layers.length} LAYERS / ${this.Engine.Screen.sprites.length} SPRITES / ActiveRoute: ${(this.Engine.Router.ActiveRoute || { route: 'Empty' }).route}`;
+    return `${this.Engine.p5.frameRate().toFixed(0)} FPS / ${this.Engine.Screen.layers.length - 1} LAYERS / ${this.Engine.Screen.sprites.length - 1} SPRITES / ActiveRoute: ${(this.Engine.Router.ActiveRoute || { route: 'Empty' }).route}`;
   }
 
   /**
