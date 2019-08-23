@@ -75,7 +75,8 @@ export class Router extends BaseObj {
 
     // Detach old scene
     if (!!this.ActiveRoute) {
-      this.ActiveRoute.scene.detach().then(() => this.Engine.Log('info', `Route ${this.ActiveRoute!.route} detached!`));
+      const currentRouteName = this.ActiveRoute.route;
+      this.ActiveRoute.scene.detach().then(() => this.Engine.Log('info', `Route ${currentRouteName} detached!`));
     }
 
     // Create scene
