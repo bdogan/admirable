@@ -8,6 +8,7 @@ import { Text } from '../../../../Engine/Sprites/Text';
 export class LayoutLayer extends Layer {
 
   private button!: Button;
+  private but2!: Button;
   private logo!: Text;
   private battleShip!: Sprite;
   private admirableLogo!: Sprite;
@@ -25,19 +26,17 @@ export class LayoutLayer extends Layer {
       // this.Engine.Screen.setScene(menu);
     });
 
-    const but2 = new Button(0, 0, 64, 64);
-    but2.background = 'orange';
-    but2.on('click', (e) => {
+    this.but2 = new Button(0, 0, 64, 64);
+    this.but2.background = 'orange';
+    this.but2.on('click', (e) => {
       console.log('secondary ');
     });
-
-    this.addSprite(but2);
 
     this.button.x = (this.Engine.Screen.dimensions.width / 2) - (this.button.width / 2);
     this.button.y = (this.Engine.Screen.dimensions.height / 2) - (this.button.height / 2);
 
-    but2.x = this.button.x - 32;
-    but2.y = this.button.y - 32;
+    this.but2.x = this.button.x - 32;
+    this.but2.y = this.button.y - 32;
 
     this.battleShip = Sprite.fromFile(BattleShip);
 
@@ -54,6 +53,7 @@ export class LayoutLayer extends Layer {
     return Promise.all([
       this.addSprite(this.admirableLogo),
       this.addSprite(this.battleShip),
+      this.addSprite(this.but2),
       this.addSprite(this.button),
     ]);
   }
