@@ -29,9 +29,7 @@ export class Sprite extends BaseObj {
    * Create from file data
    * @param fileData any
    */
-  public static fromFile(fileData: any, x: number = 0, y: number = 0): Promise<Sprite> {
-    return new Promise((resolve) => setTimeout(() => {
-
+  public static fromFile(fileData: any, x: number = 0, y: number = 0): Sprite {
       // Create image
       const image = AppEngine.p5.createGraphics(fileData.default.info.width, fileData.default.info.height);
       image.loadPixels();
@@ -45,9 +43,7 @@ export class Sprite extends BaseObj {
       image.updatePixels();
 
       // Create sprite
-      resolve(Sprite.New(x, y, image));
-
-    }));
+      return Sprite.New(x, y, image);
   }
 
   /**

@@ -8,13 +8,14 @@ import { Text } from '../../../../Engine/Sprites/Text';
 export class LayoutLayer extends Layer {
 
   private button!: Button;
-  private sBattleShip!: Sprite;
   private logo!: Text;
-  private sAdmirableLogo!: Sprite;
+  private battleShip!: Sprite;
+  private admirableLogo!: Sprite;
   private easeing: number = 0.05;
   private angle: number = 0;
 
   public setup(): void {
+    console.log('setup');
     this.button = new Button(0, 0, 256, 64);
 
     this.button.background = 'red';
@@ -28,38 +29,36 @@ export class LayoutLayer extends Layer {
     this.button.x = (this.Engine.Screen.dimensions.width / 2) - (this.button.width / 2);
     this.button.y = (this.Engine.Screen.dimensions.height / 2) - (this.button.height / 2);
 
-    // Logo
+    // Sprite.fromFile(BattleShip).then((s) => {
+    //   // console.log(s);
+    //   this.sBattleShip = s;
+    //   this.sBattleShip.x = -10;
+    //   this.sBattleShip.y = this.Engine.Screen.dimensions.height - s.graphics.height + 10;
+    //   this.addSprite(this.sBattleShip);
+    // });
 
-    // // this.logo = new Text('Admirable', 64, 256);
-    // this.logo = new Text('Admirable', 64, 256);
-    // this.logo.color = this.Engine.p5.color(0, 255, 255, 255);
-    // this.logo.x = (this.Engine.Screen.dimensions.width / 2) - (this.logo.graphics.width / 2);
-    // this.logo.y = -1 * (this.logo.graphics.height);
-    // // this.addSprite(this.logo);
+    this.battleShip = Sprite.fromFile(BattleShip);
+    // this.battleShip.x = -10;
+    this.battleShip.y = this.Engine.Screen.dimensions.height - this.battleShip.graphics.height + 10;
 
-    Sprite.fromFile(BattleShip).then((s) => {
-      // console.log(s);
-      this.sBattleShip = s;
-      this.sBattleShip.x = -10;
-      this.sBattleShip.y = this.Engine.Screen.dimensions.height - s.graphics.height + 10;
-      this.addSprite(this.sBattleShip);
-    });
+    this.admirableLogo = Sprite.fromFile(AdmirableLogoType);
+    this.admirableLogo.x = (this.Engine.Screen.dimensions.width / 2) - (this.admirableLogo.graphics.width / 2);
+    this.admirableLogo.y = -1 * (this.admirableLogo.graphics.height);
+    // Sprite.fromFile(AdmirableLogoType).then((sprite) => {
+    //   sprite.x = (this.Engine.Screen.dimensions.width / 2) - (sprite.graphics.width / 2);
+    //   sprite.y = -1 * (sprite.graphics.height);
+    //   this.sAdmirableLogo = sprite;
+    //   this.addSprite(this.sAdmirableLogo);
+    // });
 
-    Sprite.fromFile(AdmirableLogoType).then((sprite) => {
-      sprite.x = (this.Engine.Screen.dimensions.width / 2) - (sprite.graphics.width / 2);
-      sprite.y = -1 * (sprite.graphics.height);
-      this.sAdmirableLogo = sprite;
-      this.addSprite(this.sAdmirableLogo);
-    });
-
-    // this.logo.y = -1 * (this.logo.graphics.height);
   }
 
   public beforeAttach(): Promise<any> {
-    // console.log(this.admirableLogo);
+    // console.log(this.sAdmirableLogo);
 
     return Promise.all([
-      // this.addSprite(this.logo),
+      this.addSprite(this.admirableLogo),
+      this.addSprite(this.battleShip),
       this.addSprite(this.button),
     ]);
   }
@@ -67,8 +66,12 @@ export class LayoutLayer extends Layer {
   public  update(): void {
     // Animate the logo.
     // tslint:disable-next-line: max-line-length
-    const deltaY =  this.Engine.p5.round((this.Engine.Screen.dimensions.height / 3) - (this.sAdmirableLogo.graphics.height / 2) - this.sAdmirableLogo.y);
-    this.sAdmirableLogo.y += deltaY * this.easeing;
+    const deltaY =  this.Engine.p5.round((this.Engine.Screen.dimensions.height / 3) - (this.admirableLogo.graphics.height / 2) - this.admirableLogo.y);
+    this.admirableLogo.y += deltaY * this.easeing;
 
+    // this.battleShip.x += this.battleShip.x * this.Engine.p5.cos(1);
+    this.battleShip.y =  this.battleShip.y + this.Engine.p5.sin(this.angle) * (this.Engine.p5.deltaTime / 40);
+
+    this.angle = (this.angle + this.Engine.p5.TWO_PI / 40) % this.Engine.p5.TWO_PI;
   }
 }
