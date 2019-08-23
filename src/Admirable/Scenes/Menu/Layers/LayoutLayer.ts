@@ -28,7 +28,7 @@ export class LayoutLayer extends Layer {
 
     this.button.background = 'red';
 
-    this.button.on('mousePressed', (e) => {
+    this.button.on('click', (e) => {
       console.log('main button');
       // this.Engine.Screen.setScene(menu);
     });
