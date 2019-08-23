@@ -46,10 +46,11 @@ export class LayoutLayer extends Layer {
     this.admirableLogo = Sprite.fromFile(AdmirableLogoType);
     this.admirableLogo.x = (this.Engine.Screen.dimensions.width / 2) - (this.admirableLogo.graphics.width / 2);
     this.admirableLogo.y = -1 * (this.admirableLogo.graphics.height);
+
   }
 
   public beforeAttach(): Promise<any> {
-    // console.log(this.sAdmirableLogo);
+
 
     return Promise.all([
       this.addSprite(this.admirableLogo),
@@ -58,7 +59,7 @@ export class LayoutLayer extends Layer {
     ]);
   }
 
-  public  update(): void {
+  public update(): void {
     // Animate the logo.
     // tslint:disable-next-line: max-line-length
     const deltaY =  this.Engine.p5.round((this.Engine.Screen.dimensions.height / 3) - (this.admirableLogo.graphics.height / 2) - this.admirableLogo.y);
