@@ -56,6 +56,8 @@ export class Sprite extends BaseObj {
   public y: number = 0;
   public graphics!: Graphics | Image;
   public zIndex: number = 0;
+  public angle: number = 0;
+  public rotating: boolean = false;
 
   /**
    * Set sprite position
@@ -97,6 +99,15 @@ export class Sprite extends BaseObj {
    */
   public doUpdate(): Promise<Sprite> {
     return (this.update() || r).then(() => this);
+  }
+
+  /**
+   * Rotate
+   * @param degree
+   */
+  public rotate(degree: number) {
+    this.angle = degree % 360 * (Math.PI / 180);
+    this.rotating = true;
   }
 
   /**
