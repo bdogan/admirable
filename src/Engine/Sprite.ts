@@ -1,5 +1,5 @@
 import { AppEngine } from './Engine';
-import { Graphics, Image, Element } from 'p5';
+import { Graphics, Image, Element, __Graphics__ } from 'p5';
 import { BaseObj } from './BaseObj';
 
 // Promise resolved
@@ -16,11 +16,12 @@ export class Sprite extends BaseObj {
    * @param y number
    * @param graphics Graphics | Image
    */
-  public static New(x: number, y: number, graphics: Graphics | Image): Sprite {
+  public static New(x: number, y: number, graphics: Graphics): Sprite {
     const sprite = new Sprite();
     sprite.x = x;
     sprite.y = y;
     sprite.graphics = graphics;
+    sprite.graphics.remove();
     return sprite;
   }
 
@@ -32,7 +33,7 @@ export class Sprite extends BaseObj {
     return new Promise((resolve) => setTimeout(() => {
 
       // Create image
-      const image = AppEngine.p5.createImage(fileData.default.info.width, fileData.default.info.height);
+      const image = AppEngine.p5.createGraphics(fileData.default.info.width, fileData.default.info.height);
       image.loadPixels();
 
       // Fill pixels
