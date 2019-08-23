@@ -5,6 +5,7 @@ import { InfoLayer } from './Layer/InfoLayer';
 import { flatten, orderBy } from 'lodash';
 import { BaseObj } from './BaseObj';
 import { Sprite } from './Sprite';
+import { Button } from './Buttons/Button';
 
 // Promise resolver
 const r = Promise.resolve();
@@ -154,6 +155,9 @@ export class Screen extends BaseObj {
       this.sprites
         .filter((s) => this.isAttachedSprite(s))
         .forEach((s) => s.emit(this.isOverSprite(s) ? 'mouseover' : 'mouseout', event));
+
+      const cur = this.sprites.find((s) => s instanceof Button && this.isOverSprite(s));
+      this.p5.cursor(cur ? 'pointer' : 'default');
     });
 
   }

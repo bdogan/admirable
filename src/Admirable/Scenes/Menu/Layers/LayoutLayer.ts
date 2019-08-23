@@ -15,7 +15,6 @@ export class LayoutLayer extends Layer {
   private angle: number = 0;
 
   public setup(): void {
-    console.log('setup');
     this.button = new Button(0, 0, 256, 64);
 
     this.button.background = 'red';
@@ -25,6 +24,14 @@ export class LayoutLayer extends Layer {
       this.Engine.Router.navigate('demo');
       // this.Engine.Screen.setScene(menu);
     });
+
+    const but2 = new Button(0, 0, 256, 64);
+    but2.background = 'orange';
+    but2.on('click', (e) => {
+      console.log(e);
+    });
+
+    this.addSprite(but2);
 
     this.button.x = (this.Engine.Screen.dimensions.width / 2) - (this.button.width / 2);
     this.button.y = (this.Engine.Screen.dimensions.height / 2) - (this.button.height / 2);
@@ -70,14 +77,8 @@ export class LayoutLayer extends Layer {
     this.admirableLogo.y += deltaY * this.easeing;
 
     // this.battleShip.x += this.battleShip.x * this.Engine.p5.cos(1);
-<<<<<<< HEAD
     this.battleShip.y =  this.battleShip.y + this.Engine.p5.sin(this.angle) / 2;
 
     this.angle = (this.angle + this.Engine.p5.TWO_PI / 60) % this.Engine.p5.TWO_PI;
-=======
-    this.battleShip.y =  this.battleShip.y + this.Engine.p5.sin(this.angle) * (this.Engine.p5.deltaTime / 40);
-
-    this.angle = (this.angle + this.Engine.p5.TWO_PI / 40) % this.Engine.p5.TWO_PI;
->>>>>>> d96ce02118148bd8a21a0070f88bc45f61ff98c9
   }
 }
