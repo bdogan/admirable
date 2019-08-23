@@ -58,7 +58,7 @@ export class GridLayer extends Layer {
       // Debug graphic;
       // this.gridGraphics.line(x1, y1, x2, y2);
 
-      // Perspectve lines
+      // Perspective lines
       this.gridGraphics.line(0, y2, width, y2);
 
       angle = (angle + da) % this.gridGraphics.HALF_PI;

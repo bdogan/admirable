@@ -8,6 +8,8 @@ export class Button extends Sprite {
   public width: number = 0;
   public height: number = 0;
   public graphics: Graphics;
+  public angle: number = 0;
+  public rotating: boolean = false;
 
   private pBackground: any = 'rgba(10, 10, 10, 255)';
   public get background(): any {
