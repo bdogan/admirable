@@ -67,6 +67,7 @@ export class Scene extends BaseObj {
    */
   public destroy() {
     delete(this.pLayers);
+    this.pLayers = [];
   }
 
   /**
