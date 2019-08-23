@@ -75,6 +75,8 @@ export class Scene extends BaseObj {
   public detach(): Promise<any> {
     return Promise.all(this.pLayers.map((l) => this.removeLayer(l)))
       .then(() => (this.beforeDetach() || r))
+      // Remove old scenes event listeners.
+      .then(() => this.Engine.Screen.removeAllListeners())
       .then(() => this.destroy());
   }
 

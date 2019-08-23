@@ -45,11 +45,11 @@ export class Button extends Sprite {
     // Background
     this.graphics.background(this.overBackground);
     this.on('mouseover', () => {
-      this.Engine.p5.cursor('pointer');
+      // this.Engine.p5.cursor('pointer');
       this.graphics.background(this.background);
     });
     this.on('mouseout', () => {
-      this.Engine.p5.cursor('default');
+      // this.Engine.p5.cursor('default');
       this.graphics.background(this.overBackground);
     });
 
@@ -57,7 +57,7 @@ export class Button extends Sprite {
     this.Engine.Screen.on('mouseover', () => {
       // tslint:disable-next-line: max-line-length
       const currButton = this.Engine.Screen.sprites.find((s) => s instanceof Button && this.Engine.Screen.isAttachedSprite(s) && this.Engine.Screen.isOverSprite(s));
-      this.Engine.p5.cursor(currButton ? 'pointer' : 'default');
+      // this.Engine.p5.cursor(currButton ? 'pointer' : 'default');
     });
 
   }

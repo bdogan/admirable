@@ -1,35 +1,29 @@
 import { Layer } from '../../../../Engine/Layer';
 import { Graphics } from 'p5';
 import { Sprite } from '../../../../Engine/Sprite';
+import { promises } from 'fs';
 
 export class GridLayer extends Layer {
 
   private angle: number = 0;
 
-  private gridSprite: Sprite;
-  private gridGraphics: Graphics;
+  private gridSprite!: Sprite;
+  private gridGraphics!: Graphics;
   private gridOptions: any = {
     animate: true,
     frequency: 50,
     shiftY: -150,
   };
 
-  public constructor(animate: boolean = true, frequency: number = 50, shiftY: number = -150) {
-    // parent call
-    super();
+  public beforeAttach(): Promise<any> {
+    return this.addSprite(this.gridSprite);
+  }
 
-    // Grid Options
-    this.gridOptions.animate = animate;
-    this.gridOptions.frequency = frequency;
-    this.gridOptions.shiftY = shiftY;
-
-    // Create grid sprite
-    this.gridGraphics = this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width,
-      this.Engine.Screen.dimensions.height);
-
-    this.gridSprite =  Sprite.New(0, 0, this.gridGraphics);
-    // Add sprite to registry
-    this.addSprite(this.gridSprite);
+  public setup() {
+        // Create grid sprite
+        // tslint:disable-next-line: max-line-length
+        this.gridGraphics = this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width, this.Engine.Screen.dimensions.height);
+        this.gridSprite =  Sprite.New(0, 0, this.gridGraphics);
   }
 
   public update(): void {
@@ -37,8 +31,7 @@ export class GridLayer extends Layer {
     this.gridGraphics.stroke(0, 255, 255, 50);
 
     this.perspectiveGrid(this.angle);
-    // can't use this.gridGraphics.deltaTime here.
-    // tslint:disable-next-line: max-line-length
+
     this.angle = (this.angle
       + (this.gridGraphics.TWO_PI / this.Engine.Screen.dimensions.width)
       * (this.Engine.p5.deltaTime / (1000 / 2)))
