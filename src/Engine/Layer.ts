@@ -1,5 +1,5 @@
 import { BaseObj } from './BaseObj';
-import {Sprite} from './Sprite';
+import { Sprite } from './Sprite';
 
 // Promise resolved
 const r = Promise.resolve();
