@@ -131,14 +131,14 @@ export class Screen extends BaseObj {
 
     // Mouse clicked event
     this.RootCanvas.mouseClicked((event) => {
-      // const target = this.sprites.find((s) => this.isAttachedSprite(s) && this.isOverSprite(s));
-      // console.log(target);
-      // // target!.emit('click', event);
-      // (target as Sprite).emit('click', event);
 
-      this.sprites
-        .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
-        .forEach((s) => s.emit('click', event));
+      const target = this.sprites.reverse().find((s) => this.isOverSprite(s));
+      target!.emit('click', event);
+
+      // this.sprites
+      //   .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
+      //   .forEach((s) => s.emit('click', event));
+
     });
 
     // Mouse pressed
@@ -157,9 +157,18 @@ export class Screen extends BaseObj {
 
     // Mouse over
     this.RootCanvas.mouseMoved((event) => {
-      this.sprites
-        .filter((s) => this.isAttachedSprite(s))
-        .forEach((s) => s.emit(this.isOverSprite(s) ? 'mouseover' : 'mouseout', event));
+
+      const target = this.sprites.reverse().find((s) => this.isOverSprite(s));
+      this.sprites.forEach((s) => s.emit('mouseout', event));
+      if (target) {
+        target!.emit('mouseover', event);
+      }
+      // console.log(target);
+
+      // consider attaching mouseout whenever mouseover attached.
+      // this.sprites
+      //   .filter((s) => this.isAttachedSprite(s))
+      //   .forEach((s) => s.emit(this.isOverSprite(s) ? 'mouseover' : 'mouseout', event));
 
       // s sprite is always this layer's sprite.
       const cur = this.sprites.find((s) => s instanceof Button && this.isOverSprite(s));
