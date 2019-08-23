@@ -5,7 +5,10 @@ import { LayoutLayer} from './Layers/LayoutLayer';
 export class MenuScene extends Scene {
 
   public beforeAttach() {
-    this.addLayer(GridLayer);
-    this.addLayer(LayoutLayer);
+    return Promise.all([
+      this.addLayer(GridLayer),
+      this.addLayer(LayoutLayer),
+    ]);
   }
+
 }
