@@ -40,6 +40,10 @@ export class LayoutLayer extends Layer {
 
     this.battleShip = Sprite.fromFile(BattleShip);
 
+    this.battleShip.on('click', () => {
+      console.log(`I'm a battle ship!`);
+    });
+
     this.battleShip.y = this.Engine.Screen.dimensions.height - this.battleShip.graphics.height + 10;
 
     this.admirableLogo = Sprite.fromFile(AdmirableLogoType);
@@ -49,7 +53,6 @@ export class LayoutLayer extends Layer {
   }
 
   public beforeAttach(): Promise<any> {
-
 
     return Promise.all([
       this.addSprite(this.admirableLogo),
