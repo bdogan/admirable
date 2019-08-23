@@ -3,11 +3,16 @@ import { Layer } from '../../../Layer';
 
 export class DemoTextLayer extends Layer {
 
+  private text!: Text;
+
   public setup() {
-    const text = new Text('Awesome Graphics Engine\nBased on p5.js', 30,
+    this.text = new Text('Awesome Graphics Engine\nBased on p5.js', 30,
       this.Engine.Screen.dimensions.width, this.Engine.Screen.dimensions.height);
-    text.background = 'rgba(0,0,0,.2)';
-    this.addSprite(text);
+    this.text.background = 'rgba(0,0,0,.2)';
+  }
+
+  public beforeAttach(): Promise<any> {
+    return this.addSprite(this.text);
   }
 
 }

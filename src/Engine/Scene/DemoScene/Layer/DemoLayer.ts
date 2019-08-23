@@ -1,14 +1,20 @@
 import { Layer } from '../../../Layer';
 import { Sprite } from '../../../Sprite';
+import { Graphics } from 'p5';
 
 export class DemoLayer extends Layer {
 
+  private box!: Sprite;
+
   public setup() {
-    const im = this.Engine.p5.createGraphics(20, 20);
-    im.background(50);
-    // tslint:disable-next-line: max-line-length
-    const sprt = Sprite.New(Math.floor(Math.random() * this.Engine.Screen.dimensions.width), Math.floor(Math.random() * this.Engine.Screen.dimensions.height), im);
-    this.addSprite(sprt);
+    // Create box
+    this.box = Sprite.New(Math.floor(Math.random() * this.Engine.Screen.dimensions.width),
+      Math.floor(Math.random() * this.Engine.Screen.dimensions.height), this.Engine.p5.createGraphics(20, 20));
+    (this.box.graphics as Graphics).background(50);
+  }
+
+  public beforeAttach(): Promise<any> {
+    return this.addSprite(this.box);
   }
 
   public update() {

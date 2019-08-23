@@ -4,4 +4,5 @@ import { MenuScene } from './Admirable/Scenes/Menu/Menu';
 
 export const RouteConfig: IRoute[] = [
   { route: 'main', scene: MenuScene },
+  { route: 'demo', scene: DemoScene },
 ];
