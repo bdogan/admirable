@@ -51,7 +51,7 @@ export class Sprite extends BaseObj {
    */
   public x: number = 0;
   public y: number = 0;
-  public graphics!: Graphics | Image;
+  public graphics!: Graphics;
   public zIndex: number = 0;
 
   /**

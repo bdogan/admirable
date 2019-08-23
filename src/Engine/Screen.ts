@@ -136,6 +136,8 @@ export class Screen extends BaseObj {
       // // target!.emit('click', event);
       // (target as Sprite).emit('click', event);
 
+      // const target = this.sprites.find();
+
       this.sprites
         .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
         .forEach((s) => s.emit('click', event));
