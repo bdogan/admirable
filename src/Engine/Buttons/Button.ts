@@ -54,11 +54,11 @@ export class Button extends Sprite {
     });
 
     // // Maintain cursor pointer
-    // this.Engine.Screen.on('mouseover', () => {
-    //   // tslint:disable-next-line: max-line-length
-    //   const currButton = this.Engine.Screen.sprites.find((s) => s instanceof Button && this.Engine.Screen.isAttachedSprite(s) && this.Engine.Screen.isOverSprite(s));
-    //   this.Engine.p5.cursor(currButton ? 'pointer' : 'default');
-    // });
+    this.Engine.Screen.on('mouseover', () => {
+      // tslint:disable-next-line: max-line-length
+      const currButton = this.Engine.Screen.sprites.find((s) => s instanceof Button && this.Engine.Screen.isAttachedSprite(s) && this.Engine.Screen.isOverSprite(s));
+      this.Engine.p5.cursor(currButton ? 'pointer' : 'default');
+    });
 
   }
 

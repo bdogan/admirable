@@ -24,6 +24,13 @@ export class LayoutLayer extends Layer {
 
     // this.addSprite(this.admirableLogo);
 
+    const second = new Button(0, 0, 128, 32);
+    second.background = 'orange';
+    second.on('click', (e) => {
+      console.log('second test');
+    });
+    this.addSprite(second);
+
     this.button = new Button(0, 0, 256, 64);
 
     this.button.background = 'red';
