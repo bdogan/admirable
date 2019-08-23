@@ -21,7 +21,6 @@ AppEngine.Run();
 
 AppEngine.Router.navigate('main');
 
-
 /*
 import { Screen } from './Engine/Screen';
 import { DemoScene } from './Engine/Scene/DemoScene/DemoScene';

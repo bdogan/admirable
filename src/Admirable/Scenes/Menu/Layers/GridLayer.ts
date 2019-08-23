@@ -38,7 +38,11 @@ export class GridLayer extends Layer {
 
     this.perspectiveGrid(this.angle);
     // can't use this.gridGraphics.deltaTime here.
-    this.angle = (this.angle + (this.Engine.p5.deltaTime / 100000));
+    // tslint:disable-next-line: max-line-length
+    this.angle = (this.angle
+      + (this.gridGraphics.TWO_PI / this.Engine.Screen.dimensions.width)
+      * (this.Engine.p5.deltaTime / (1000 / 2)))
+      % this.gridGraphics.TWO_PI;
   }
 
   /**
@@ -47,12 +51,15 @@ export class GridLayer extends Layer {
    */
   private perspectiveGrid(angle: number) {
     const width = this.Engine.Screen.dimensions.width;
+    // const height = this.Engine.Screen.dimensions.height;
     const da = this.gridGraphics.TWO_PI / width;
 
     for (let i = 0; i < width / 4; i++) {
       const x1 = (i * 4),
             y1 = 0,
             x2 = x1,
+            // tslint:disable-next-line: max-line-length
+            // y2 = this.Engine.p5.min(this.gridOptions.shiftY + this.gridGraphics.tan(angle) * this.gridOptions.frequency, height);
             y2 = this.gridOptions.shiftY + this.gridGraphics.tan(angle) * this.gridOptions.frequency;
 
       // Debug graphic;

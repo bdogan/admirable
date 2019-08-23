@@ -43,11 +43,11 @@ export class Button extends Sprite {
 
     // Background
     this.graphics.background(this.background);
-    this.on('mouseOut', () => this.graphics.background(this.background));
-    this.on('mouseIn', () => this.graphics.background(this.overBackground));
-
+    this.on('mouseover', () => this.graphics.background(this.background));
+    this.on('mouseout', () => this.graphics.background(this.overBackground));
     // Maintain cursor pointer
-    this.Engine.Screen.on('mouseMoved', () => {
+    this.Engine.Screen.on('mouseover', () => {
+      console.log('t');
       // tslint:disable-next-line: max-line-length
       const currButton = this.Engine.Screen.sprites.find((s) => s instanceof Button && this.Engine.Screen.isAttachedSprite(s) && this.Engine.Screen.isOverSprite(s));
       this.Engine.p5.cursor(currButton ? 'pointer' : 'default');
