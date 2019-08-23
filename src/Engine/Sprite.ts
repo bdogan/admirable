@@ -102,7 +102,7 @@ export class Sprite extends BaseObj {
    * @param degree
    */
   public rotate(degree: number) {
-    this.angle = degree % 360 * (Math.PI / 180);
+    this.angle = degree;
   }
 
   /**
