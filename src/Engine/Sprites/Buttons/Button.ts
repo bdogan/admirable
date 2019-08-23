@@ -1,5 +1,5 @@
 import { Graphics } from 'p5';
-import { Sprite } from '../Sprite';
+import { Sprite } from '../../Sprite';
 
 export class Button extends Sprite {
 

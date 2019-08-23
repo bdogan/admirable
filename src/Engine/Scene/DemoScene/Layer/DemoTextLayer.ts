@@ -1,6 +1,6 @@
 import { Text } from './../../../Sprites/Text/Text';
 import { Layer } from '../../../Layer';
-import { Button } from '../../../Buttons/Button';
+import { Button } from '../../../Sprites/Buttons/Button';
 
 export class DemoTextLayer extends Layer {
 

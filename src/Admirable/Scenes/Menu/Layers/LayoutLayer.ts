@@ -1,5 +1,5 @@
 import { Layer } from '../../../../Engine/Layer';
-import { Button } from '../../../../Engine/Buttons/Button';
+import { Button } from '../../../../Engine/Sprites/Buttons/Button';
 import { Sprite} from '../../../../Engine/Sprite';
 
 import {BattleShip, AdmirableLogoType} from '../Images';

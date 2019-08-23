@@ -5,7 +5,7 @@ import { InfoLayer } from './Layer/InfoLayer';
 import { flatten, orderBy } from 'lodash';
 import { BaseObj } from './BaseObj';
 import { Sprite } from './Sprite';
-import { Button } from './Buttons/Button';
+import { Button } from './Sprites/Buttons/Button';
 
 // Promise resolver
 const r = Promise.resolve();
