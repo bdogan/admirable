@@ -29,7 +29,8 @@ export class LayoutLayer extends Layer {
     this.button.background = 'red';
 
     this.button.on('click', (e) => {
-      console.log('main button');
+      // console.log('main button');
+      this.Engine.Router.navigate('demo');
       // this.Engine.Screen.setScene(menu);
     });
 

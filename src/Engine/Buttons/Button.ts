@@ -41,17 +41,24 @@ export class Button extends Sprite {
     this.graphics = this.Engine.p5.createGraphics(this.width, this.height);
     this.graphics.remove();
 
+    // this.overBackground = this.background;
     // Background
-    this.graphics.background(this.background);
-    this.on('mouseover', () => this.graphics.background(this.background));
-    this.on('mouseout', () => this.graphics.background(this.overBackground));
-    // Maintain cursor pointer
-    this.Engine.Screen.on('mouseover', () => {
-      console.log('t');
-      // tslint:disable-next-line: max-line-length
-      const currButton = this.Engine.Screen.sprites.find((s) => s instanceof Button && this.Engine.Screen.isAttachedSprite(s) && this.Engine.Screen.isOverSprite(s));
-      this.Engine.p5.cursor(currButton ? 'pointer' : 'default');
+    this.graphics.background(this.overBackground);
+    this.on('mouseover', () => {
+      this.Engine.p5.cursor('pointer');
+      this.graphics.background(this.background);
     });
+    this.on('mouseout', () => {
+      this.Engine.p5.cursor('default');
+      this.graphics.background(this.overBackground);
+    });
+
+    // // Maintain cursor pointer
+    // this.Engine.Screen.on('mouseover', () => {
+    //   // tslint:disable-next-line: max-line-length
+    //   const currButton = this.Engine.Screen.sprites.find((s) => s instanceof Button && this.Engine.Screen.isAttachedSprite(s) && this.Engine.Screen.isOverSprite(s));
+    //   this.Engine.p5.cursor(currButton ? 'pointer' : 'default');
+    // });
 
   }
 
