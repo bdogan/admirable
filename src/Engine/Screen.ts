@@ -192,7 +192,12 @@ export class Screen extends BaseObj {
         // Attach sprites
         orderBy(this.sprites, 'zIndex')
           .filter((s) => !!s && !!s.graphics)
-          .forEach((s) => this.p5.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height));
+          .forEach((s) => {
+            this.p5.push();
+            this.p5.rotate(this.p5.radians(s.angle));
+            this.p5.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height);
+            this.p5.pop();
+          });
         this.p5.loop();
       });
 
