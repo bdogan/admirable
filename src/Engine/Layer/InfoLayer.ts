@@ -21,7 +21,7 @@ export class InfoLayer extends Layer {
     this.fpsCounterText.x = this.Engine.Screen.dimensions.width - this.fpsCounterText.width;
     this.fpsCounterText.y = this.Engine.Screen.dimensions.height - this.fpsCounterText.height;
     this.fpsCounterText.color = 'rgba(255, 255, 255, .8)';
-    this.fpsCounterText.background = 'rgba(0, 0, 0, .7)';
+    this.fpsCounterText.background = 'rgba(255, 255, 255, .2)';
     this.addSprite(this.fpsCounterText);
   }
 

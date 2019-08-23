@@ -45,7 +45,7 @@ export class Button extends Sprite {
     this.graphics.background(this.background);
     this.on('mouseOut', () => this.graphics.background(this.background));
     this.on('mouseIn', () => this.graphics.background(this.overBackground));
-
+    this.on('click', () => {console.log('test'); });
     // Maintain cursor pointer
     this.Engine.Screen.on('mouseMoved', () => {
       // tslint:disable-next-line: max-line-length

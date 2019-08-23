@@ -49,7 +49,7 @@ export class LayoutLayer extends Layer {
     Sprite.fromFile(AdmirableLogo).then((s) => {
       this.admirableLogo = s;
       this.admirableLogo.x = -10;
-      this.admirableLogo.y = this.Engine.Screen.dimensions.height - s.graphics.height - 10;
+      this.admirableLogo.y = this.Engine.Screen.dimensions.height - s.graphics.height + 10;
       this.addSprite(this.admirableLogo);
     });
 
@@ -66,9 +66,9 @@ export class LayoutLayer extends Layer {
     // this.logo.y = this.logo.y + 1 * (this.Engine.p5.deltaTime / 10);
     this.logo.y += deltaY * this.easeing; // * ( this.Engine.p5.deltaTime / 10);
 
-    this.admirableLogo.x = (this.admirableLogo.x + this.Engine.p5.cos(this.angle) / 6);
+    this.admirableLogo.x = (this.admirableLogo.x + this.Engine.p5.cos(this.angle) / 4);
     this.admirableLogo.y = (this.admirableLogo.y + this.Engine.p5.sin(this.angle) / 2);
-    this.angle = (this.angle + (this.Engine.p5.TWO_PI / 35) * (this.Engine.p5.deltaTime / 60)) % this.Engine.p5.TWO_PI;
+    this.angle = (this.angle + (this.Engine.p5.TWO_PI / 25) * (this.Engine.p5.deltaTime / 80)) % this.Engine.p5.TWO_PI;
     // console.log(this.angle);
   }
 }
