@@ -12,28 +12,23 @@ export class Button extends Sprite {
   public rotating: boolean = false;
 
   private pBackground: any = 'rgba(10, 10, 10, 255)';
+  private pHoverBackround: any = undefined;
   public get background(): any {
     return this.pBackground;
   }
   public set background(b: any) {
-    this.graphics.background(this.pBackground = b);
-    this.oOverBackground = undefined;
-  }
-
-  private pOverBackground: any;
-  private oOverBackground: any;
-  public get overBackground(): any {
-    return this.pOverBackground || this.oOverBackground
-      || (this.oOverBackground = this.Engine.p5.brightness(this.background));
-  }
-  public set overBackground(b: any) {
-    this.pOverBackground = b;
+    this.pHoverBackround = b;
+    const alter = this.Engine.p5.color(b);
+    alter.setRed(this.Engine.p5.red(alter) * 0.6);
+    alter.setGreen(this.Engine.p5.green(alter) * 0.6);
+    alter.setBlue(this.Engine.p5.blue(alter) * 0.6);
+    // alter.setAlpha(0);
+    this.pBackground = alter;
+    this.graphics.background(alter);
   }
 
   public constructor(x: number, y: number, w: number, h: number) {
     super();
-
-    // this.screen = Global.Screen as Screen;
 
     this.x = x;
     this.y = y;
@@ -43,17 +38,12 @@ export class Button extends Sprite {
     this.graphics = this.Engine.p5.createGraphics(this.width, this.height);
     this.graphics.remove();
 
-    // this.overBackground = this.background;
-    // Background
-    this.graphics.background(this.overBackground);
     this.on('mouseover', () => {
-      this.Engine.p5.cursor('pointer');
-      this.graphics.background(this.background);
+      this.graphics.background(this.pHoverBackround);
     });
 
     this.on('mouseout', () => {
-      this.Engine.p5.cursor('default');
-      this.graphics.background(this.overBackground);
+      this.graphics.background(this.pBackground);
     });
   }
 

@@ -131,6 +131,11 @@ export class Screen extends BaseObj {
 
     // Mouse clicked event
     this.RootCanvas.mouseClicked((event) => {
+      // const target = this.sprites.find((s) => this.isAttachedSprite(s) && this.isOverSprite(s));
+      // console.log(target);
+      // // target!.emit('click', event);
+      // (target as Sprite).emit('click', event);
+
       this.sprites
         .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
         .forEach((s) => s.emit('click', event));
@@ -156,6 +161,7 @@ export class Screen extends BaseObj {
         .filter((s) => this.isAttachedSprite(s))
         .forEach((s) => s.emit(this.isOverSprite(s) ? 'mouseover' : 'mouseout', event));
 
+      // s sprite is always this layer's sprite.
       const cur = this.sprites.find((s) => s instanceof Button && this.isOverSprite(s));
       this.p5.cursor(cur ? 'pointer' : 'default');
     });

@@ -20,15 +20,15 @@ export class LayoutLayer extends Layer {
     this.button.background = 'red';
 
     this.button.on('click', (e) => {
-      // console.log('main button');
+      console.log('main button');
       this.Engine.Router.navigate('demo');
       // this.Engine.Screen.setScene(menu);
     });
 
-    const but2 = new Button(0, 0, 256, 64);
+    const but2 = new Button(0, 0, 64, 64);
     but2.background = 'orange';
     but2.on('click', (e) => {
-      console.log(e);
+      console.log('secondary ');
     });
 
     this.addSprite(but2);
@@ -36,28 +36,16 @@ export class LayoutLayer extends Layer {
     this.button.x = (this.Engine.Screen.dimensions.width / 2) - (this.button.width / 2);
     this.button.y = (this.Engine.Screen.dimensions.height / 2) - (this.button.height / 2);
 
-    // Sprite.fromFile(BattleShip).then((s) => {
-    //   // console.log(s);
-    //   this.sBattleShip = s;
-    //   this.sBattleShip.x = -10;
-    //   this.sBattleShip.y = this.Engine.Screen.dimensions.height - s.graphics.height + 10;
-    //   this.addSprite(this.sBattleShip);
-    // });
+    but2.x = this.button.x - 32;
+    but2.y = this.button.y - 32;
 
     this.battleShip = Sprite.fromFile(BattleShip);
-    // this.battleShip.x = -10;
+
     this.battleShip.y = this.Engine.Screen.dimensions.height - this.battleShip.graphics.height + 10;
 
     this.admirableLogo = Sprite.fromFile(AdmirableLogoType);
     this.admirableLogo.x = (this.Engine.Screen.dimensions.width / 2) - (this.admirableLogo.graphics.width / 2);
     this.admirableLogo.y = -1 * (this.admirableLogo.graphics.height);
-    // Sprite.fromFile(AdmirableLogoType).then((sprite) => {
-    //   sprite.x = (this.Engine.Screen.dimensions.width / 2) - (sprite.graphics.width / 2);
-    //   sprite.y = -1 * (sprite.graphics.height);
-    //   this.sAdmirableLogo = sprite;
-    //   this.addSprite(this.sAdmirableLogo);
-    // });
-
   }
 
   public beforeAttach(): Promise<any> {
