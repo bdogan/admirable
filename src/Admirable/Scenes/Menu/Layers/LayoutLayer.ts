@@ -70,8 +70,14 @@ export class LayoutLayer extends Layer {
     this.admirableLogo.y += deltaY * this.easeing;
 
     // this.battleShip.x += this.battleShip.x * this.Engine.p5.cos(1);
+<<<<<<< HEAD
     this.battleShip.y =  this.battleShip.y + this.Engine.p5.sin(this.angle) / 2;
 
     this.angle = (this.angle + this.Engine.p5.TWO_PI / 60) % this.Engine.p5.TWO_PI;
+=======
+    this.battleShip.y =  this.battleShip.y + this.Engine.p5.sin(this.angle) * (this.Engine.p5.deltaTime / 40);
+
+    this.angle = (this.angle + this.Engine.p5.TWO_PI / 40) % this.Engine.p5.TWO_PI;
+>>>>>>> d96ce02118148bd8a21a0070f88bc45f61ff98c9
   }
 }
