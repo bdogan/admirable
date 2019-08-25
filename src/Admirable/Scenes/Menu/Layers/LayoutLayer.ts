@@ -9,13 +9,13 @@ export class LayoutLayer extends Layer {
 
   private button!: Button;
   private but2!: Button;
-  private logo!: Text;
   private battleShip!: Sprite;
   private admirableLogo!: Sprite;
   private easeing: number = 0.05;
   private angle: number = 0;
 
   public setup(): void {
+    // this.zIndex = -50;
     this.button = new Button(0, 0, 256, 64);
 
     this.button.background = 'red';
@@ -53,12 +53,13 @@ export class LayoutLayer extends Layer {
   }
 
   public beforeAttach(): Promise<any> {
-
+    // this.but2.zIndex = -50;
+    // this.but2.zIndex = 99;
     return Promise.all([
       this.addSprite(this.admirableLogo),
       this.addSprite(this.battleShip),
-      this.addSprite(this.but2),
       this.addSprite(this.button),
+      this.addSprite(this.but2),
     ]);
   }
 

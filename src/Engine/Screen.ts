@@ -131,10 +131,9 @@ export class Screen extends BaseObj {
 
     // Mouse clicked event
     this.RootCanvas.mouseClicked((event) => {
-
+      // reversed is used to find the top targeted sprite.
       const target = this.sprites.reverse().find((s) => this.isOverSprite(s));
       target!.emit('click', event);
-
       // this.sprites
       //   .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
       //   .forEach((s) => s.emit('click', event));
@@ -190,7 +189,8 @@ export class Screen extends BaseObj {
     ])
       .then(() => {
         // Attach sprites
-        orderBy(this.sprites, 'zIndex')
+        // orderBy(this.sprites, 'zIndex')
+        this.sprites
           .filter((s) => !!s && !!s.graphics)
           .forEach((s) => {
             this.p5.push();

@@ -1,5 +1,6 @@
 import { BaseObj } from './BaseObj';
 import { Sprite } from './Sprite';
+import _ from 'lodash';
 
 // Promise resolved
 const r = Promise.resolve();
@@ -9,6 +10,7 @@ const r = Promise.resolve();
  */
 export class Layer extends BaseObj {
 
+  public zIndex: number = 0;
   /**
    * Layer Sprites
    */
@@ -22,9 +24,21 @@ export class Layer extends BaseObj {
    * @param sprite Sprite
    */
   public addSprite(sprite: Sprite): Promise<Sprite> {
+
     sprite.setup();
     return sprite.attach()
-      .then(() => this.pSprites.push(sprite))
+      .then(() => {
+        /**
+         * This will help us to sort our array in the ascending order
+         * by the sprite's z-index value and the adding order automatically in setup time.
+         * So in later we don't have to mind the ordering.
+         *
+         * position will return 0 if the array is empty, or can't find a smaller zIndexed sprite in the array.
+         * ortherwise position will return the proper position for ordering by z-index and adding order.
+         */
+        const position = _.findLastIndex(this.pSprites, (s) => s.zIndex <= sprite.zIndex) + 1;
+        this.pSprites.splice(position, 0, sprite);
+      })
       .then(() => sprite);
   }
 

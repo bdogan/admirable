@@ -2,6 +2,7 @@ import { Sprite } from './Sprite';
 import { Layer } from './Layer';
 import { BaseObj } from './BaseObj';
 import { flatten, orderBy } from 'lodash';
+import _ from 'lodash';
 
 // Create resolver
 const r = Promise.resolve();
@@ -44,7 +45,12 @@ export class Scene extends BaseObj {
     const layer = new layerType();
     layer.setup();
     return (layer.beforeAttach() || Promise.resolve())
-      .then(() => this.layers.push(layer))
+      // .then(() => this.layers.push(layer))
+      // .then(() => this.layers.splice(layer.zIndex, 0, layer))
+      .then(() => {
+        const position = _.findLastIndex(this.layers, (l) => l.zIndex <= layer.zIndex) + 1;
+        this.layers.splice(position, 0, layer);
+      })
       .then(() => layer);
   }
 
