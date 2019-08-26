@@ -12,7 +12,7 @@ export class DemoTextLayer extends Layer {
       this.Engine.Screen.dimensions.width, this.Engine.Screen.dimensions.height);
     this.text.background = 'rgba(0,0,0,.2)';
 
-    this.button = new Button(0, 0, 256, 64);
+    this.button = new Button('Back to Menu', 0, 0, 256, 64);
     this.button.x = (this.Engine.Screen.dimensions.width / 2) - (this.button.width / 2);
     this.button.y = (this.Engine.Screen.dimensions.height / 2) - (this.button.height / 2);
     this.button.background = 'green';

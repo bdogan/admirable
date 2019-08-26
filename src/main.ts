@@ -19,7 +19,7 @@ AppEngine.Init({
 
 AppEngine.Run();
 
-AppEngine.Router.navigate('components');
+AppEngine.Router.navigate('main');
 
 /*
 import { Screen } from './Engine/Screen';

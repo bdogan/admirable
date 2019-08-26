@@ -16,8 +16,9 @@ export class LayoutLayer extends Layer {
 
   public setup(): void {
     // this.zIndex = -50;
-    this.button = new Button(0, 0, 256, 64);
-
+    this.button = new Button('Demo Scene', 0, 0, 256, 64);
+    this.button.text.color = 'blue';
+    this.button.text.size = 32;
     this.button.background = 'red';
 
     this.button.on('click', (e) => {
@@ -26,7 +27,7 @@ export class LayoutLayer extends Layer {
       // this.Engine.Screen.setScene(menu);
     });
 
-    this.but2 = new Button(0, 0, 64, 64);
+    this.but2 = new Button('Table', 0, 0, 64, 64);
     this.but2.background = 'orange';
     this.but2.on('click', (e) => {
       this.Engine.Router.navigate('components');
