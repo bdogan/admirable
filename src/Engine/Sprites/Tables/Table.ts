@@ -73,10 +73,9 @@ export class Table extends Sprite {
     }
 
     if (this.stretch) {
-      this.graphics = this.Engine.p5.createGraphics(this.tableWidth, this.tableHeight);
+      this.graphics = this.Engine.p5.createGraphics(this.tableWidth, this.height);
       this.graphics.remove();
       this.width = this.tableWidth;
-      this.height = this.tableHeight;
     }
 
     this.on('wheel', (e) => {
@@ -86,14 +85,19 @@ export class Table extends Sprite {
         this.Engine.p5.mouseX > this.x &&
         this.Engine.p5.mouseY < this.graphics.height + this.y &&
         this.Engine.p5.mouseY > this.y) {
-        this.tableTopPos = e.deltaY * 0.5;
+        this.tableTopPos = e.deltaY * 0.7;
 
         this.tableAbsPos += this.tableTopPos;
         if (this.tableAbsPos < 0) {
           this.graphics.translate(0, this.tableAbsPos);
           this.tableAbsPos = 0;
         }
-
+        /*
+        if (this.tableAbsPos > this.tableMeta.row * this.rowSize - this.height) {
+          this.tableAbsPos = this.tableMeta.row * this.rowSize - this.height;
+          this.graphics.translate(0, this.tableTopPos);
+        }
+        */
         this.graphics.translate(0, -this.tableTopPos);
       }
     });
