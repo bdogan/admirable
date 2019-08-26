@@ -29,7 +29,7 @@ export class LayoutLayer extends Layer {
     this.but2 = new Button(0, 0, 64, 64);
     this.but2.background = 'orange';
     this.but2.on('click', (e) => {
-      console.log('secondary ');
+      this.Engine.Router.navigate('components');
     });
 
     this.button.x = (this.Engine.Screen.dimensions.width / 2) - (this.button.width / 2);
@@ -73,5 +73,7 @@ export class LayoutLayer extends Layer {
     this.battleShip.y =  this.battleShip.y + this.Engine.p5.sin(this.angle) / 2;
 
     this.angle = (this.angle + this.Engine.p5.TWO_PI / 60) % this.Engine.p5.TWO_PI;
+
+    this.battleShip.graphics.rotate(Math.PI);
   }
 }
