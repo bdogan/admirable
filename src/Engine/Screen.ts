@@ -133,7 +133,9 @@ export class Screen extends BaseObj {
     this.RootCanvas.mouseClicked((event) => {
       // reversed is used to find the top targeted sprite.
       const target = this.sprites.reverse().find((s) => this.isOverSprite(s));
-      target!.emit('click', event);
+      if (target) {
+        target!.emit('click', event);
+      }
       // this.sprites
       //   .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
       //   .forEach((s) => s.emit('click', event));
@@ -172,6 +174,14 @@ export class Screen extends BaseObj {
       // s sprite is always this layer's sprite.
       const cur = this.sprites.find((s) => s instanceof Button && this.isOverSprite(s));
       this.p5.cursor(cur ? 'pointer' : 'default');
+    });
+
+    this.RootCanvas.mouseWheel((event) => {
+      const target = this.sprites.reverse().find((s) => this.isOverSprite(s));
+
+      if (target) {
+        target!.emit('wheel', event);
+      }
     });
 
   }

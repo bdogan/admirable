@@ -10,6 +10,10 @@ export class TableLayer extends Layer {
     this.table.showHead = true;
 
     this.table.content = users;
+    this.table.background = this.Engine.p5.color(0);
+    this.table.on('wheel', (e) => {
+      console.log(e);
+    });
   }
 
   public beforeAttach(): Promise<any> | any {
