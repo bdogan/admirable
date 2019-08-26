@@ -4,7 +4,6 @@ import { Sprite} from '../../../../Engine/Sprite';
 
 import {BattleShip, AdmirableLogoType} from '../Images';
 import { Text } from '../../../../Engine/Sprites/Text';
-import p5sound = require('p5/lib/addons/p5.sound');
 
 export class LayoutLayer extends Layer {
 

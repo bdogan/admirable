@@ -21,8 +21,8 @@ export class GridLayer extends Layer {
 
   public setup() {
         // Create grid sprite
-        // tslint:disable-next-line: max-line-length
-        this.gridGraphics = this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width, this.Engine.Screen.dimensions.height);
+        this.gridGraphics = this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width,
+          this.Engine.Screen.dimensions.height);
         this.gridSprite =  Sprite.New(0, 0, this.gridGraphics);
   }
 
