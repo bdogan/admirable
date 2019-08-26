@@ -52,6 +52,8 @@ export class Button extends Sprite {
       this.bg = this.pDefaultBackground;
       this.refreshGraphics();
     });
+
+    this.refreshGraphics();
   }
 
   public refreshGraphics(): void {

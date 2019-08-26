@@ -25,6 +25,7 @@ export class Table extends Sprite {
   private tableMeta: any;
   private tableWidth: number;
   private tableHeight: number;
+  private visibleRate: number = 0;
 
   public constructor(x: number, y: number, w: number, h: number) {
     super();
@@ -73,10 +74,9 @@ export class Table extends Sprite {
     }
 
     if (this.stretch) {
-      this.graphics = this.Engine.p5.createGraphics(this.tableWidth, this.tableHeight);
+      this.graphics = this.Engine.p5.createGraphics(this.tableWidth, this.height);
       this.graphics.remove();
       this.width = this.tableWidth;
-      this.height = this.tableHeight;
     }
 
     this.on('wheel', (e) => {
@@ -86,14 +86,19 @@ export class Table extends Sprite {
         this.Engine.p5.mouseX > this.x &&
         this.Engine.p5.mouseY < this.graphics.height + this.y &&
         this.Engine.p5.mouseY > this.y) {
-        this.tableTopPos = e.deltaY * 0.5;
+        this.tableTopPos = e.deltaY * 0.7;
 
         this.tableAbsPos += this.tableTopPos;
         if (this.tableAbsPos < 0) {
           this.graphics.translate(0, this.tableAbsPos);
           this.tableAbsPos = 0;
         }
-
+        /*
+        if (this.tableAbsPos > this.tableMeta.row * this.rowSize - this.height) {
+          this.tableAbsPos = this.tableMeta.row * this.rowSize - this.height;
+          this.graphics.translate(0, this.tableTopPos);
+        }
+        */
         this.graphics.translate(0, -this.tableTopPos);
       }
     });
@@ -104,7 +109,6 @@ export class Table extends Sprite {
     this.graphics.clear();
     this.graphics.background(this.background);
 
-    this.graphics.push();
     for (let i = 0; i < this.tableMeta.row; i++) {
       for (let j = 0; j < this.tableMeta.col; j++) {
         this.graphics.stroke(170);
@@ -141,6 +145,29 @@ export class Table extends Sprite {
 
         this.graphics.text(this.content[i][j] ? this.content[i][j] : '', textX, textY);
       }
+    }
+
+    this.graphics.fill(255, 100);
+    this.graphics.stroke(125);
+
+    this.visibleRate = this.graphics.height / this.tableHeight * this.graphics.height;
+
+    if (this.scroll &&
+      this.Engine.p5.mouseX < this.graphics.width &&
+    this.Engine.p5.mouseX > this.graphics.width - 100) {
+      let scrollTop = this.tableAbsPos * (this.graphics.height / this.tableHeight);
+
+      if (scrollTop > this.graphics.height) {
+        scrollTop = this.graphics.height;
+      }
+
+      let scrollBottom = this.visibleRate;
+
+      if (scrollTop + this.visibleRate > this.graphics.height) {
+        scrollBottom = this.graphics.height - scrollTop;
+      }
+
+      this.graphics.rect(this.graphics.width - 10, scrollTop + this.tableAbsPos, 10, scrollBottom);
     }
   }
 }

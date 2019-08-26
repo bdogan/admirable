@@ -17,10 +17,9 @@ export class TableLayer extends Layer {
       this.Engine.Router.navigate('main');
     });
 
-    // tslint:disable-next-line: max-line-length
-    const g = this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width, this.Engine.Screen.dimensions.height);
-    g.background(120);
-    this.bg = Sprite.New(0, 0, g);
+    this.bg = Sprite.New(0, 0, this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width,
+      this.Engine.Screen.dimensions.height));
+    this.bg.graphics.background(120);
 
     this.table = new Table(20, 20, 400, 300);
     this.table.showHead = true;
