@@ -27,6 +27,9 @@ export class Table extends Sprite {
   private tableHeight: number;
   private visibleRate: number = 0;
 
+  private lockY: number = 0;
+  private deltaY: number = 0;
+
   public constructor(x: number, y: number, w: number, h: number) {
     super();
 
@@ -101,6 +104,17 @@ export class Table extends Sprite {
         */
         this.graphics.translate(0, -this.tableTopPos);
       }
+    });
+
+    this.on('mousedown', (e) => {
+      console.log('mousedown');
+      this.lockY = this.Engine.p5.mouseY;
+    });
+    this.on('drag', (e) => {
+      let dY = (this.Engine.p5.mouseY - this.lockY);
+      this.lockY = this.Engine.p5.mouseY;
+      this.tableAbsPos += dY;
+      this.graphics.translate(0, dY);
     });
 
   }

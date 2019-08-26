@@ -125,6 +125,8 @@ export class Screen extends BaseObj {
 
     // Set framerate
     this.p5.frameRate(this.frameRate);
+    // Set pixelDensity 1 for performance on canvas scale.
+    this.p5.pixelDensity(1);
 
     // Info
     this.Engine.Log('info', `Screen canvas generated at ${this.width} x ${this.height} dimensions.`);
@@ -183,6 +185,14 @@ export class Screen extends BaseObj {
         target!.emit('wheel', event);
       }
     });
+
+    this.Engine.p5.mouseDragged = (e) => {
+      const target = this.sprites.reverse().find((s) => this.isOverSprite(s));
+      if (target) {
+        target!.emit('drag', e);
+      }
+      return false;
+    };
 
   }
 
