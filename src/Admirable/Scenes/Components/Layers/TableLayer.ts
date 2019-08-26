@@ -1,22 +1,37 @@
 import { Layer } from '../../../../Engine/Layer';
 import {Table} from '../../../../Engine/Sprites/Tables/Table';
+import {Sprite} from '../../../../Engine/Sprite';
 const users = require('./users.json');
 
 export class TableLayer extends Layer {
   private table!: Table;
+  private bg!: Sprite;
 
   public setup() {
-    this.table = new Table(20, 20, 640, 600);
+
+    // this.bg = Sprite.New(0, 0,
+    //   this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width,
+    //     this.Engine.Screen.dimensions.height));
+    // this.bg.graphics.fill(0);
+
+    // tslint:disable-next-line: max-line-length
+    const g = this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width, this.Engine.Screen.dimensions.height);
+    g.background(120);
+    this.bg = Sprite.New(0, 0, g);
+
+    this.table = new Table(20, 20, 400, 300);
     this.table.showHead = true;
+    this.table.stretch = true;
+    this.table.scroll = true;
 
     this.table.content = users;
-    this.table.background = this.Engine.p5.color(0);
-    this.table.on('wheel', (e) => {
-      console.log(e);
-    });
+    this.table.background = this.Engine.p5.color(140);
   }
 
   public beforeAttach(): Promise<any> | any {
-    return this.addSprite(this.table);
+    return Promise.all([
+      this.addSprite(this.bg),
+      this.addSprite(this.table),
+    ]);
   }
 }

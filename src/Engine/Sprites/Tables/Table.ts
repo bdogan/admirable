@@ -16,6 +16,7 @@ export class Table extends Sprite {
   public paddingY: number;
   public fontSize: number;
   public background: any;
+  public stretch: boolean;
 
   public scroll: boolean = false;
 
@@ -42,6 +43,7 @@ export class Table extends Sprite {
     this.fontSize = 14;
 
     this.showHead = false;
+    this.stretch = false;
 
     this.tableMeta = {
       col: 0,
@@ -63,19 +65,46 @@ export class Table extends Sprite {
       row: this.content.length,
     };
 
+    this.tableWidth = this.tableMeta.col * this.colSize;
+    this.tableHeight = this.tableMeta.row * this.rowSize;
+
     if (!this.background) {
       this.background = this.Engine.p5.color(0, 0, 0, 0);
     }
 
-    this.tableWidth = this.tableMeta.col * this.colSize;
-    this.tableHeight = this.tableMeta.row * this.rowSize;
+    if (this.stretch) {
+      this.graphics = this.Engine.p5.createGraphics(this.tableWidth, this.tableHeight);
+      this.graphics.remove();
+      this.width = this.tableWidth;
+      this.height = this.tableHeight;
+    }
 
-    this.graphics.background(this.background);
+    this.on('wheel', (e) => {
+      if (this.scroll &&
+        !!e.deltaY &&
+        this.Engine.p5.mouseX < this.graphics.width + this.x &&
+        this.Engine.p5.mouseX > this.x &&
+        this.Engine.p5.mouseY < this.graphics.height + this.y &&
+        this.Engine.p5.mouseY > this.y) {
+        this.tableTopPos = e.deltaY * 0.5;
+
+        this.tableAbsPos += this.tableTopPos;
+        if (this.tableAbsPos < 0) {
+          this.graphics.translate(0, this.tableAbsPos);
+          this.tableAbsPos = 0;
+        }
+
+        this.graphics.translate(0, -this.tableTopPos);
+      }
+    });
+
   }
 
   public update(): Promise<any> | any {
-    this.graphics.push();
+    this.graphics.clear();
+    this.graphics.background(this.background);
 
+    this.graphics.push();
     for (let i = 0; i < this.tableMeta.row; i++) {
       for (let j = 0; j < this.tableMeta.col; j++) {
         this.graphics.stroke(170);
