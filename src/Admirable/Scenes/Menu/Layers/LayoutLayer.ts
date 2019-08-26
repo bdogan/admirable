@@ -18,12 +18,13 @@ export class LayoutLayer extends Layer {
   public setup(): void {
     // this.zIndex = -50;
     this.button = new Button('Demo Scene', 0, 0, 256, 64);
-    this.button.text.color = 'blue';
+    this.button.text.color = 'rgba(0,255,255, 1)';
     this.button.text.size = 32;
-    this.button.background = 'red';
+    this.button.background = 'rgba(0,255,0, 255)';
 
     this.button.on('click', (e) => {
       console.log('main button');
+      // this.button.text.text = 'changed';
       this.Engine.Router.navigate('demo');
       // this.Engine.Screen.setScene(menu);
     });

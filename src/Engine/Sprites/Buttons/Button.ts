@@ -18,13 +18,13 @@ export class Button extends Sprite {
   private pHoverBackround: any = undefined;
 
   public get background(): any {
-    return this.bg ? this.bg : 'rgb(0,255,255)';
+    return this.bg ? this.bg : 'rgba(0,255,255, 10)';
   }
   public set background(b: any) {
-    this.pDefaultBackground = this.bg = this.alterColor(b, 0.7, 0.7, 0.7);
+    this.pDefaultBackground = this.bg = this.alterColor(b, 0.7, 0.7, 0.7, 0.4);
 
     if (!this.pHoverBackround) {
-      this.pHoverBackround = b;
+      this.pHoverBackround = this.alterColor(b, 0.7, 0.7, 0.7, 0.8);
     }
 
     this.refreshGraphics();

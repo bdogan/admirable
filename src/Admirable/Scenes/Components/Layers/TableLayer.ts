@@ -2,6 +2,7 @@ import { Layer } from '../../../../Engine/Layer';
 import {Table} from '../../../../Engine/Sprites/Tables/Table';
 import {Sprite} from '../../../../Engine/Sprite';
 import { Button } from '../../../../Engine/Sprites/Buttons/Button';
+// tslint:disable-next-line: no-var-requires
 const users = require('./users.json');
 
 export class TableLayer extends Layer {
