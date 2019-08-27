@@ -2,6 +2,7 @@ import { Layer } from '../../../../Engine/Layer';
 import {Table} from '../../../../Engine/Sprites/Tables/Table';
 import {Sprite} from '../../../../Engine/Sprite';
 import { Button } from '../../../../Engine/Sprites/Buttons/Button';
+import { MouseState } from '../../../../Engine/Enums';
 // tslint:disable-next-line: no-var-requires
 const users = require('./users.json');
 
@@ -13,7 +14,7 @@ export class TableLayer extends Layer {
   public setup() {
 
     this.backButton = new Button('Menu', 0, 0, this.Engine.Screen.dimensions.width, 20);
-    this.backButton.on('click', () => {
+    this.backButton.on(MouseState.CLICK, () => {
       this.Engine.Router.navigate('main');
     });
 

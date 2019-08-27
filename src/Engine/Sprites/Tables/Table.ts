@@ -1,5 +1,6 @@
 import { Graphics } from 'p5';
 import { Sprite } from '../../Sprite';
+import { MouseState } from '../../Enums';
 
 export class Table extends Sprite {
   public x: number = 0;
@@ -82,7 +83,7 @@ export class Table extends Sprite {
       this.width = this.tableWidth;
     }
 
-    this.on('wheel', (e) => {
+    this.on(MouseState.WHEEL, (e) => {
       if (this.scroll &&
         !!e.deltaY &&
         this.Engine.p5.mouseX < this.graphics.width + this.x &&
@@ -106,12 +107,12 @@ export class Table extends Sprite {
       }
     });
 
-    this.on('mousedown', (e) => {
+    this.on(MouseState.PRESSED, (e) => {
       console.log('mousedown');
       this.lockY = this.Engine.p5.mouseY;
     });
-    this.on('drag', (e) => {
-      let dY = (this.Engine.p5.mouseY - this.lockY);
+    this.on(MouseState.DRAG, (e) => {
+      const dY = (this.Engine.p5.mouseY - this.lockY);
       this.lockY = this.Engine.p5.mouseY;
       this.tableAbsPos += dY;
       this.graphics.translate(0, dY);

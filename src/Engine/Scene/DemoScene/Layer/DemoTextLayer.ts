@@ -1,6 +1,7 @@
 import { Text } from './../../../Sprites/Text/Text';
 import { Layer } from '../../../Layer';
 import { Button } from '../../../Sprites/Buttons/Button';
+import { MouseState } from '../../../Enums';
 
 export class DemoTextLayer extends Layer {
 
@@ -16,7 +17,7 @@ export class DemoTextLayer extends Layer {
     this.button.x = (this.Engine.Screen.dimensions.width / 2) - (this.button.width / 2);
     this.button.y = (this.Engine.Screen.dimensions.height / 2) - (this.button.height / 2);
     this.button.background = 'green';
-    this.button.on('click', (e) => {
+    this.button.on(MouseState.CLICK, (e) => {
       this.Engine.Router.navigate('main');
     });
 

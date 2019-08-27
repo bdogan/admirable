@@ -6,6 +6,7 @@ import { flatten, orderBy } from 'lodash';
 import { BaseObj } from './BaseObj';
 import { Sprite } from './Sprite';
 import { Button } from './Sprites/Buttons/Button';
+import { MouseState } from './Enums';
 
 // Promise resolver
 const r = Promise.resolve();
@@ -133,14 +134,12 @@ export class Screen extends BaseObj {
 
     // Mouse clicked event
     this.RootCanvas.mouseClicked((event) => {
-      // reversed is used to find the top targeted sprite.
-      const target = this.sprites.reverse().find((s) => this.isOverSprite(s));
+
+      const target = this.eventTarget();
+
       if (target) {
-        target!.emit('click', event);
+        target!.emit(MouseState.CLICK, event);
       }
-      // this.sprites
-      //   .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
-      //   .forEach((s) => s.emit('click', event));
 
     });
 
@@ -148,52 +147,65 @@ export class Screen extends BaseObj {
     this.RootCanvas.mousePressed((event) => {
       this.sprites
         .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
-        .forEach((s) => s.emit('mousedown', event));
+        .forEach((s) => s.emit(MouseState.PRESSED, event));
     });
 
     // Mouse released
     this.RootCanvas.mouseReleased((event) => {
       this.sprites
         .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
-        .forEach((s) => s.emit('mouseup', event));
+        .forEach((s) => s.emit(MouseState.RELEASED, event));
     });
 
-    // Mouse over
+    // Mouse in / Mouse out
     this.RootCanvas.mouseMoved((event) => {
-/*
-      const target = this.sprites.reverse().find((s) => this.isOverSprite(s));
-      this.sprites.forEach((s) => s.emit('mouseout', event));
-      if (target) {
-        target!.emit('mouseover', event);
-      }*/
-      // console.log(target);
+      // Make the cursor Pointer on a button.
+      const cur = this.sprites.find((s) => s instanceof Button && this.isOverSprite(s));
+      this.p5.cursor(cur ? 'pointer' : 'default');
 
-      // consider attaching mouseout whenever mouseover attached.
+      const target = this.eventTarget();
+
       this.sprites
         .filter((s) => this.isAttachedSprite(s))
-        .forEach((s) => s.emit(this.isOverSprite(s) ? 'mouseover' : 'mouseout', event));
+        .forEach((s) => s.emit(this.isOverSprite(s) && s === target ? MouseState.OVER : MouseState.OUT, event));
 
-      // s sprite is always this layer's sprite.
-      // const cur = this.sprites.find((s) => s instanceof Button && this.isOverSprite(s));
-      // this.p5.cursor(cur ? 'pointer' : 'default');
     });
 
     this.RootCanvas.mouseWheel((event) => {
-      const target = this.sprites.reverse().find((s) => this.isOverSprite(s));
+      const target = this.eventTarget();
 
       if (target) {
-        target!.emit('wheel', event);
+        target!.emit(MouseState.WHEEL, event);
       }
     });
 
+    // Root canvas doesn't support mouseDragged natively, so we need to implement like this.
     this.Engine.p5.mouseDragged = (e) => {
-      const target = this.sprites.reverse().find((s) => this.isOverSprite(s));
+      const target = this.eventTarget();
+
       if (target) {
-        target!.emit('drag', e);
+        target!.emit(MouseState.DRAG, e);
       }
       return false;
     };
 
+  }
+
+  /**
+   * Loop the array through backward and return the targeted sprite if found.
+   * It's better to iterate the array backward because our fifo draw/update logic
+   * and since **we're looking for the top/last targetable element in the canvas** at the
+   * current mouse position it's likely to be found at the end of the array.
+   *
+   * @returns Sprite if is found or undefined if not found.
+   */
+  private eventTarget(): Sprite | undefined {
+    // console.log(this.sprites);
+    for (let i = this.sprites.length - 1; i > 0; i--) {
+      if (this.isOverSprite(this.sprites[i])) {
+        return this.sprites[i];
+      }
+    }
   }
 
   private draw() {
@@ -211,7 +223,7 @@ export class Screen extends BaseObj {
         // Attach sprites
         // orderBy(this.sprites, 'zIndex')
         this.sprites
-          .filter((s) => !!s && !!s.graphics)
+          // .filter((s) => !!s && !!s.graphics)
           .forEach((s) => this.p5.image(s.graphics as Graphics, s.x, s.y, s.graphics.width, s.graphics.height));
         this.p5.loop();
       });

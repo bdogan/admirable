@@ -4,6 +4,7 @@ import { Sprite} from '../../../../Engine/Sprite';
 
 import {BattleShip, AdmirableLogoType} from '../Images';
 import { Text } from '../../../../Engine/Sprites/Text';
+import { MouseState } from '../../../../Engine/Enums';
 
 export class LayoutLayer extends Layer {
 
@@ -21,7 +22,7 @@ export class LayoutLayer extends Layer {
     this.button.text.size = 32;
     this.button.background = 'rgb(0,255,255)';
 
-    this.button.on('click', (e) => {
+    this.button.on(MouseState.CLICK, (e) => {
       console.log('main button');
       // this.button.text.text = 'changed';
       this.Engine.Router.navigate('demo');
@@ -30,7 +31,7 @@ export class LayoutLayer extends Layer {
 
     this.but2 = new Button('Table', 0, 0, 64, 64);
     this.but2.background = 'orange';
-    this.but2.on('click', (e) => {
+    this.but2.on(MouseState.CLICK, (e) => {
       this.Engine.Router.navigate('components');
     });
 
@@ -40,7 +41,7 @@ export class LayoutLayer extends Layer {
     this.but2.x = this.button.x - 32;
     this.but2.y = this.button.y - 32;
 
-    this.battleShip.on('click', () => {
+    this.battleShip.on(MouseState.CLICK, () => {
       console.log(`I'm a battle ship!`);
     });
 
@@ -48,7 +49,7 @@ export class LayoutLayer extends Layer {
 
     this.admirableLogo.x = (this.Engine.Screen.dimensions.width / 2) - (this.admirableLogo.graphics.width / 2);
     this.admirableLogo.y = -1 * (this.admirableLogo.graphics.height);
-    //this.admirableLogo.graphics.resizeCanvas(200, 200);
+    // this.admirableLogo.graphics.resizeCanvas(200, 200);
 
   }
 

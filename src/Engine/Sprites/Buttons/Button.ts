@@ -2,11 +2,7 @@ import { Graphics } from 'p5';
 import { Sprite } from '../../Sprite';
 import { Text } from '../Text';
 import p5 = require('p5');
-
-export enum MouseState {
-  OVER = 'over',
-  OUT = 'out',
-}
+import { MouseState } from '../../Enums';
 
 export class Button extends Sprite {
 
@@ -60,30 +56,9 @@ export class Button extends Sprite {
     this.text = new Text(txt, 16, w, h);
     this.text.on('change', () => this.graphics.image(this.text.graphics, 0, 0));
 
-    this.on('mouseover', () => this.MouseState = MouseState.OVER);
-    this.on('mouseout', () => this.MouseState = MouseState.OUT);
+    this.on(MouseState.OVER, () => this.MouseState = MouseState.OVER);
+    this.on(MouseState.OUT, () => this.MouseState = MouseState.OUT);
 
-    /*
-    this.on('mouseover', () => {
-      if (this.pLastMouseState === 'over') {
-        return;
-      }
-      console.log('over', this.text.text);
-      this.bg = this.pHoverBackround;
-      this.pLastMouseState = 'over';
-      this.refreshGraphics();
-    });
-
-    this.on('mouseout', () => {
-      if (this.pLastMouseState === 'out') {
-        return;
-      }
-      console.log('out', this.text.text);
-      this.bg = this.pDefaultBackground;
-      this.pLastMouseState = 'out';
-      this.refreshGraphics();
-    });
-*/
     this.refreshGraphics();
   }
 

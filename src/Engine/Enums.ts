@@ -1,0 +1,9 @@
+export enum MouseState {
+  CLICK = 'click',
+  PRESSED = 'mousedown',
+  RELEASED = 'mouseup',
+  OVER = 'mouseover',
+  OUT = 'mouseout',
+  WHEEL = 'wheel',
+  DRAG = 'drag',
+}

@@ -2,10 +2,14 @@ import { Layer } from '../../../../Engine/Layer';
 import { Graphics } from 'p5';
 import { Sprite } from '../../../../Engine/Sprite';
 import { promises } from 'fs';
+import { Button } from '../../../../Engine/Sprites/Buttons/Button';
+import { MouseState } from '../../../../Engine/Enums';
 
 export class GridLayer extends Layer {
 
   private angle: number = 0;
+
+  private button!: Button;
 
   private gridSprite!: Sprite;
   private gridGraphics!: Graphics;
@@ -16,14 +20,22 @@ export class GridLayer extends Layer {
   };
 
   public beforeAttach(): Promise<any> {
-    return this.addSprite(this.gridSprite);
+    // return this.addSprite(this.gridSprite);
+    return Promise.all([
+      this.addSprite(this.gridSprite),
+      this.addSprite(this.button),
+    ]);
   }
 
   public setup() {
+    this.button = new Button('GRID LAYER BUTTON', 129, 64, 256, 32);
+    this.button.on(MouseState.CLICK, (e) => {
+      console.log('A button in the background layer is clicked');
+    });
         // Create grid sprite
-        this.gridGraphics = this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width,
+    this.gridGraphics = this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width,
           this.Engine.Screen.dimensions.height);
-        this.gridSprite =  Sprite.New(0, 0, this.gridGraphics);
+    this.gridSprite =  Sprite.New(0, 0, this.gridGraphics);
   }
 
   public update(): void {
