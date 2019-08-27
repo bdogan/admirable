@@ -1,6 +1,7 @@
 import { AppEngine } from './Engine';
 import { Graphics, Image, Element, __Graphics__ } from 'p5';
 import { BaseObj } from './BaseObj';
+import p5 = require('p5');
 
 // Promise resolved
 const r = Promise.resolve();
@@ -22,6 +23,8 @@ export class Sprite extends BaseObj {
     sprite.y = y;
     sprite.graphics = graphics;
     sprite.graphics.remove();
+    sprite.graphics.pixelDensity(1);
+    sprite.graphics.updatePixels();
     return sprite;
   }
 
@@ -30,20 +33,21 @@ export class Sprite extends BaseObj {
    * @param fileData any
    */
   public static fromFile(fileData: any, x: number = 0, y: number = 0): Sprite {
-      // Create image
-      const image = AppEngine.p5.createGraphics(fileData.default.info.width, fileData.default.info.height);
-      image.loadPixels();
+    // Create image
+    const image = AppEngine.p5.createGraphics(fileData.default.info.width, fileData.default.info.height);
+    image.pixelDensity(1);
+    image.loadPixels();
 
-      // Fill pixels
-      for (let i = 0; i < fileData.default.pixels.data.length; i++) {
-        image.pixels[i] = fileData.default.pixels.data[i];
-      }
+    // Fill pixels
+    for (let i = 0; i < fileData.default.pixels.data.length; i++) {
+      image.pixels[i] = fileData.default.pixels.data[i];
+    }
 
-      // Update pixels
-      image.updatePixels();
+    // Update pixels
+    image.updatePixels();
 
-      // Create sprite
-      return Sprite.New(x, y, image);
+    // Create sprite
+    return Sprite.New(x, y, image);
   }
 
   /**
