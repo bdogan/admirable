@@ -9,8 +9,8 @@ export class LayoutLayer extends Layer {
 
   private button!: Button;
   private but2!: Button;
-  private battleShip!: Sprite;
-  private admirableLogo!: Sprite;
+  private battleShip: Sprite = Sprite.fromFile(BattleShip);
+  private admirableLogo: Sprite = Sprite.fromFile(AdmirableLogoType);
   private easeing: number = 0.05;
   private angle: number = 0;
 
@@ -40,17 +40,15 @@ export class LayoutLayer extends Layer {
     this.but2.x = this.button.x - 32;
     this.but2.y = this.button.y - 32;
 
-    this.battleShip = Sprite.fromFile(BattleShip);
-
     this.battleShip.on('click', () => {
       console.log(`I'm a battle ship!`);
     });
 
     this.battleShip.y = this.Engine.Screen.dimensions.height - this.battleShip.graphics.height + 10;
 
-    this.admirableLogo = Sprite.fromFile(AdmirableLogoType);
     this.admirableLogo.x = (this.Engine.Screen.dimensions.width / 2) - (this.admirableLogo.graphics.width / 2);
     this.admirableLogo.y = -1 * (this.admirableLogo.graphics.height);
+    //this.admirableLogo.graphics.resizeCanvas(200, 200);
 
   }
 
