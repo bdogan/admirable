@@ -3,6 +3,11 @@ import { Sprite } from '../../Sprite';
 import { Text } from '../Text';
 import p5 = require('p5');
 
+export enum MouseState {
+  OVER = 'over',
+  OUT = 'out',
+}
+
 export class Button extends Sprite {
 
   public x: number = 0;
@@ -16,6 +21,17 @@ export class Button extends Sprite {
   private bg: any;
   private pDefaultBackground: any = undefined;
   private pHoverBackround: any = undefined;
+
+  private pLastMouseState!: MouseState;
+  public get MouseState(): MouseState {
+    return this.pLastMouseState;
+  }
+  public set MouseState(v: MouseState) {
+    if (this.pLastMouseState === v) {
+      return;
+    }
+    this.onMouseHover(this.pLastMouseState = v);
+  }
 
   public get background(): any {
     return this.bg ? this.bg : 'rgba(0,255,255, 10)';
@@ -42,17 +58,45 @@ export class Button extends Sprite {
     this.height = h;
 
     this.text = new Text(txt, 16, w, h);
+    this.text.on('change', () => this.graphics.image(this.text.graphics, 0, 0));
 
+    this.on('mouseover', () => this.MouseState = MouseState.OVER);
+    this.on('mouseout', () => this.MouseState = MouseState.OUT);
+
+    /*
     this.on('mouseover', () => {
+      if (this.pLastMouseState === 'over') {
+        return;
+      }
+      console.log('over', this.text.text);
       this.bg = this.pHoverBackround;
+      this.pLastMouseState = 'over';
       this.refreshGraphics();
     });
 
     this.on('mouseout', () => {
+      if (this.pLastMouseState === 'out') {
+        return;
+      }
+      console.log('out', this.text.text);
       this.bg = this.pDefaultBackground;
+      this.pLastMouseState = 'out';
       this.refreshGraphics();
     });
+*/
+    this.refreshGraphics();
+  }
 
+  public onMouseHover(state: MouseState) {
+    console.log(state);
+    switch (state) {
+      case MouseState.OVER:
+        this.bg = this.pHoverBackround;
+        break;
+      case MouseState.OUT:
+        this.bg = this.pDefaultBackground;
+        break;
+    }
     this.refreshGraphics();
   }
 

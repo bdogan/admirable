@@ -145,34 +145,35 @@ export class Text extends Sprite {
         this.graphics.remove();
 
         // Load font
-        // this.loadFont();
+        this.loadFont();
 
         // this.on('mousePressed', console.log)
         this.refreshGraphics();
     }
 
     private refreshGraphics() {
-        // if (this.font) {
+        if (this.font) {
             // Clear the canvas to prevent over print.
             this.graphics.clear();
             this.graphics.background(this.background);
-            // this.graphics.textFont(this.font);
+            this.graphics.textFont(this.font);
             this.graphics.textLeading(this.leading);
             this.graphics.fill(this.color);
             this.graphics.textSize(this.size);
             this.graphics.textAlign(this.hAlign, this.vAlign);
             this.graphics.text(this.text, this.textX, this.textY);
-        // }
+        }
+        this.emit('change', this);
     }
 
-    // private loadFont() {
-    //   if (this.font) {
-    //     return;
-    //   }
-    //   this.Engine.p5.loadFont(this.fontPath, (f) => {
-    //     this.font = f;
-    //     this.refreshGraphics();
-    //   });
-    // }
+    private loadFont() {
+      if (this.font) {
+        return;
+      }
+      this.Engine.p5.loadFont(this.fontPath, (f) => {
+        this.font = f;
+        this.refreshGraphics();
+      });
+    }
 
 }

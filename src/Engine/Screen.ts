@@ -160,22 +160,22 @@ export class Screen extends BaseObj {
 
     // Mouse over
     this.RootCanvas.mouseMoved((event) => {
-
+/*
       const target = this.sprites.reverse().find((s) => this.isOverSprite(s));
       this.sprites.forEach((s) => s.emit('mouseout', event));
       if (target) {
         target!.emit('mouseover', event);
-      }
+      }*/
       // console.log(target);
 
       // consider attaching mouseout whenever mouseover attached.
-      // this.sprites
-      //   .filter((s) => this.isAttachedSprite(s))
-      //   .forEach((s) => s.emit(this.isOverSprite(s) ? 'mouseover' : 'mouseout', event));
+      this.sprites
+        .filter((s) => this.isAttachedSprite(s))
+        .forEach((s) => s.emit(this.isOverSprite(s) ? 'mouseover' : 'mouseout', event));
 
       // s sprite is always this layer's sprite.
-      const cur = this.sprites.find((s) => s instanceof Button && this.isOverSprite(s));
-      this.p5.cursor(cur ? 'pointer' : 'default');
+      // const cur = this.sprites.find((s) => s instanceof Button && this.isOverSprite(s));
+      // this.p5.cursor(cur ? 'pointer' : 'default');
     });
 
     this.RootCanvas.mouseWheel((event) => {
