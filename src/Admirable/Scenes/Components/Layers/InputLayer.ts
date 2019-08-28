@@ -8,6 +8,7 @@ export class InputLayer extends Layer {
   private textbox2!: TextBox;
 
   public setup() {
+    this.zIndex = 0;
     this.textbox = new TextBox();
     // this.textbox.focus = true;
     this.textbox.value = 'merhaba. ಠ_ಠ ';

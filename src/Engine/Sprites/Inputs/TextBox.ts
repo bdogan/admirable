@@ -125,9 +125,24 @@ export class TextBox extends Sprite {
     this.graphics = graphics;
     graphics.remove();
 
-    this.on(KeyState.FOCUS, () => {this.focus = true; } );
-    this.on(KeyState.BLUR, () => {this.focus = false; this.isDirty = true; });
+    // On focus
+    this.on(KeyState.FOCUS, () => {
+      this.focus = true;
+      this.pCursorBlink = 0;
+    } );
+
+    // On focus out
+    this.on(KeyState.BLUR, () => {
+      if (this.focus) {
+        this.focus = false;
+        this.isDirty = true;
+      }
+    });
+
+    // On key pressed
     this.on(KeyState.PRESSED, (event) => this.onKeyPressed(event));
+
+    // Trigger redraw once.
     this.isDirty = true;
   }
 
@@ -135,7 +150,7 @@ export class TextBox extends Sprite {
 
     // Draw only when it's needed
     if (this.isDirty) {
-      console.log('textbox redrawed');
+      console.log(`TextBox on the position ${this.x}x${this.y} redrawed.`);
       this.graphics.background(255);
       this.graphics.textAlign('left', 'center');
       this.graphics.text(this.value, this.textBoxPosition, this.height / 2);

@@ -45,12 +45,7 @@ export class Scene extends BaseObj {
     const layer = new layerType();
     layer.setup();
     return (layer.beforeAttach() || Promise.resolve())
-      // .then(() => this.layers.push(layer))
-      // .then(() => this.layers.splice(layer.zIndex, 0, layer))
-      .then(() => {
-        const position = _.findLastIndex(this.layers, (l) => l.zIndex <= layer.zIndex) + 1;
-        this.layers.splice(position, 0, layer);
-      })
+      .then(() => this.layers.push(layer))
       .then(() => layer);
   }
 
@@ -93,8 +88,10 @@ export class Scene extends BaseObj {
   public attach(): Promise<Scene> {
     return Promise.all(this.pLayers.map((l) => l.attach()))
       .then(() => (this.beforeAttach() || r))
+      .then(() => this.afterAttach())
       .then(() => this);
   }
+
 
   /**
    * Update
@@ -112,5 +109,20 @@ export class Scene extends BaseObj {
   public beforeAttach(): Promise<any> | any { return; }
   public beforeDetach(): Promise<any> | any { return; }
   public update(): Promise<any> | any { return; }
+
+  // run after attached.
+  private afterAttach(): Promise<any> {
+    return this.orderZIndex();
+  }
+
+  private orderZIndex(): Promise<any> {
+
+    // this.pLayers.forEach((l) => l.sprites = _.orderBy(l.sprites, 'zIndex'));
+
+    console.log(this.pLayers);
+    this.pLayers = _.orderBy(this.pLayers, 'zIndex');
+    console.log(this.pLayers);
+    return Promise.resolve(true);
+  }
 
 }
