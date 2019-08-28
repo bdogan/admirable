@@ -10,4 +10,5 @@ export enum MouseState {
 
 export enum KeyState {
   PRESSED = 'keydown',
+  FOCUS = 'focus',
 }

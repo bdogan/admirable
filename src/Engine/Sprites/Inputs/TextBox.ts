@@ -1,8 +1,6 @@
 import { Sprite } from '../../Sprite';
 import { Graphics, HORIZ_ALIGN } from 'p5';
 import { KeyState } from '../../Enums';
-import { EventEmitter } from 'events';
-import { resolveTxt } from 'dns';
 
 const BLOCKED_CHARS = [
                         8,  // Back Space
@@ -28,6 +26,7 @@ export class TextBox extends Sprite {
   public graphics: Graphics;
 
   private pCursorBlink: number = 0;
+
   /**
    * Hold's the current cursor position relative to the text's end.
    */
@@ -45,29 +44,24 @@ export class TextBox extends Sprite {
   /**
    * @returns the cursor X position relative to the textbox bounds.
    */
-  private get cursorPosition() {
-    // Calculate the cursor's X position at the cursor position in the string.
-    const cursorX = this.graphics.textWidth(this.value.substring(0, this.value.length - this.pCursorPosition));
-
-    // define the bounds.
-    const bound = (this.width - this.height);
-
-    // return minumum.
-    return Math.min(cursorX, bound);
-  }
-
-  /**
-   * @returns Horizontal align relative to cursor position.
-   */
-  private get align(): HORIZ_ALIGN {
-    return this.floatState ? 'left' : 'right';
+  private get cursorPosition(): number {
+    // // find the width value of the substring at the cursor position.
+    // let cp = this.graphics.textWidth(this.value.substring(0, this.value.length - this.pCursorPosition));
+    // // this.textBoxPosition is <= 0
+    // cp = cp + this.textBoxPosition;
+    // return cp;
+    const cp = this.graphics.textWidth(this.value.substring(0, this.value.length - this.pCursorPosition));
+    const delta = (this.width + cp);
+    return Math.min(cp, this.width);
   }
 
   /**
    * @returns text's position relative to the textbox wrapper.
    */
-  private get textBoxAlign(): number {
-    return this.floatState ? 0 : (this.width - this.height);
+  private get textBoxPosition(): number {
+    const cp = this.graphics.textWidth(this.value.substring(0, this.value.length - this.pCursorPosition));
+    const delta = (this.width - cp);
+    return Math.min(delta, 0);
   }
 
   /**
@@ -95,23 +89,27 @@ export class TextBox extends Sprite {
     this.graphics = graphics;
     graphics.remove();
 
+    this.on(KeyState.FOCUS, () => this.focus = true );
     this.on(KeyState.PRESSED, (event) => this.onKeyPressed(event));
 
   }
 
   public update() {
     this.graphics.background(255);
-    this.graphics.textAlign(this.align, 'center');
-    this.graphics.text(this.value, this.textBoxAlign, this.height / 2);
+    this.graphics.textAlign('left', 'center');
+    this.graphics.text(this.value, this.textBoxPosition, this.height / 2);
 
-    // Draw cursor
-    this.graphics.stroke(this.pCursorBlink);
-    this.graphics.strokeWeight(2);
-    this.pCursorBlink = (this.pCursorBlink + 10) % 255;
-    // tslint:disable-next-line: max-line-length
-    this.graphics.line(this.cursorPosition, 0 + (this.height * 0.85), this.cursorPosition, this.height - (this.height * 0.85));
-    this.graphics.noStroke();
+    if (this.focus) {
+      // Draw cursor
+      this.graphics.stroke(this.pCursorBlink);
+      this.graphics.strokeWeight(2);
+      this.pCursorBlink = (this.pCursorBlink + 10) % 255;
+      // tslint:disable-next-line: max-line-length
+      this.graphics.line(this.cursorPosition, 0 + (this.height * 0.85), this.cursorPosition, this.height - (this.height * 0.85));
+      this.graphics.noStroke();
+    }
   }
+
   private onKeyPressed(event: {key: string, keyCode: number}): void {
     console.log(event);
 
