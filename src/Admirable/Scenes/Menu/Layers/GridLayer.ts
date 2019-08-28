@@ -28,7 +28,8 @@ export class GridLayer extends Layer {
   }
 
   public setup() {
-    this.button = new Button('GRID LAYER BUTTON', 129, 64, 256, 32);
+    this.button = new Button('GRID LAYER BUTTON', 129, 290, 256, 32);
+    this.button.zIndex = 500;
     this.button.on(MouseState.CLICK, (e) => {
       console.log('A button in the background layer is clicked');
     });
@@ -36,6 +37,10 @@ export class GridLayer extends Layer {
     this.gridGraphics = this.Engine.p5.createGraphics(this.Engine.Screen.dimensions.width,
           this.Engine.Screen.dimensions.height);
     this.gridSprite =  Sprite.New(0, 0, this.gridGraphics);
+
+    // this.button.update = () => {
+    //   this.button.x += 1;
+    // };
   }
 
   public update(): void {

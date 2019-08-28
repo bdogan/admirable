@@ -7,3 +7,7 @@ export enum MouseState {
   WHEEL = 'wheel',
   DRAG = 'drag',
 }
+
+export enum KeyState {
+  PRESSED = 'keydown',
+}

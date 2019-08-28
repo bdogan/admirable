@@ -6,7 +6,8 @@ import { flatten, orderBy } from 'lodash';
 import { BaseObj } from './BaseObj';
 import { Sprite } from './Sprite';
 import { Button } from './Sprites/Buttons/Button';
-import { MouseState } from './Enums';
+import { MouseState, KeyState } from './Enums';
+import { TextBox } from './Sprites/Inputs/TextBox';
 
 // Promise resolver
 const r = Promise.resolve();
@@ -189,6 +190,15 @@ export class Screen extends BaseObj {
       return false;
     };
 
+    // Event handler for text inputs
+    this.Engine.p5.keyPressed = () => {
+      const focused =  this.sprites.find((s) => s instanceof TextBox && s.focus === true);
+
+      if (focused) {
+        focused!.emit(KeyState.PRESSED, {key: this.p5.key, keyCode: this.p5.keyCode});
+      }
+
+    };
   }
 
   /**
