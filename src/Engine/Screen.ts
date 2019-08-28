@@ -149,21 +149,14 @@ export class Screen extends BaseObj {
 
       const target = this.eventTarget();
 
-      // if target is a textbox trigger the text box events.
-      if (target && target instanceof TextBox) {
-
-        // set the focus state false for all of the other textbox.
-        // this.sprites.filter((s) => s instanceof TextBox)
-        // .forEach((s) => { (s as TextBox).focus = false; });
-
-        // set the focus state true for the target textbox.
+      // set the focus state true for the target.
+      if (target) {
         target!.emit(KeyState.FOCUS);
       }
 
-      this.sprites.filter((s) => s instanceof TextBox && s !== target)
-      // consider creating/implemanting/triggering a blur event for all of the not target sprites.
-      // maybe all of the sprites can have a focus state?
-      .forEach((s) => {(s as TextBox).focus = false; });
+      // blur other sprites that is not the target.
+      this.sprites.filter((s) => s !== target)
+      .forEach((s) => s.emit(KeyState.BLUR));
 
       this.sprites
         .filter((s) => this.isAttachedSprite(s) && this.isOverSprite(s))
