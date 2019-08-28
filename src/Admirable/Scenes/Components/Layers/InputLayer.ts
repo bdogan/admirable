@@ -10,6 +10,7 @@ export class InputLayer extends Layer {
   public setup() {
     this.textbox = new TextBox();
     // this.textbox.focus = true;
+    this.textbox.value = 'merhaba. ಠ_ಠ';
     this.textbox.x = 250;
     this.textbox.y = 400;
 
