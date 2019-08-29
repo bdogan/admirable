@@ -1,4 +1,7 @@
 import 'Phaser';
+import { BootScene } from './Admirable/Scenes/BootScene';
+import { MenuScene } from './Admirable/Scenes/MenuScene';
+import { GameScene } from './Admirable/Scenes/GameScene';
 
 /* tslint:disable */
 const AdmirableConfig: Phaser.Types.Core.GameConfig = {
@@ -10,6 +13,7 @@ const AdmirableConfig: Phaser.Types.Core.GameConfig = {
   backgroundColor: '#003459',
   autoFocus: true,
   disableContextMenu: true,
+  scene: [BootScene, MenuScene, GameScene],
   fps: {
     target: 60,
   },
