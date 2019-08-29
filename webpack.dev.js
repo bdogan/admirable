@@ -2,7 +2,7 @@ const path = require('path');
 const HTMLPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/main.ts',
+  entry: './src/admirable.ts',
   devtool: 'source-map',
   devServer: {
       open: true

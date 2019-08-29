@@ -3,7 +3,7 @@ const HTMLPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  entry: './src/main.ts',
+  entry: './src/admirable.ts',
   module: {
     rules: [
       {
