@@ -1,37 +1,26 @@
-const path = require('path');
-const HTMLPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const merge = require("webpack-merge");
+const base = require("./webpack.config.js");
+const TerserPlugin = require("terser-webpack-plugin");
 
-module.exports = {
-  entry: './src/admirable.ts',
-  module: {
-    rules: [
-      {
-        test: /\.ts?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.(png|jpe?g|gif|ttf)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-          },
-        ],
-      }
-    ]
-  },
-  resolve: {
-    extensions: [ '.ts', '.js' ]
-  },
+module.exports = merge(base, {
+  mode: "production",
   output: {
-    filename: 'admirable.js',
-    path: path.resolve(__dirname, 'dist')
+    filename: "bundle.min.js"
   },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HTMLPlugin({
-      template: './src/index.html',
-    })
-  ]
-};
+  devtool: false,
+  performance: {
+    maxEntrypointSize: 900000,
+    maxAssetSize: 900000
+  },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          output: {
+            comments: false
+          }
+        }
+      })
+    ]
+  }
+});

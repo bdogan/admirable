@@ -1,5 +1,4 @@
 import { Cursor } from '../Objects/Cursor';
-import { globalAgent } from 'http';
 
 export class GameScene extends Phaser.Scene {
 
