@@ -1,3 +1,5 @@
+import { Button } from "../../Objects/Button";
+
 export class MenuScene extends Phaser.Scene {
 
   private grid!: Phaser.GameObjects.Graphics;
@@ -35,6 +37,10 @@ export class MenuScene extends Phaser.Scene {
 
     this.gridGraphics = this.add.graphics();
 
+    const button = new Button(this, 0, 0);
+    button.onClick = () => {
+      this.scene.start('GameScene');
+    };
   }
 
   public update(time: number): void {
