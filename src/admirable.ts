@@ -1,9 +1,8 @@
-import 'Phaser';
+import * as Phaser from 'phaser';
 import { BootScene } from './Admirable/Scenes/BootScene';
 import { MenuScene } from './Admirable/Scenes/MenuScene';
 import { GameScene } from './Admirable/Scenes/GameScene';
 
-/* tslint:disable */
 const AdmirableConfig: Phaser.Types.Core.GameConfig = {
   title: 'Admirable',
   version: '0.1.0',
@@ -34,7 +33,6 @@ const AdmirableConfig: Phaser.Types.Core.GameConfig = {
     zoom: 1,
   },
 };
-/* tslint:enable */
 
 export class Game extends Phaser.Game {
   constructor(config: Phaser.Types.Core.GameConfig) {
