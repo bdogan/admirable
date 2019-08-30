@@ -1,4 +1,4 @@
-import 'Phaser';
+import 'phaser';
 import { AdmirableGame } from './admirable.game';
 import { AdmirableConfig } from './admirable.config';
 import { BootScene, MenuScene, GameScene, SetupScene } from './Scenes';

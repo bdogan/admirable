@@ -1,0 +1,16 @@
+{
+  "preload": {
+    "files": [
+      {
+        "type": "image",
+        "key": "battleship",
+        "url": "src/Admirable/Scenes/MenuScene/Images/battleship.png"
+      },
+      {
+        "type": "image",
+        "key": "logo",
+        "url": "src/Admirable/Scenes/MenuScene/Images/admirable-logotype.png"
+      }
+    ]
+  }
+}

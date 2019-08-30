@@ -1,4 +1,4 @@
-import { Cursor } from '../Objects/Cursor';
+import { Cursor } from '../../Objects/Cursor';
 
 export class GameScene extends Phaser.Scene {
 
