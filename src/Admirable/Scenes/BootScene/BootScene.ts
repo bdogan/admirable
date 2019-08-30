@@ -10,6 +10,14 @@ export class BootScene extends Phaser.Scene {
     console.log('BootScene initialized');
   }
 
+  public preload(): void {
+    this.load.pack(
+      'preload',
+      './src/Admirable/Assets/assets.json',
+      'preload',
+    );
+  }
+
   public update(): void {
     this.scene.start('MenuScene');
   }
