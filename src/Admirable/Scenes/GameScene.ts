@@ -55,7 +55,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private drawGrid() {
-    const gap = 48;
+    const gap = 40;
     const canvasWidth = this.sys.canvas.width;
     const canvasHeight = this.sys.canvas.height;
 

@@ -11,7 +11,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   public update(): void {
-    this.scene.start('GameScene');
+    this.scene.start('SetupScene');
   }
 
 }
