@@ -2,15 +2,16 @@ export class BootScene extends Phaser.Scene {
 
   constructor() {
     super({
-        key: 'BootScene',
+      key: 'BootScene',
     });
   }
-  public init(): void{
+
+  public init(): void {
     console.log('BootScene initialized');
   }
 
   public update(): void {
-    this.scene.start('MenuScene');
+    this.scene.start('SetupScene');
   }
 
 }

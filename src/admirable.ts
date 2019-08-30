@@ -2,6 +2,7 @@ import * as Phaser from 'phaser';
 import { BootScene } from './Admirable/Scenes/BootScene';
 import { MenuScene } from './Admirable/Scenes/MenuScene';
 import { GameScene } from './Admirable/Scenes/GameScene';
+import { SetupScene } from './Admirable/Scenes/SetupScene';
 
 const AdmirableConfig: Phaser.Types.Core.GameConfig = {
   title: 'Admirable',
@@ -12,7 +13,7 @@ const AdmirableConfig: Phaser.Types.Core.GameConfig = {
   backgroundColor: '#003459',
   autoFocus: true,
   disableContextMenu: true,
-  scene: [BootScene, MenuScene, GameScene],
+  scene: [BootScene, MenuScene, GameScene, SetupScene],
   fps: {
     target: 60,
   },
