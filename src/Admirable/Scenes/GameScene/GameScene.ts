@@ -1,4 +1,4 @@
-import { Cursor } from '../Objects/Cursor';
+import { Cursor } from '../../Objects/Cursor';
 
 export class GameScene extends Phaser.Scene {
 
@@ -28,7 +28,7 @@ export class GameScene extends Phaser.Scene {
     this.grid = this.add.graphics();
     this.drawGrid();
 
-    this.cursor = new Cursor(this, 48, 48);
+    this.cursor = new Cursor(this, 40, 40);
   }
 
   public update(): void {

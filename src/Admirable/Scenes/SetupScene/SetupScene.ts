@@ -15,28 +15,6 @@ export class SetupScene extends Phaser.Scene {
   public create(): void {
     this.grid = this.add.graphics();
     this.drawGrid();
-
-    const back = this.add.graphics({
-      fillStyle: {color: 0xCCFF00},
-      lineStyle: {color: 0xFF0000, width: 2},
-    });
-
-    // tslint:disable-next-line: max-line-length
-    const txt = this.add.text(128 / 2, 24 / 2, 'TEST DÜĞME', { fontFamily: 'Arial', fontSize: 16, color: '#000000' });
-
-    const asd: Phaser.Types.Input.InputConfiguration = {
-      hitArea : new Phaser.Geom.Rectangle(0, 0, 240, 24),
-      hitAreaCallback: (e: any) => {console.log(e); },
-      useHandCursor: true,
-    };
-
-    const shape = new Phaser.Geom.Rectangle(0, 0, 240, 40);
-    back.fillRectShape(shape);
-    back.setInteractive(shape, Phaser.Geom.Rectangle.Contains);
-    back.on('pointerover', () => {console.log('hovered'); });
-
-    this.add.container(0, 0, [back, txt]);
-
   }
 
   private drawGrid() {
