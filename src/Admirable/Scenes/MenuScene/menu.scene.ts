@@ -1,5 +1,11 @@
-import { Button } from "../../Objects/Button";
+import { Button } from '../../Objects/Button';
+import { AdmirableScene } from '../admirable.scene';
+const logoImg = require('./Images/admirable-logotype.png');
+const battleshipImg = require('./Images/battleship.png');
 
+@AdmirableScene({
+  key: 'menu'
+})
 export class MenuScene extends Phaser.Scene {
 
   private grid!: Phaser.GameObjects.Graphics;
@@ -20,6 +26,11 @@ export class MenuScene extends Phaser.Scene {
     super({
       key: 'MenuScene',
     });
+  }
+
+  public preload() {
+    this.load.image('logo', logoImg);
+    this.load.image('battleship', battleshipImg);
   }
 
   public init(): void {

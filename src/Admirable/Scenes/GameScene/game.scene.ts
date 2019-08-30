@@ -1,5 +1,9 @@
 import { Cursor } from '../../Objects/Cursor';
+import { AdmirableScene } from '../admirable.scene';
 
+@AdmirableScene({
+  key: 'game'
+})
 export class GameScene extends Phaser.Scene {
 
   private grid!: Phaser.GameObjects.Graphics;
@@ -8,17 +12,12 @@ export class GameScene extends Phaser.Scene {
 
   private cursor!: Cursor;
 
-  constructor() {
-    super({
-      key: 'GameScene',
-    });
-  }
-
   public init(): void {
     console.log('GameScene initialized.');
   }
 
   public create(): void {
+
     this.line = this.add.graphics();
 
     this.input.on('pointerdown', this.onMouseDown, this);
@@ -39,6 +38,7 @@ export class GameScene extends Phaser.Scene {
     this.isDrawing = true;
   }
 
+  
   private onMouseMove(event: any) {
     if (this.isDrawing) {
       this.line.clear();

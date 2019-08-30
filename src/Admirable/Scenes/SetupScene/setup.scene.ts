@@ -1,12 +1,12 @@
+import 'Phaser';
+import { AdmirableScene } from '../admirable.scene';
+
+@AdmirableScene({
+  key: 'setup'
+})
 export class SetupScene extends Phaser.Scene {
 
   private grid!: Phaser.GameObjects.Graphics;
-
-  constructor() {
-    super({
-      key: 'SetupScene',
-    });
-  }
 
   public  init(): void {
     console.log('SetupScene initialized.');
