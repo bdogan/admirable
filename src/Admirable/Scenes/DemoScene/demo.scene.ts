@@ -1,5 +1,4 @@
 import { AdmirableScene } from '../admirable.scene';
-import { ButtonSprite } from '../../Sprites/Button/button.sprite';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
 
 @AdmirableScene({
@@ -7,17 +6,15 @@ import { Button, MouseEvent } from '../../Objects/UI/Button';
 })
 export class DemoScene extends Phaser.Scene {
 
-  private button!: ButtonSprite;
-
   public create() {
 
-    const button = new Button(this, 0, 0);
+    const button = new Button(this, 960 / 2, 480 / 2);
 
     this.add.existing(button);
 
     button.on(MouseEvent.onClick, (e: any) => {
-      console.log('button clicked!');
+      // console.log('button clicked!');
+      this.scene.start('game');
     });
-
   }
 }
