@@ -1,4 +1,3 @@
-import { Button } from '../../Objects/Button';
 import { AdmirableScene } from '../admirable.scene';
 const logoImg = require('./Images/admirable-logotype.png');
 const battleshipImg = require('./Images/battleship.png');
@@ -47,11 +46,6 @@ export class MenuScene extends Phaser.Scene {
     this.imgLogo.y = -1 * this.imgLogo.height;
 
     this.gridGraphics = this.add.graphics();
-
-    const button = new Button(this, 0, 0);
-    button.onClick = () => {
-      this.scene.start('GameScene');
-    };
   }
 
   public update(time: number): void {
