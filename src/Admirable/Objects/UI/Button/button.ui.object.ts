@@ -16,6 +16,16 @@ export class Button extends Phaser.GameObjects.Container {
   private background: Phaser.GameObjects.Rectangle;
   private text: Phaser.GameObjects.Text;
 
+  private defaultStyle: object = {
+    fontSize: '48px',
+    color : '#000000',
+  };
+
+  private hoverStyle: object = {
+    fontSize: '64px',
+    color : '#FF0000',
+  };
+
   /**
    * clickState helps us to ensure if the click event happened within the button's bounds.
    */
@@ -23,8 +33,8 @@ export class Button extends Phaser.GameObjects.Container {
 
   constructor(scene: Phaser.Scene, x: number, y: number, width: number = 256, height: number = 64) {
     super(scene, x, y, []);
-    this.x = x ; // + width / 2;
-    this.y = y ; // + height / 2;
+    this.x = x; // + width / 2;
+    this.y = y; // + height / 2;
     this.width  = width;
     this.height = height;
 
@@ -32,7 +42,7 @@ export class Button extends Phaser.GameObjects.Container {
 
     this.text = new Phaser.GameObjects.Text(scene, 0, 0, 'START', {fontFamily: 'Munro', fontSize: '48px', color: '#000000'}).setOrigin(0.5);
 
-    // this.text.setStyle({backgroundColor: '#FF0000'});
+    this.text.setStyle(this.defaultStyle);
 
     this.list = [this.background, this.text];
 
@@ -41,12 +51,19 @@ export class Button extends Phaser.GameObjects.Container {
 
     this.on(MouseEvent.onEnter, (e: any) => {
       scene.input.setDefaultCursor('pointer');
+
       this.background.setFillStyle(0xFFCC00);
+
+      this.text.setStyle(this.hoverStyle);
+
     });
 
     this.on(MouseEvent.onLeave, (e: any) => {
       scene.input.setDefaultCursor('default');
+
       this.background.setFillStyle(0xCCFF00);
+
+      this.text.setStyle(this.defaultStyle);
 
       this.clickState = false;
     });
@@ -62,6 +79,11 @@ export class Button extends Phaser.GameObjects.Container {
         // Emit custom event to handle the click event properly.
         this.emit(MouseEvent.onClick, e);
       }
+    });
+
+    // workaround for cursor style freezing problem  whenever scene changes.
+    scene.events.once('shutdown', () => {
+      scene.input.setDefaultCursor('default');
     });
 
     // Add the button container to the scene at object creation.
