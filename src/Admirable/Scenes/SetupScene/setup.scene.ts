@@ -1,4 +1,3 @@
-import 'Phaser';
 import { AdmirableScene } from '../admirable.scene';
 
 @AdmirableScene({

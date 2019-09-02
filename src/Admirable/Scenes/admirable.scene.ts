@@ -1,5 +1,3 @@
-import 'Phaser';
-
 /**
  * Admirable scene decorator
  * @param _config Phaser.Types.Scenes.SettingsConfig
