@@ -16,16 +16,6 @@ export class Button extends Phaser.GameObjects.Container {
   private background: Phaser.GameObjects.Rectangle;
   private text: Phaser.GameObjects.Text;
 
-  private defaultStyle: object = {
-    fontSize: '48px',
-    color : '#000000',
-  };
-
-  private hoverStyle: object = {
-    fontSize: '64px',
-    color : '#FF0000',
-  };
-
   /**
    * clickState helps us to ensure if the click event happened within the button's bounds.
    */
@@ -33,17 +23,19 @@ export class Button extends Phaser.GameObjects.Container {
 
   constructor(scene: Phaser.Scene, x: number, y: number, width: number = 256, height: number = 64) {
     super(scene, x, y, []);
+
     this.x = x; // + width / 2;
     this.y = y; // + height / 2;
     this.width  = width;
     this.height = height;
 
-    this.background = new Phaser.GameObjects.Rectangle(scene, 0, 0, this.width, this.height, 0xCCFF00);
+    // button background.
+    this.background = new Phaser.GameObjects.Rectangle(scene, 0, 0, this.width, this.height, 0x00A8E8);
 
-    this.text = new Phaser.GameObjects.Text(scene, 0, 0, 'START', {fontFamily: 'Munro', fontSize: '48px', color: '#000000'}).setOrigin(0.5);
+    // button text.
+    this.text = new Phaser.GameObjects.Text(scene, 0, 0, 'START', {fontFamily: 'Munro', fontSize: '48px', color: '#00171F'}).setOrigin(0.5);
 
-    this.text.setStyle(this.defaultStyle);
-
+    // add child's to the container.
     this.list = [this.background, this.text];
 
     // Set the container interactive to handle event inputs.
@@ -52,18 +44,13 @@ export class Button extends Phaser.GameObjects.Container {
     this.on(MouseEvent.onEnter, (e: any) => {
       scene.input.setDefaultCursor('pointer');
 
-      this.background.setFillStyle(0xFFCC00);
-
-      this.text.setStyle(this.hoverStyle);
-
+      this.background.setFillStyle(0x00A8E8, 0.5);
     });
 
     this.on(MouseEvent.onLeave, (e: any) => {
       scene.input.setDefaultCursor('default');
 
-      this.background.setFillStyle(0xCCFF00);
-
-      this.text.setStyle(this.defaultStyle);
+      this.background.setFillStyle(0x00A8E8);
 
       this.clickState = false;
     });

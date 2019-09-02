@@ -14,7 +14,7 @@ export class DemoScene extends Phaser.Scene {
 
     button.on(MouseEvent.onClick, (e: any) => {
       // console.log('button clicked!');
-      this.scene.start('game');
+      this.scene.start('setup');
     });
   }
 }
