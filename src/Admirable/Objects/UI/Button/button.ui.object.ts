@@ -21,7 +21,7 @@ export class Button extends Phaser.GameObjects.Container {
    */
   private clickState: boolean = false;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, width: number = 256, height: number = 64) {
+  constructor(scene: Phaser.Scene, text: string, x: number, y: number, width: number = 256, height: number = 64) {
     super(scene, x, y, []);
 
     this.x = x; // + width / 2;
@@ -33,7 +33,7 @@ export class Button extends Phaser.GameObjects.Container {
     this.background = new Phaser.GameObjects.Rectangle(scene, 0, 0, this.width, this.height, 0x00A8E8);
 
     // button text.
-    this.text = new Phaser.GameObjects.Text(scene, 0, 0, 'START', {fontFamily: 'Munro', fontSize: '48px', color: '#00171F'}).setOrigin(0.5);
+    this.text = new Phaser.GameObjects.Text(scene, 0, 0, text, {fontFamily: 'Munro', fontSize: '48px', color: '#00171F'}).setOrigin(0.5);
 
     // add child's to the container.
     this.list = [this.background, this.text];

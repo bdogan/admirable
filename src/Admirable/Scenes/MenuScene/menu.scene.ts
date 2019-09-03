@@ -1,4 +1,5 @@
 import { AdmirableScene } from '../admirable.scene';
+import { Button, MouseEvent } from '../../Objects/UI/Button';
 const logoImg = require('./Images/admirable-logotype.png');
 const battleshipImg = require('./Images/battleship.png');
 
@@ -39,7 +40,7 @@ export class MenuScene extends Phaser.Scene {
     this.imgLogo.setPosition(this.sys.canvas.width / 2 , -this.imgLogo.height);
     this.gridGraphics = this.add.graphics();
 
-    const shipTween = this.tweens.add({
+    this.tweens.add({
       targets: this.imgBattleShip,
       y: this.sys.game.canvas.height + 50,
       ease: 'Sine.easeInOut',
@@ -48,11 +49,26 @@ export class MenuScene extends Phaser.Scene {
       loop: -1
     });
 
-    const logoTween = this.tweens.add({
-      targets: this.imgLogo,
-      y: this.sys.canvas.height / 3,
+    this.tweens.add({
+      targets: [this.imgLogo],
+      y: {
+        getStart: () => 0,
+        getEnd: () => this.sys.canvas.height / 4
+      },
+      alpha: {
+        getStart: () => 0,
+        getEnd: () => 1
+      },
       ease: 'Expo.easeOut',
       duration: 2000
+    });
+
+    const startButton =  new Button(this, 'START', 960 / 2, 480 / 2);
+
+    this.add.existing(startButton);
+
+    startButton.on(MouseEvent.onClick, (e: any) => {
+      this.scene.start('setup');
     });
 
   }

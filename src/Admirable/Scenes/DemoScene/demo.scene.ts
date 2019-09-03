@@ -8,7 +8,7 @@ export class DemoScene extends Phaser.Scene {
 
   public create() {
 
-    const button = new Button(this, 960 / 2, 480 / 2);
+    const button = new Button(this, 'Button', 960 / 2, 480 / 2);
 
     this.add.existing(button);
 
