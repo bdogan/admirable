@@ -116,13 +116,13 @@ export class Table extends Phaser.GameObjects.Container {
     this.height = h;
 
     // Set default variables
-    this.pColSize = 150;
-    this.pRowSize = 53;
+    this.pColSize = 100;
+    this.pRowSize = 40;
 
     this.pPaddingX = 20;
-    this.pPaddingY = 15;
+    this.pPaddingY = 10;
 
-    this.pFontSize = 14;
+    this.pFontSize = 12;
 
     this.pShowHead = true;
     this.pStretch = false;

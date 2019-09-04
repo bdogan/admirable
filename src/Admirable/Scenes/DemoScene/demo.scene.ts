@@ -64,36 +64,6 @@ export class DemoScene extends Phaser.Scene {
         'Castagnet',
         '342'
       ],
-      [
-        'Aurore',
-        'Bes',
-        '841'
-      ],
-      [
-        'Emelina',
-        'Belmont',
-        '729'
-      ],
-      [
-        'Drake',
-        'Rudham',
-        '855'
-      ],
-      [
-        'Trenna',
-        'Colebourn',
-        '343'
-      ],
-      [
-        'Andras',
-        'Pray',
-        '441'
-      ],
-      [
-        'Ira',
-        'Vergine',
-        '371'
-      ],
     ];
 
     const table = new Table(this, 10, 10, 300, 400, content);
