@@ -1,64 +1,142 @@
 export class Ship extends Phaser.GameObjects.Container {
 
-  public bounds!: Phaser.GameObjects.Rectangle;
+  // Helper graphic while positioning the ship.
+  public allowedArea!: Phaser.GameObjects.Rectangle;
+
+  // Helper rectangle for detecting overlapping/intersecting ships.
+  private anchor!: Phaser.Geom.Rectangle;
+
+  // Ship sprite.
   private ship!: Phaser.GameObjects.TileSprite;
 
+  // Default grid size.
   private gridSize: number = 40;
 
-  private canvasBounds: {width: number, height: number} = {width: this.scene.sys.canvas.width, height: this.scene.sys.canvas.height};
-  private selfBounds!: {width: number, height: number};
+  // Canvas boundaries.
+  private canvasBoundary: {width: number, height: number} = {width: this.scene.sys.canvas.width, height: this.scene.sys.canvas.height};
+
+  // Ship boundaries.
+  private shipBoundary!: {width: number, height: number};
 
   constructor(scene: Phaser.Scene, width: number = 1, height: number = 1) {
       super(scene, 0, 0, []);
 
+      // Create the ship sprite and add it to the container.
       this.ship = scene.add.tileSprite(0, 0, this.gridSize * width, this.gridSize * height, 'ship').setTileScale(this.gridSize / 32).setOrigin(0);
+
+      this.shipBoundary = {width: this.ship.width, height: this.ship.height};
+
       this.add(this.ship);
 
+      // Set the container interactive for event handling.
       this.setInteractive(this.getBounds(), Phaser.Geom.Rectangle.Contains);
+
+      // Set the container draggable on the scene.
       scene.input.setDraggable(this);
 
-      this.selfBounds = {width: this.getBounds().width, height: this.getBounds().height};
+      // Create the helper rectangle for using while positioning.
+      this.allowedArea = new Phaser.GameObjects.Rectangle(scene, -this.gridSize / 2, -this.gridSize / 2, this.ship.width + this.gridSize, this.ship.height + this.gridSize, 0x00A8E8, 0.2).setOrigin(0);
+      this.addAt(this.allowedArea, 0);
 
-      this.bounds = new Phaser.GameObjects.Rectangle(scene, -this.gridSize/2, -this.gridSize/2, this.ship.width + this.gridSize * 1, this.ship.height + this.gridSize * 1, 0x00A8E8).setOrigin(0);
-      this.bounds.setAlpha(0.075);
-      this.addAt(this.bounds, 0);
+      // 4
+      this.anchor = Phaser.Geom.Rectangle.Clone(this.ship.getBounds()).setSize(this.ship.getBounds().width + this.gridSize - 1, this.ship.getBounds().height + this.gridSize - 1);
 
       this.on('dragstart', (p: any, x: any, y: any) => {
         // Bring the selected ship to the top of the scene's display list.
+        this.allowedArea.fillAlpha = 0.5;
         scene.children.bringToTop(this);
-        this.bounds.setAlpha(0.2);
       });
 
       this.on('dragend', (p: any, x: any, y: any)  => {
-        this.bounds.setAlpha(0.075);
+        // this.bounds.fillAlpha = 0.2;
+
+        // anchor debug.
+        // scene.add.graphics({fillStyle: {color: 0xFF0000}}).fillRectShape(this.anchor);
       });
 
       this.on('drag', (p: any, x: any, y: any) => {
-        this._setPosition(x, y);
+
+        this._setPosition(x, y, true);
+
+        this._checkOverlap();
+
       });
 
-      // scene.input.on('gameobjectdown', (p: any, o: any) => {
-      //   this.bounds.destroy();
-      //   // console.log(o.list);
-      // });
-
+      // Add the created ship immediately to the scene.
       scene.add.existing(this);
   }
 
-  private _setPosition(x: number, y: number, snapToGrid: boolean = true) {
+  /**
+   * @param x x position of the ship.
+   * @param y y position of the ship.
+   * @param snapToGrid snap to the nearest grid.
+   */
+  public _setPosition(x: number, y: number, snapToGrid: boolean = true): void {
 
     if (snapToGrid) {
       x = Math.round(x / this.gridSize) * this.gridSize;
       y = Math.round(y / this.gridSize) * this.gridSize;
     }
 
+    // Prevent to go outside of the canvas.
     x = Math.max(x, 0);
-    x = Math.min(x, (this.canvasBounds.width - this.selfBounds.width));
+    x = Math.min(x, (this.canvasBoundary.width - this.shipBoundary.width));
     y = Math.max(y, 0);
-    y = Math.min(y, (this.canvasBounds.height - this.selfBounds.height));
+    y = Math.min(y, (this.canvasBoundary.height - this.shipBoundary.height));
 
+    // Set the position using native method.
     this.setPosition(x, y);
+    this.anchor.setPosition(this.x - this.gridSize / 2, this.y - this.gridSize / 2);
 
   }
 
+  // private _checkOverlap(): void {
+  //   this.scene.children.list.filter((child) => child instanceof Ship && child !== this)
+  //       .forEach((ship) => {
+  //         const intersects = Phaser.Geom.Intersects.RectangleToRectangle(this.anchor, (ship as Ship).anchor);
+  //         if (intersects) {
+  //           this.allowedArea.fillColor = 0xFF0000;
+  //           (ship as Ship).allowedArea.fillColor = 0xFF0000;
+
+  //           this.allowedArea.fillAlpha = 0.8;
+  //           (ship as Ship).allowedArea.fillAlpha = 0.8;
+  //         } else {
+
+  //           this.allowedArea.fillColor = 0x00FF00;
+  //           (ship as Ship).allowedArea.fillColor = 0x00FF00;
+
+  //           this.allowedArea.fillAlpha = 0.2;
+  //           (ship as Ship).allowedArea.fillAlpha = 0.2;
+
+  //         }
+  //   });
+  // }
+
+  private _checkOverlap(): void {
+    const Ships = this.scene.children.list.filter((child) => child instanceof Ship);
+
+    Ships.forEach((ship) => {
+      const _ships = Ships.filter((s) => s !== ship);
+
+      for (const s of _ships as Ship[]) {
+        const intersection = Phaser.Geom.Intersects.RectangleToRectangle(s.anchor, (ship as Ship).anchor);
+        if (intersection) {
+          (ship as Ship).allowedArea.fillColor = 0xFF0000;
+          break;
+        } else {
+          (ship as Ship).allowedArea.fillColor = 0x00FF00;
+        }
+      }
+
+      // _ships.forEach((s) => {
+      //   const intersection = Phaser.Geom.Intersects.RectangleToRectangle((ship as Ship).anchor, (s as Ship).anchor);
+      //   if (intersection) {
+      //     (ship as Ship).allowedArea.fillColor = 0xFF0000;
+      //   } else {
+      //     (ship as Ship).allowedArea.fillColor = 0x00FF00;
+      //   }
+      // });
+    });
+
+  }
 }

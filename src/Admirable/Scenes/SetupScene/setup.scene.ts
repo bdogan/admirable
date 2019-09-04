@@ -18,20 +18,16 @@ export class SetupScene extends Phaser.Scene {
     this.grid = this.add.graphics();
     this.drawGrid();
 
-    const s1 = new Ship(this, 1, 3);
+    // Random ships
+    for (let i = 0; i < 8; i++) {
+      const x = Phaser.Math.Between(0, 20) * 40;
+      const y = Phaser.Math.Between(0, 8) * 40;
+      const width = Phaser.Math.Between(2, 4);
+      const axis = Phaser.Math.Between(0, 1);
+      const ship = new Ship(this, !axis ? 1 : width, axis ? 1 : width);
+      ship._setPosition(x, y);
+    }
 
-    const s2 = new Ship(this, 3, 1);
-
-    const s3 = new Ship(this, 2, 1);
-
-    this.ships = [s1, s2];
-
-  }
-
-  public update(): void {
-    this.ships.forEach((ship) => {
-      // ship.bounds
-    });
   }
 
   private drawGrid() {
