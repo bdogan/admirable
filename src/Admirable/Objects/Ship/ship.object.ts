@@ -1,10 +1,10 @@
 export class Ship extends Phaser.GameObjects.Container {
 
-  // Helper graphic while positioning the ship.
+  // Helper rectangle to help while positioning the ship.
   public allowedArea!: Phaser.GameObjects.Rectangle;
 
   // Helper rectangle for detecting overlapping/intersecting ships.
-  private anchor!: Phaser.Geom.Rectangle;
+  public anchor!: Phaser.Geom.Rectangle;
 
   // Ship sprite.
   private ship!: Phaser.GameObjects.TileSprite;
@@ -29,7 +29,7 @@ export class Ship extends Phaser.GameObjects.Container {
       this.add(this.ship);
 
       // Set the container interactive for event handling.
-      this.setInteractive(this.getBounds(), Phaser.Geom.Rectangle.Contains);
+      this.setInteractive(this.ship, Phaser.Geom.Rectangle.Contains);
 
       // Set the container draggable on the scene.
       scene.input.setDraggable(this);
@@ -38,28 +38,23 @@ export class Ship extends Phaser.GameObjects.Container {
       this.allowedArea = new Phaser.GameObjects.Rectangle(scene, -this.gridSize / 2, -this.gridSize / 2, this.ship.width + this.gridSize, this.ship.height + this.gridSize, 0x00A8E8, 0.2).setOrigin(0);
       this.addAt(this.allowedArea, 0);
 
-      // 4
       this.anchor = Phaser.Geom.Rectangle.Clone(this.ship.getBounds()).setSize(this.ship.getBounds().width + this.gridSize - 1, this.ship.getBounds().height + this.gridSize - 1);
 
       this.on('dragstart', (p: any, x: any, y: any) => {
         // Bring the selected ship to the top of the scene's display list.
-        this.allowedArea.fillAlpha = 0.5;
         scene.children.bringToTop(this);
       });
 
       this.on('dragend', (p: any, x: any, y: any)  => {
-        // this.bounds.fillAlpha = 0.2;
-
+        this.allowedArea.fillAlpha = 0.2;
         // anchor debug.
         // scene.add.graphics({fillStyle: {color: 0xFF0000}}).fillRectShape(this.anchor);
       });
 
       this.on('drag', (p: any, x: any, y: any) => {
-
+        this.allowedArea.fillAlpha = 0.4;
         this._setPosition(x, y, true);
-
         this._checkOverlap();
-
       });
 
       // Add the created ship immediately to the scene.
@@ -90,53 +85,27 @@ export class Ship extends Phaser.GameObjects.Container {
 
   }
 
-  // private _checkOverlap(): void {
-  //   this.scene.children.list.filter((child) => child instanceof Ship && child !== this)
-  //       .forEach((ship) => {
-  //         const intersects = Phaser.Geom.Intersects.RectangleToRectangle(this.anchor, (ship as Ship).anchor);
-  //         if (intersects) {
-  //           this.allowedArea.fillColor = 0xFF0000;
-  //           (ship as Ship).allowedArea.fillColor = 0xFF0000;
-
-  //           this.allowedArea.fillAlpha = 0.8;
-  //           (ship as Ship).allowedArea.fillAlpha = 0.8;
-  //         } else {
-
-  //           this.allowedArea.fillColor = 0x00FF00;
-  //           (ship as Ship).allowedArea.fillColor = 0x00FF00;
-
-  //           this.allowedArea.fillAlpha = 0.2;
-  //           (ship as Ship).allowedArea.fillAlpha = 0.2;
-
-  //         }
-  //   });
-  // }
-
+  /**
+   * Check if the ships overlapping on the scene.
+   */
   private _checkOverlap(): void {
+    // Get all of the Ship objects from the scene.
     const Ships = this.scene.children.list.filter((child) => child instanceof Ship);
 
+    // Check if ships intersects / collides with any other ships.
     Ships.forEach((ship) => {
       const _ships = Ships.filter((s) => s !== ship);
 
       for (const s of _ships as Ship[]) {
         const intersection = Phaser.Geom.Intersects.RectangleToRectangle(s.anchor, (ship as Ship).anchor);
+
+        (ship as Ship).allowedArea.fillColor = intersection ? 0xFF0000 : 0x00FF00;
+
         if (intersection) {
-          (ship as Ship).allowedArea.fillColor = 0xFF0000;
           break;
-        } else {
-          (ship as Ship).allowedArea.fillColor = 0x00FF00;
         }
+
       }
-
-      // _ships.forEach((s) => {
-      //   const intersection = Phaser.Geom.Intersects.RectangleToRectangle((ship as Ship).anchor, (s as Ship).anchor);
-      //   if (intersection) {
-      //     (ship as Ship).allowedArea.fillColor = 0xFF0000;
-      //   } else {
-      //     (ship as Ship).allowedArea.fillColor = 0x00FF00;
-      //   }
-      // });
     });
-
   }
 }

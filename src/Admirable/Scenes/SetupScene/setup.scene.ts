@@ -8,8 +8,6 @@ export class SetupScene extends Phaser.Scene {
 
   private grid!: Phaser.GameObjects.Graphics;
 
-  private ships: Ship[] = [];
-
   public  init(): void {
     console.log('SetupScene initialized.');
   }
@@ -19,7 +17,7 @@ export class SetupScene extends Phaser.Scene {
     this.drawGrid();
 
     // Random ships
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 10; i++) {
       const x = Phaser.Math.Between(0, 20) * 40;
       const y = Phaser.Math.Between(0, 8) * 40;
       const width = Phaser.Math.Between(2, 4);
@@ -27,6 +25,9 @@ export class SetupScene extends Phaser.Scene {
       const ship = new Ship(this, !axis ? 1 : width, axis ? 1 : width);
       ship._setPosition(x, y);
     }
+
+    // just run once after all of the ships created for the demo.
+    this._checkOverlap();
 
   }
 
@@ -53,6 +54,25 @@ export class SetupScene extends Phaser.Scene {
     this.grid.lineBetween(canvasWidth, 0, canvasWidth, canvasHeight);
 
     this.grid.strokePath();
+  }
+
+  // Check collide on scene.
+  private _checkOverlap(): void {
+    const Ships = this.children.list.filter((child) => child instanceof Ship);
+
+    Ships.forEach((ship) => {
+      const _ships = Ships.filter((s) => s !== ship);
+
+      for (const s of _ships as Ship[]) {
+        const intersection = Phaser.Geom.Intersects.RectangleToRectangle(s.anchor, (ship as Ship).anchor);
+        if (intersection) {
+          (ship as Ship).allowedArea.fillColor = 0xFF0000;
+          break;
+        } else {
+          (ship as Ship).allowedArea.fillColor = 0x00FF00;
+        }
+      }
+    });
   }
 
 }
