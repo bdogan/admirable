@@ -68,7 +68,7 @@ export class MenuScene extends Phaser.Scene {
     this.add.existing(startButton);
 
     startButton.on(MouseEvent.onClick, (e: any) => {
-      this.scene.start('setup');
+      this.scene.start('demo');
     });
 
   }
