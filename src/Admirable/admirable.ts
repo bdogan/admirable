@@ -5,9 +5,9 @@ import { DemoScene, MenuScene, GameScene, SetupScene } from './Scenes';
 
 export const Game = new AdmirableGame(AdmirableConfig({
   scene: [
+    SetupScene,
     MenuScene,
     DemoScene,
     GameScene,
-    SetupScene
   ],
 }));
