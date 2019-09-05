@@ -7,6 +7,7 @@ import { Table } from '../../Objects/UI/Table';
 })
 export class DemoScene extends Phaser.Scene {
 
+  // Create
   public create() {
 
     const button = new Button(this, 'Button', 960 - 250, 480 / 2);
@@ -70,5 +71,6 @@ export class DemoScene extends Phaser.Scene {
     table.showHead = true;
 
     this.add.existing(table);
+
   }
 }

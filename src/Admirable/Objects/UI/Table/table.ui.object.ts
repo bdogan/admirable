@@ -202,7 +202,6 @@ export class Table extends Phaser.GameObjects.Container {
 
         // Check if show head variable is true and the row is the first one
 
-        console.log(this.pShowHead);
         if (this.pShowHead && i === 0) {
           // Set options for title row
           this.graphics.fillStyle(0x333333);

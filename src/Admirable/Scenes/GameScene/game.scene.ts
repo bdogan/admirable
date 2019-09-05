@@ -38,7 +38,6 @@ export class GameScene extends Phaser.Scene {
     this.isDrawing = true;
   }
 
-  
   private onMouseMove(event: any) {
     if (this.isDrawing) {
       this.line.clear();
