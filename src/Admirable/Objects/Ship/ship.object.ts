@@ -49,7 +49,7 @@ export class Ship extends Phaser.GameObjects.Container {
     }
 
     // Prevent to go outside of the canvas.
-    const xMax = (this.scene.sys.canvas.width / 2 - this.ship.getBounds().width),
+    const xMax = (this.scene.sys.canvas.width - this.ship.getBounds().width),
           yMax = (this.scene.sys.canvas.height - this.ship.getBounds().height);
 
     x = this.getBetween(x, 0, xMax);
@@ -108,7 +108,7 @@ export class Ship extends Phaser.GameObjects.Container {
 
     this.on('drag', (p: any, x: any, y: any) => {
       this.collisionArea.fillAlpha = 0.4;
-      this._setPosition(x, y, false, false);
+      this._setPosition(x, y, true);
     });
   }
 
