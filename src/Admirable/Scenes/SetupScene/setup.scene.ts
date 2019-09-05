@@ -6,6 +6,7 @@ import { BoardConfig } from '../../board.config';
 @AdmirableScene({
   key: 'setup'
 })
+
 export class SetupScene extends Phaser.Scene {
 
   private grid!: Phaser.GameObjects.Graphics;
@@ -29,19 +30,20 @@ export class SetupScene extends Phaser.Scene {
     }
 
     // just run once after all of the ships created for the demo.
-    this._isOverlap();
+    this._isOverlapping();
 
+    // Deploy Button
     const bw = 160, bh = 60, bx = (this.sys.canvas.width) - (bw / 2) - 16, by = (this.sys.canvas.height) - (bh / 2) - 16;
     const button = new Button(this, 'DEPLOY', bx, by, bw, bh );
     button.text.setFontSize(32);
 
     button.on(MouseEvent.onClick, (e: any) => {
 
-      if (this._isOverlap()) {
+      if (this._isOverlapping()) {
         return;
       }
 
-      const ships = (this.children.list.filter((child) => child instanceof Ship) as Ship[]).map((ship: Ship) => {
+      const ships = (this.children.list.filter((child) => child instanceof Ship) as Ship[]).map((ship) => {
           return {x: ship.x, y: ship.y, width: ship.width, height: ship.height };
       });
 
@@ -78,22 +80,22 @@ export class SetupScene extends Phaser.Scene {
   }
 
   /**
-   * Checks if any ship on the scene collides with other ships.
+   * Checks if any ship on the scene collides with any other ships.
    * @returns true if collision detected, false if not.
    */
-  private _isOverlap(): boolean {
-    // Check for overlapping.
+  private _isOverlapping(): boolean {
     let flag: boolean = false;
-
+    // Get all of the Ship objects from the scene.
     const Ships = this.children.list.filter((child) => child instanceof Ship) as Ship[];
 
-    Ships.forEach((ship: Ship) => {
+    // Check if ships intersects / collides with any other ships on the scene.
+    Ships.forEach((ship) => {
       const _ships = Ships.filter((s) => s !== ship);
 
       for (const s of _ships as Ship[]) {
-        const intersection = Phaser.Geom.Rectangle.Overlaps(s.anchor, ship.anchor);
+        const intersection = Phaser.Geom.Rectangle.Overlaps(s.collisionArea.getBounds(), ship.collisionArea.getBounds());
 
-        ship.allowedArea.fillColor = intersection ? 0xFF0000 : 0x00FF00;
+        ship.collisionArea.fillColor = intersection ? 0xFF0000 : 0x00FF00;
 
         if (intersection) {
           flag = true;
