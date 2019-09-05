@@ -1,10 +1,12 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Ship } from '../../Objects/Ship/ship.object';
-import { Button } from '../../Objects/UI/Button';
+import { Button, MouseEvent } from '../../Objects/UI/Button';
+import { BoardConfig } from '../../board.config';
 
 @AdmirableScene({
   key: 'setup'
 })
+
 export class SetupScene extends Phaser.Scene {
 
   private grid!: Phaser.GameObjects.Graphics;
@@ -19,26 +21,37 @@ export class SetupScene extends Phaser.Scene {
 
     // Random ships
     for (let i = 0; i < 10; i++) {
-      const x = Phaser.Math.Between(0, 20) * 32;
-      const y = Phaser.Math.Between(0, 8) * 32;
+      const x = Phaser.Math.Between(0, 20) * BoardConfig.gridSize;
+      const y = Phaser.Math.Between(0, 8) * BoardConfig.gridSize;
       const width = Phaser.Math.Between(2, 4);
       const axis = Phaser.Math.Between(0, 1);
       const ship = new Ship(this, !axis ? 1 : width, axis ? 1 : width);
       ship._setPosition(x, y);
     }
 
-    // just run once after all of the ships created for the demo.
-    this._checkOverlap();
-
+    // Deploy Button
     const bw = 160, bh = 60, bx = (this.sys.canvas.width) - (bw / 2) - 16, by = (this.sys.canvas.height) - (bh / 2) - 16;
     const button = new Button(this, 'DEPLOY', bx, by, bw, bh );
     button.text.setFontSize(32);
+
+    button.on(MouseEvent.onClick, (e: any) => {
+      if (Ship.isPlacementValid(this)) {
+        return;
+      }
+
+      const ships = (this.children.list.filter((child) => child instanceof Ship) as Ship[]).map((ship) => {
+          return {x: ship.x, y: ship.y, width: ship.width, height: ship.height };
+      });
+
+      this.scene.start('game', {ships});
+    });
+
     this.add.existing(button);
 
   }
 
   private drawGrid() {
-    const gap = 32;
+    const gap = BoardConfig.gridSize;
     const canvasWidth = this.sys.canvas.width / 2;
     const canvasHeight = this.sys.canvas.height;
 
@@ -61,24 +74,4 @@ export class SetupScene extends Phaser.Scene {
 
     this.grid.strokePath();
   }
-
-  // Check collide on scene.
-  private _checkOverlap(): void {
-    const Ships = this.children.list.filter((child) => child instanceof Ship);
-
-    Ships.forEach((ship) => {
-      const _ships = Ships.filter((s) => s !== ship);
-
-      for (const s of _ships as Ship[]) {
-        const intersection = Phaser.Geom.Intersects.RectangleToRectangle(s.anchor, (ship as Ship).anchor);
-        if (intersection) {
-          (ship as Ship).allowedArea.fillColor = 0xFF0000;
-          break;
-        } else {
-          (ship as Ship).allowedArea.fillColor = 0x00FF00;
-        }
-      }
-    });
-  }
-
 }

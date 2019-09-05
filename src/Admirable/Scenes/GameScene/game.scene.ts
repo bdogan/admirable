@@ -1,5 +1,7 @@
 import { Cursor } from '../../Objects/Cursor';
 import { AdmirableScene } from '../admirable.scene';
+import { BoardConfig } from '../../board.config';
+import { Ship } from '../../Objects/Ship/ship.object';
 
 @AdmirableScene({
   key: 'game'
@@ -12,11 +14,12 @@ export class GameScene extends Phaser.Scene {
 
   private cursor!: Cursor;
 
-  public init(): void {
+  public init(data: any): void {
     console.log('GameScene initialized.');
+    console.log('passed data: ', data);
   }
 
-  public create(): void {
+  public create(data: any): void {
 
     this.line = this.add.graphics();
 
@@ -27,7 +30,14 @@ export class GameScene extends Phaser.Scene {
     this.grid = this.add.graphics();
     this.drawGrid();
 
-    this.cursor = new Cursor(this, 32, 32);
+    data.ships.forEach((s: Ship) => {
+      // console.log(ship);
+      const ship = new Ship(this, s.width, s.height);
+      ship._setPosition(s.x, s.y);
+      // this.add.existing(ship);
+    });
+
+    this.cursor = new Cursor(this, BoardConfig.gridSize);
   }
 
   public update(): void {
@@ -53,7 +63,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private drawGrid() {
-    const gap = 32;
+    const gap = BoardConfig.gridSize;
     const canvasWidth = this.sys.canvas.width;
     const canvasHeight = this.sys.canvas.height;
 
