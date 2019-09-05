@@ -46,7 +46,7 @@ export class Ship extends Phaser.GameObjects.Container {
       this.allowedArea = new Phaser.GameObjects.Rectangle(scene, -this.gridSize / 2, -this.gridSize / 2, this.ship.width + this.gridSize, this.ship.height + this.gridSize, 0x00A8E8, 0.2).setOrigin(0);
       this.addAt(this.allowedArea, 0);
 
-      this.anchor = Phaser.Geom.Rectangle.Clone(this.ship.getBounds()).setSize(this.ship.getBounds().width + this.gridSize - 1, this.ship.getBounds().height + this.gridSize - 1);
+      this.anchor = Phaser.Geom.Rectangle.Clone(this.ship.getBounds()).setSize(this.ship.getBounds().width + this.gridSize, this.ship.getBounds().height + this.gridSize);
 
       this.on('dragstart', (p: any, x: any, y: any) => {
         // Bring the selected ship to the top of the scene's display list.
@@ -98,14 +98,14 @@ export class Ship extends Phaser.GameObjects.Container {
    */
   private _checkOverlap(): void {
     // Get all of the Ship objects from the scene.
-    const Ships = this.scene.children.list.filter((child) => child instanceof Ship);
+    const Ships = this.scene.children.list.filter((child) => child instanceof Ship) as Ship[];
 
     // Check if ships intersects / collides with any other ships.
     Ships.forEach((ship) => {
       const _ships = Ships.filter((s) => s !== ship);
 
       for (const s of _ships as Ship[]) {
-        const intersection = Phaser.Geom.Intersects.RectangleToRectangle(s.anchor, (ship as Ship).anchor);
+        const intersection = Phaser.Geom.Rectangle.Overlaps(s.anchor, ship.anchor);
 
         (ship as Ship).allowedArea.fillColor = intersection ? 0xFF0000 : 0x00FF00;
 

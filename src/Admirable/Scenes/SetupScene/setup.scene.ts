@@ -82,24 +82,22 @@ export class SetupScene extends Phaser.Scene {
    * @returns true if collision detected, false if not.
    */
   private _isOverlap(): boolean {
-    const Ships = this.children.list.filter((child) => child instanceof Ship);
-
+    // Check for overlapping.
     let flag: boolean = false;
 
-    Ships.forEach((ship) => {
+    const Ships = this.children.list.filter((child) => child instanceof Ship) as Ship[];
+
+    Ships.forEach((ship: Ship) => {
       const _ships = Ships.filter((s) => s !== ship);
 
       for (const s of _ships as Ship[]) {
-        const intersection = Phaser.Geom.Intersects.RectangleToRectangle(s.anchor, (ship as Ship).anchor);
+        const intersection = Phaser.Geom.Rectangle.Overlaps(s.anchor, ship.anchor);
+
+        ship.allowedArea.fillColor = intersection ? 0xFF0000 : 0x00FF00;
+
         if (intersection) {
-          (ship as Ship).allowedArea.fillColor = 0xFF0000;
-
           flag = true;
-
           break;
-
-        } else {
-          (ship as Ship).allowedArea.fillColor = 0x00FF00;
         }
       }
     });
