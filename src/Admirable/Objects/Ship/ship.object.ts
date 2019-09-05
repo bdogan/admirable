@@ -10,7 +10,7 @@ export class Ship extends Phaser.GameObjects.Container {
   private ship!: Phaser.GameObjects.TileSprite;
 
   // Default grid size.
-  private gridSize: number = 40;
+  private gridSize: number = 32;
 
   // Canvas boundaries.
   private canvasBoundary: {width: number, height: number} = {width: this.scene.sys.canvas.width, height: this.scene.sys.canvas.height};
@@ -22,7 +22,7 @@ export class Ship extends Phaser.GameObjects.Container {
       super(scene, 0, 0, []);
 
       // Create the ship sprite and add it to the container.
-      this.ship = scene.add.tileSprite(0, 0, this.gridSize * width, this.gridSize * height, 'ship').setTileScale(this.gridSize / 32).setOrigin(0);
+      this.ship = scene.add.tileSprite(0, 0, this.gridSize * width, this.gridSize * height, 'ship').setOrigin(0);
 
       this.shipBoundary = {width: this.ship.width, height: this.ship.height};
 

@@ -27,7 +27,7 @@ export class GameScene extends Phaser.Scene {
     this.grid = this.add.graphics();
     this.drawGrid();
 
-    this.cursor = new Cursor(this, 40, 40);
+    this.cursor = new Cursor(this, 32, 32);
   }
 
   public update(): void {
@@ -53,7 +53,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private drawGrid() {
-    const gap = 40;
+    const gap = 32;
     const canvasWidth = this.sys.canvas.width;
     const canvasHeight = this.sys.canvas.height;
 

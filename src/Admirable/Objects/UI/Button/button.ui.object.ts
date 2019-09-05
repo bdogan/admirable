@@ -13,8 +13,8 @@ export class Button extends Phaser.GameObjects.Container {
   public width: number;
   public height: number;
 
+  public text: Phaser.GameObjects.Text;
   private background: Phaser.GameObjects.Rectangle;
-  private text: Phaser.GameObjects.Text;
 
   /**
    * clickState helps us to ensure if the click event happened within the button's bounds.
