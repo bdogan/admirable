@@ -20,7 +20,7 @@ export class SetupScene extends Phaser.Scene {
     this.drawGrid();
 
     // Random ships
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10; i++) {
       const x = Phaser.Math.Between(0, 20) * BoardConfig.gridSize;
       const y = Phaser.Math.Between(0, 8) * BoardConfig.gridSize;
       const width = Phaser.Math.Between(2, 4);
@@ -29,17 +29,13 @@ export class SetupScene extends Phaser.Scene {
       ship._setPosition(x, y);
     }
 
-    // just run once after all of the ships created for the demo.
-    this._isOverlapping();
-
     // Deploy Button
     const bw = 160, bh = 60, bx = (this.sys.canvas.width) - (bw / 2) - 16, by = (this.sys.canvas.height) - (bh / 2) - 16;
     const button = new Button(this, 'DEPLOY', bx, by, bw, bh );
     button.text.setFontSize(32);
 
     button.on(MouseEvent.onClick, (e: any) => {
-
-      if (this._isOverlapping()) {
+      if (Ship.isPlacementValid(this)) {
         return;
       }
 
@@ -78,33 +74,4 @@ export class SetupScene extends Phaser.Scene {
 
     this.grid.strokePath();
   }
-
-  /**
-   * Checks if any ship on the scene collides with any other ships.
-   * @returns true if collision detected, false if not.
-   */
-  private _isOverlapping(): boolean {
-    let flag: boolean = false;
-    // Get all of the Ship objects from the scene.
-    const Ships = this.children.list.filter((child) => child instanceof Ship) as Ship[];
-
-    // Check if ships intersects / collides with any other ships on the scene.
-    Ships.forEach((ship) => {
-      const _ships = Ships.filter((s) => s !== ship);
-
-      for (const s of _ships as Ship[]) {
-        const intersection = Phaser.Geom.Rectangle.Overlaps(s.collisionArea.getBounds(), ship.collisionArea.getBounds());
-
-        ship.collisionArea.fillColor = intersection ? 0xFF0000 : 0x00FF00;
-
-        if (intersection) {
-          flag = true;
-          break;
-        }
-      }
-    });
-
-    return flag;
-  }
-
 }
