@@ -1,5 +1,6 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Ship } from '../../Objects/Ship/ship.object';
+import { Button } from '../../Objects/UI/Button';
 
 @AdmirableScene({
   key: 'setup'
@@ -18,8 +19,8 @@ export class SetupScene extends Phaser.Scene {
 
     // Random ships
     for (let i = 0; i < 10; i++) {
-      const x = Phaser.Math.Between(0, 20) * 40;
-      const y = Phaser.Math.Between(0, 8) * 40;
+      const x = Phaser.Math.Between(0, 20) * 32;
+      const y = Phaser.Math.Between(0, 8) * 32;
       const width = Phaser.Math.Between(2, 4);
       const axis = Phaser.Math.Between(0, 1);
       const ship = new Ship(this, !axis ? 1 : width, axis ? 1 : width);
@@ -29,10 +30,15 @@ export class SetupScene extends Phaser.Scene {
     // just run once after all of the ships created for the demo.
     this._checkOverlap();
 
+    const bw = 160, bh = 60, bx = (this.sys.canvas.width) - (bw / 2) - 16, by = (this.sys.canvas.height) - (bh / 2) - 16;
+    const button = new Button(this, 'DEPLOY', bx, by, bw, bh );
+    button.text.setFontSize(32);
+    this.add.existing(button);
+
   }
 
   private drawGrid() {
-    const gap = 40;
+    const gap = 32;
     const canvasWidth = this.sys.canvas.width / 2;
     const canvasHeight = this.sys.canvas.height;
 
