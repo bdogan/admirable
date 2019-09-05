@@ -10,11 +10,11 @@ export class Cursor {
 
   private controls: Phaser.Types.Input.Keyboard.CursorKeys;
 
-  constructor(scene: Phaser.Scene, width: number, height: number) {
+  constructor(scene: Phaser.Scene, width: number, height?: number) {
     this.controls = scene.input.keyboard.createCursorKeys();
 
     this.width = width;
-    this.height = height;
+    this.height = height || width;
 
     this.graphic = scene.add.graphics({
       lineStyle: {color: 0xFF0000, width: 2},

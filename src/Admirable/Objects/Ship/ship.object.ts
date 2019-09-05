@@ -1,16 +1,21 @@
+import { BoardConfig } from '../../board.config';
+
 export class Ship extends Phaser.GameObjects.Container {
 
-  // Helper rectangle to help while positioning the ship.
-  public allowedArea!: Phaser.GameObjects.Rectangle;
+  public width: number;
+  public height: number;
 
   // Helper rectangle for detecting overlapping/intersecting ships.
   public anchor!: Phaser.Geom.Rectangle;
+
+  // Helper rectangle to help while positioning the ship.
+  public allowedArea!: Phaser.GameObjects.Rectangle;
 
   // Ship sprite.
   private ship!: Phaser.GameObjects.TileSprite;
 
   // Default grid size.
-  private gridSize: number = 32;
+  private gridSize: number = BoardConfig.gridSize;
 
   // Canvas boundaries.
   private canvasBoundary: {width: number, height: number} = {width: this.scene.sys.canvas.width, height: this.scene.sys.canvas.height};
@@ -20,6 +25,9 @@ export class Ship extends Phaser.GameObjects.Container {
 
   constructor(scene: Phaser.Scene, width: number = 1, height: number = 1) {
       super(scene, 0, 0, []);
+
+      this.width = width;
+      this.height = height;
 
       // Create the ship sprite and add it to the container.
       this.ship = scene.add.tileSprite(0, 0, this.gridSize * width, this.gridSize * height, 'ship').setOrigin(0);
