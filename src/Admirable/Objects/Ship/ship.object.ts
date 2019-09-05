@@ -50,33 +50,6 @@ export class Ship extends Phaser.GameObjects.Container {
     this.setPosition(x, y);
   }
 
-  /**
-   * Checks if any ship on the scene collides with  other ships.
-   * @returns true if collision detected, false if not.
-   */
-  private _isOverlapping(): boolean {
-    let flag: boolean = false;
-    // Get all of the Ship objects from the scene.
-    const Ships = this.scene.children.list.filter((child) => child instanceof Ship) as Ship[];
-
-    // Check if ships intersects / collides with any other ships on the scene.
-    Ships.forEach((ship) => {
-      const _ships = Ships.filter((s) => s !== ship);
-
-      for (const s of _ships) {
-        const intersection = Phaser.Geom.Rectangle.Overlaps(s.collisionArea.getBounds(), ship.collisionArea.getBounds());
-
-        ship.collisionArea.fillColor = intersection ? 0xFF0000 : 0x00FF00;
-
-        if (intersection) {
-          flag = true;
-          break;
-        }
-      }
-    });
-
-    return flag;
-  }
 /**
  * @param value value to be bounded
  * @param min minimum bound of the value
@@ -117,8 +90,33 @@ export class Ship extends Phaser.GameObjects.Container {
        this.collisionArea.fillAlpha = 0.4;
 
        this._setPosition(x, y, true);
-       this._isOverlapping();
 
+       this.checkCollide();
      });
+  }
+  /**
+   * Determinate if the current ship collides with any of the other ships in the scene.
+   * O(n-1);
+   */
+  private get isColliding(): boolean {
+    let flag: boolean = false;
+
+    const ships = this.scene.children.list.filter((child) => child instanceof Ship && child !== this) as Ship[];
+
+    for (const ship of ships) {
+      const colliding = Phaser.Geom.Rectangle.Overlaps(this.collisionArea.getBounds(), ship.collisionArea.getBounds());
+
+      if ( colliding ) {
+        flag = true;
+        break;
+      }
+    }
+
+    return flag;
+  }
+
+  private checkCollide(): void {
+    const ships = this.scene.children.list.filter((child) => child instanceof Ship) as Ship[];
+    ships.forEach((ship) => ship.collisionArea.fillColor = ship.isColliding ? 0xFF0000 : 0x00FF00);
   }
 }

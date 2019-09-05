@@ -20,7 +20,7 @@ export class SetupScene extends Phaser.Scene {
     this.drawGrid();
 
     // Random ships
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
       const x = Phaser.Math.Between(0, 20) * BoardConfig.gridSize;
       const y = Phaser.Math.Between(0, 8) * BoardConfig.gridSize;
       const width = Phaser.Math.Between(2, 4);
