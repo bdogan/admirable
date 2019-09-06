@@ -2,6 +2,7 @@ import { AdmirableScene } from '../admirable.scene';
 import { Ship } from '../../Objects/Ship/ship.object';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { BoardConfig } from '../../board.config';
+import { Notification } from '../../Objects/UI/Notification';
 
 @AdmirableScene({
   key: 'setup'
@@ -35,7 +36,9 @@ export class SetupScene extends Phaser.Scene {
     button.text.setFontSize(32);
 
     button.on(MouseEvent.onClick, (e: any) => {
+
       if (Ship.isPlacementValid(this)) {
+        Notification.create(this, 'Placement is not valid');
         return;
       }
 

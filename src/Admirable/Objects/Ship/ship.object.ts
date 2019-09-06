@@ -113,7 +113,7 @@ export class Ship extends Phaser.GameObjects.Container {
   }
 
   /**
-   * Determinate if the current ship collides with any other ships in the scene. O(n-1).
+   * Determinate if the current ship collides with any other ships in the scene.
    */
   private get isColliding(): boolean {
     let flag: boolean = false;
