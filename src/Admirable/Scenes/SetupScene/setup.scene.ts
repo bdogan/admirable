@@ -1,5 +1,5 @@
 import { AdmirableScene } from '../admirable.scene';
-import { Ship } from '../../Objects/Ship/ship.object';
+import { Ship } from '../../Objects/Ship';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { BoardConfig } from '../../board.config';
 import { Notification } from '../../Objects/UI/Notification';
@@ -12,7 +12,7 @@ export class SetupScene extends Phaser.Scene {
 
   private grid!: Phaser.GameObjects.Graphics;
 
-  public  init(): void {
+  public init(): void {
     console.log('SetupScene initialized.');
   }
 
@@ -27,12 +27,12 @@ export class SetupScene extends Phaser.Scene {
       const width = Phaser.Math.Between(2, 4);
       const axis = Phaser.Math.Between(0, 1);
       const ship = new Ship(this, !axis ? 1 : width, axis ? 1 : width);
-      ship._setPosition(x, y);
+      ship._setPosition(x, y, true, false);
     }
 
     // Deploy Button
     const bw = 160, bh = 60, bx = (this.sys.canvas.width) - (bw / 2) - 16, by = (this.sys.canvas.height) - (bh / 2) - 16;
-    const button = new Button(this, 'DEPLOY', bx, by, bw, bh );
+    const button = new Button(this, 'DEPLOY', bx, by, bw, bh);
     button.text.setFontSize(32);
 
     button.on(MouseEvent.onClick, (e: any) => {
@@ -43,10 +43,10 @@ export class SetupScene extends Phaser.Scene {
       }
 
       const ships = (this.children.list.filter((child) => child instanceof Ship) as Ship[]).map((ship) => {
-          return {x: ship.x, y: ship.y, width: ship.width, height: ship.height };
+        return { x: ship.x, y: ship.y, width: ship.width, height: ship.height };
       });
 
-      this.scene.start('game', {ships});
+      this.scene.start('game', { ships });
     });
 
     this.add.existing(button);

@@ -104,11 +104,16 @@ export class Ship extends Phaser.GameObjects.Container {
 
     this.on('dragend', (p: any, x: any, y: any) => {
       this.collisionArea.fillAlpha = 0.2;
+      // in carefree mode try to place the ship correctly after the drag.
+      // this._setPosition(this.x, this.y);
     });
 
     this.on('drag', (p: any, x: any, y: any) => {
       this.collisionArea.fillAlpha = 0.4;
-      this._setPosition(x, y, true);
+      // aggresive snap.
+      this._setPosition(x, y);
+      // carefree mode:
+      // this._setPosition(x, y, false, false);
     });
   }
 
@@ -116,18 +121,10 @@ export class Ship extends Phaser.GameObjects.Container {
    * Determinate if the current ship collides with any other ships in the scene.
    */
   private get isColliding(): boolean {
-    let flag: boolean = false;
 
     const ships = this.scene.children.list.filter((child) => child instanceof Ship && child !== this) as Ship[];
 
-    for (const ship of ships) {
-      const colliding = Phaser.Geom.Rectangle.Overlaps(this.collisionArea.getBounds(), ship.collisionArea.getBounds());
-
-      if (colliding) {
-        flag = true;
-        break;
-      }
-    }
+    const flag = ships.some((ship) => Phaser.Geom.Rectangle.Overlaps(this.collisionArea.getBounds(), ship.collisionArea.getBounds()));
 
     return flag;
   }
@@ -139,7 +136,7 @@ export class Ship extends Phaser.GameObjects.Container {
   }
 
   /**
-   * @param scene a Phaser.Scene to be checked for condition.
+   * @param scene a Phaser.Scene to be checked for colliding Ship objects.
    */
   // tslint:disable-next-line: member-ordering
   public static isPlacementValid(scene: Phaser.Scene): boolean {

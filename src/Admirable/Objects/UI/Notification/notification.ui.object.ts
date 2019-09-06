@@ -1,11 +1,24 @@
+type FontStyle = Phaser.Types.GameObjects.Text.TextStyle;
+
 export class Notification {
+
+  /**
+   * Create a notification object and add it to the given scene.
+   */
+  public static create(scene: Phaser.Scene, text: string, timeout: number = 1000, style: FontStyle = {}) {
+    const notification = new Notification(scene, text, timeout, style);
+    scene.add.existing(notification.text);
+  }
+
   private scene: Phaser.Scene;
   private text: Phaser.GameObjects.Text;
 
-  constructor(scene: Phaser.Scene, text: string, timeout: number = 1000) {
+  constructor(scene: Phaser.Scene, text: string, timeout: number = 1000, style: FontStyle = {}) {
 
     this.scene = scene;
-    const style: Phaser.Types.GameObjects.Text.TextStyle = {
+
+    // set the default font style.
+    const _style: FontStyle = {
       fontFamily: 'Munro',
       fontSize: '36px',
       color: '#FFEB3B',
@@ -18,7 +31,11 @@ export class Notification {
         left: 18,
       }
     };
-    this.text = new Phaser.GameObjects.Text(scene, 0, 0, text, style).setOrigin(0.5);
+
+    // assign the custom style attributes.
+    Object.assign(_style, style);
+
+    this.text = new Phaser.GameObjects.Text(scene, 0, 0, text, _style).setOrigin(0.5);
     this.text.setPosition(scene.sys.canvas.width / 2, scene.sys.canvas.height / 5);
 
     // scene.add.existing(this.text);
@@ -29,6 +46,9 @@ export class Notification {
     }, timeout);
   }
 
+  /**
+   * Destroys the relevant game object.
+   */
   private destroy(): void {
     this.text.destroy();
     // console.log(this, ' has been destroyed');
@@ -38,7 +58,7 @@ export class Notification {
    * Fade out animation.
    * @returns a promise when the tween completed.
    */
-  private fadeOut(): Promise<any> {
+  private fadeOut(): Promise<Notification> {
     return new Promise((resolve) => {
       this.scene.tweens.add({
         targets: this.text,
@@ -57,9 +77,4 @@ export class Notification {
     });
   }
 
-  // tslint:disable-next-line: member-ordering
-  public static create(scene: Phaser.Scene, text: string, timeout: number = 1000) {
-    const notification = new Notification(scene, text, timeout);
-    scene.add.existing(notification.text);
-  }
 }
