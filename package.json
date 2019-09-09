@@ -29,7 +29,9 @@
   },
   "dependencies": {
     "@types/node": "^12.7.3",
+    "@types/peerjs": "0.0.30",
     "peer": "^0.2.10",
+    "peerjs": "^1.0.4",
     "phaser": "^3.19.0"
   }
 }
