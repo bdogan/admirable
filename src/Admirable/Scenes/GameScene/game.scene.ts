@@ -1,7 +1,7 @@
 import { Cursor } from '../../Objects/Cursor';
 import { AdmirableScene } from '../admirable.scene';
 import { BoardConfig } from '../../board.config';
-import { Ship } from '../../Objects/Ship/ship.object';
+import { Ship } from '../../Objects/Ship';
 
 @AdmirableScene({
   key: 'game'
