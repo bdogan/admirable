@@ -2,24 +2,25 @@ import { BoardConfig } from '../../board.config';
 
 export class Ship extends Phaser.GameObjects.Container {
 
-  public focused: boolean = false;
+  public hasFocus: boolean = false;
 
-  // Length of the ship in grid unit.
+  // Length of the ship based on the grid size.
   public extent: number = 1;
 
+  // Orthogonality of the ship. True if it's vertical.
   public orthogonal: boolean = false;
-
-  // Helper rectangle to help while positioning the ship.
-  public collisionArea!: Phaser.GameObjects.Rectangle;
 
   // Ship sprite.
   private ship!: Phaser.GameObjects.TileSprite;
 
+  // Helper rectangle to help while positioning the ship.
+  private collisionArea!: Phaser.GameObjects.Rectangle;
+
   /**
    * Constructor.
-   * @param scene Scene object to attach this ship.
-   * @param length Lenght of the ship in defined grid unit.
-   * @param orthogonal orthogonality of the ship.
+   * @param scene The scene this ship belongs to.
+   * @param length Lenght of the ship based on the grid size.
+   * @param orthogonal Orthogonality of the ship.
    */
   constructor(scene: Phaser.Scene, length: number = 1, orthogonal: boolean = false) {
     super(scene, 0, 0, []);
@@ -27,10 +28,10 @@ export class Ship extends Phaser.GameObjects.Container {
     this.extent = length;
     this.orthogonal = orthogonal;
 
-    // create sprite.
+    // Create the ship sprite and it's colision area.
     this.refreshSprite();
 
-    // register the events to handle.
+    // Register the events to be handled.
     this.registerEvents();
 
     // Add the created ship immediately to the scene.
@@ -42,13 +43,16 @@ export class Ship extends Phaser.GameObjects.Container {
    */
   public rotate() {
     this.orthogonal = !this.orthogonal;
+
     this.refreshSprite();
-    // if colliding prevent rotate.
+
+    // if the rotated ship colliding prevent the rotation.
     if (this.isColliding) {
       this.orthogonal = !this.orthogonal;
       this.refreshSprite();
     }
-    this.checkCollideForAll();
+
+    // this.checkCollideForAll();
   }
 
   /**
@@ -89,73 +93,6 @@ export class Ship extends Phaser.GameObjects.Container {
     this.checkCollideForAll();
   }
 
-  /**
-   * Limits the given number between [min, max]
-   * @param value value to be limited.
-   * @param min minimum limit of the value.
-   * @param max maximum limit of the value.
-   * @returns min if value < min, max if max < value, value if otherwise.
-   */
-  private getBetween(value: number, min: number, max: number): number {
-
-    if (value < min) {
-      return min;
-    } else if (value > max) {
-      return max;
-    } else {
-      return value;
-    }
-  }
-
-  /**
-   * register the events to be handled for this ship object.
-   */
-  private registerEvents(): void {
-
-    // Set the container draggable on the scene.
-    this.scene.input.setDraggable(this);
-
-    this.on('dragstart', (p: any, x: any, y: any) => {
-      // Bring the selected ship to the top of the scene's display list.
-      this.scene.children.bringToTop(this);
-      this.focused = true;
-    });
-
-    this.on('dragend', (p: any, x: any, y: any) => {
-      this.collisionArea.fillAlpha = 0.2;
-      // in carefree mode try to place the ship correctly after the drag.
-      // this._setPosition(this.x, this.y);
-      this.focused = false;
-    });
-
-    this.on('drag', (p: any, x: any, y: any) => {
-      this.collisionArea.fillAlpha = 0.4;
-      // aggresive snap.
-      this._setPosition(x, y);
-      // carefree mode:
-      // this._setPosition(x, y, false, false);
-    });
-
-  }
-
-  /**
-   * Determinate if the current ship collides with any other ships in the scene.
-   */
-  private get isColliding(): boolean {
-
-    const ships = this.scene.children.list.filter((child) => child instanceof Ship && child !== this) as Ship[];
-
-    const flag = ships.some((ship) => Phaser.Geom.Rectangle.Overlaps(this.collisionArea.getBounds(), ship.collisionArea.getBounds()));
-
-    return flag;
-  }
-
-  // Check Colliding for all of the ships.
-  private checkCollideForAll(): void {
-    const ships = this.scene.children.list.filter((child) => child instanceof Ship) as Ship[];
-    ships.forEach((ship) => ship.collisionArea.fillColor = ship.isColliding ? 0xFF0000 : 0x00CCFF);
-  }
-
   private refreshSprite(): void {
     // If exist, remove the old sprites from the displayList of the container thus scene.
     if (this.ship) { this.ship.destroy(); }
@@ -177,6 +114,7 @@ export class Ship extends Phaser.GameObjects.Container {
 
     // Create the helper rectangle for using while positioning.
     this.collisionArea = new Phaser.GameObjects.Rectangle(this.scene, -BoardConfig.gridSize / 2, -BoardConfig.gridSize / 2, width + BoardConfig.gridSize, height + BoardConfig.gridSize, 0x00CCFF, 0.2).setOrigin(0);
+    this.collisionArea.setStrokeStyle(1, 0x00CCFF, 0.8);
     this.addAt(this.collisionArea, 0);
 
     // If object is not interactive make it interactive.
@@ -186,13 +124,85 @@ export class Ship extends Phaser.GameObjects.Container {
   }
 
   /**
+   * register the events to be handled for this ship object.
+   */
+  private registerEvents(): void {
+
+    // Set the container draggable on the scene.
+    this.scene.input.setDraggable(this);
+
+    this.on('dragstart', (p: any, x: any, y: any) => {
+      this.collisionArea.fillAlpha = 0.4;
+      this.collisionArea.strokeAlpha = 1;
+      // Bring the selected ship to the top of the scene's display list.
+      this.scene.children.bringToTop(this);
+      this.hasFocus = true;
+    });
+
+    this.on('dragend', (p: any, x: any, y: any) => {
+      this.collisionArea.fillAlpha = 0.2;
+      this.collisionArea.strokeAlpha = 0.5;
+      // in carefree mode try to place the ship correctly after the drag.
+      // this._setPosition(this.x, this.y);
+      this.hasFocus = false;
+    });
+
+    this.on('drag', (p: any, x: any, y: any) => {
+      // aggresive snap.
+      // this._setPosition(x, y);
+      // console.log(this.isWithinBound);
+      // carefree mode:
+      // this._setPosition(x, y, false, false);
+      this._setPosition(x, y, true, false);
+    });
+
+  }
+
+  /**
+   * Determinate if the current ship collides with any other ships in the scene.
+   */
+  private get isColliding(): boolean {
+
+    const ships = this.scene.children.list.filter((child) => child instanceof Ship && child !== this) as Ship[];
+
+    const flag = ships.some((ship) => Phaser.Geom.Rectangle.Overlaps(this.collisionArea.getBounds(), ship.collisionArea.getBounds()));
+
+    return flag;
+  }
+
+  /**
+   * Check if the ship is inside of the placement area.
+   */
+  private get isWithinArea(): boolean {
+    const w = this.scene.sys.canvas.width, h = this.scene.sys.canvas.height;
+
+    // return !Phaser.Geom.Rectangle.Overlaps(this.ship.getBounds(), new Phaser.Geom.Rectangle(w / 2, 0, w / 2, h));
+    // We have to use this hack to determinate if the ship overflow out of the placement area.
+    return !Phaser.Geom.Intersects.RectangleToValues(this.ship.getBounds(), w / 2, w, 0, h, -1);
+  }
+
+  // Check Colliding for all of the ships.
+  private checkCollideForAll(): void {
+    const ships = this.scene.children.list.filter((child) => child instanceof Ship) as Ship[];
+    ships.forEach((ship) => {
+      const flag = ship.isColliding || !ship.isWithinArea;
+      ship.collisionArea.fillColor = flag ? 0xFF0000 : 0x00CCFF;
+      ship.collisionArea.strokeColor = flag ? 0xFF0000 : 0x00CCFF;
+    });
+  }
+
+  /**
    * @param scene a Phaser.Scene to be checked for colliding Ship objects.
    */
   // tslint:disable-next-line: member-ordering
   public static isPlacementValid(scene: Phaser.Scene): boolean {
     const ships = scene.children.list.filter((child) => child instanceof Ship) as Ship[];
-    const flag = ships.some((ship) => ship.isColliding);
-    return flag;
+
+    // check and return as soon as possible if any ship on the scene is coliding or outside of the placement area.
+    const flag = ships.some((ship) => ship.isColliding || !ship.isWithinArea);
+
+    // if flag is true overall placement is not valid.
+    return !flag;
   }
 
   // tslint:disable-next-line: member-ordering
@@ -201,12 +211,31 @@ export class Ship extends Phaser.GameObjects.Container {
 
     key.on('down', (event: any) => {
       // Rotate.
-      const focusedShip = (scene.children.list.filter((child) => child instanceof Ship) as Ship[]).find((ship) => ship.focused);
+      const focusedShip = (scene.children.list.filter((child) => child instanceof Ship) as Ship[]).find((ship) => ship.hasFocus);
       if (focusedShip) {
         focusedShip.rotate();
       }
       // console.log(event);
     });
+
+  }
+
+  /**
+   * Limits the given number between [min, max]
+   * @param value value to be limited.
+   * @param min minimum limit of the value.
+   * @param max maximum limit of the value.
+   * @returns min if value < min, max if max < value, value if otherwise.
+   */
+  private getBetween(value: number, min: number, max: number): number {
+
+    if (value < min) {
+      return min;
+    } else if (value > max) {
+      return max;
+    } else {
+      return value;
+    }
 
   }
 

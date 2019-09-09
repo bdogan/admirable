@@ -12,6 +12,10 @@ export class Dock {
   private player!: Player;
   private ships!: Ship[];
 
+  public add(ship: Ship) {
+    this.ships.push(ship);
+  }
+
   public export(): IExport[] {
     // tslint:disable-next-line: no-angle-bracket-type-assertion
     return this.ships.map((ship: Ship) => <IExport> {x: ship.x, y: ship.y, extent: ship.extent, orthogonal: ship.orthogonal});

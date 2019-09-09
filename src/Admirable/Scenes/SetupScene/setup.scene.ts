@@ -39,8 +39,7 @@ export class SetupScene extends Phaser.Scene {
     button.text.setFontSize(32);
 
     button.on(MouseEvent.onClick, (e: any) => {
-
-      if (Ship.isPlacementValid(this)) {
+      if (!Ship.isPlacementValid(this)) {
         Notification.create(this, 'Placement is not valid');
         return;
       }
@@ -49,7 +48,7 @@ export class SetupScene extends Phaser.Scene {
         return { x: ship.x, y: ship.y, extent: ship.extent, orthogonal: ship.orthogonal };
       });
 
-      this.scene.start('game', { ships });
+      // this.scene.start('game', { ships });
     });
 
     this.add.existing(button);
