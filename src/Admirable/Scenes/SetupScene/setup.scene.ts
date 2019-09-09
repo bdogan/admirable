@@ -48,7 +48,7 @@ export class SetupScene extends Phaser.Scene {
         return { x: ship.x, y: ship.y, extent: ship.extent, orthogonal: ship.orthogonal };
       });
 
-      // this.scene.start('game', { ships });
+      this.scene.start('game', { ships });
     });
 
     this.add.existing(button);

@@ -89,7 +89,7 @@ export class DemoScene extends Phaser.Scene {
 
     // Define some data that will send
     const data = {
-      hello: 'hell'
+      hello: 'world'
     };
 
     // Send the data
