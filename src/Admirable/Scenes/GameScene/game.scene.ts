@@ -1,4 +1,3 @@
-import { Cursor } from '../../Objects/Cursor';
 import { AdmirableScene } from '../admirable.scene';
 import { BoardConfig } from '../../board.config';
 import { Ship } from '../../Objects/Ship';
@@ -8,27 +7,13 @@ import { Ship } from '../../Objects/Ship';
 })
 export class GameScene extends Phaser.Scene {
 
-  private grid!: Phaser.GameObjects.Graphics;
-  private line!: Phaser.GameObjects.Graphics;
-  private isDrawing: boolean = false;
-
-  private cursor!: Cursor;
-
   public init(data: any): void {
     console.log('GameScene initialized.');
     console.log('passed data: ', data);
   }
 
   public create(data: any): void {
-
-    this.line = this.add.graphics();
-
-    this.input.on('pointerdown', this.onMouseDown, this);
-    this.input.on('pointermove', this.onMouseMove, this);
-    this.input.on('pointerup', this.onMouseUp, this);
-
-    this.grid = this.add.graphics();
-    this.drawGrid();
+    this.showGrid();
 
     data.ships.forEach((s: Ship) => {
       // console.log(ship);
@@ -37,54 +22,57 @@ export class GameScene extends Phaser.Scene {
       this.add.existing(ship);
     });
 
-    this.cursor = new Cursor(this, BoardConfig.gridSize);
+    const hitBox = this.add.graphics({
+      fillStyle: {
+        color: 0xCCCCCC
+      }
+    });
+
+    this.input.on('pointerdown', (pointer: any) => {
+      const ships = this.children.list.filter((child) => child instanceof Ship) as Ship[];
+
+      let  x = pointer.x, y = pointer.y;
+      // Floor is better than round in this situation.
+      x = Math.floor(x / BoardConfig.gridSize) * BoardConfig.gridSize;
+      y = Math.floor(y / BoardConfig.gridSize) * BoardConfig.gridSize;
+
+      const hitArea = new Phaser.Geom.Rectangle(x, y, 32, 32);
+      const hit = ships.some((ship) => Phaser.Geom.Rectangle.Overlaps(ship.getBounds(), hitArea));
+
+      hitBox.fillStyle(hit ? 0xFF0000 : 0xCCCCCC, 1);
+
+      hitBox.fillRectShape(hitArea);
+      console.log(pointer);
+    });
+
   }
 
-  public update(): void {
-    this.cursor.handleInput();
-  }
+  private showGrid() {
 
-  private onMouseDown(event: any) {
-    this.isDrawing = true;
-  }
+    const grid = this.add.graphics();
 
-  private onMouseMove(event: any) {
-    if (this.isDrawing) {
-      this.line.clear();
-      this.line.lineStyle(1, 0xccff00);
-      this.line.moveTo(event.downX, event.downY);
-      this.line.lineTo(event.x, event.y);
-      this.line.strokePath();
-    }
-  }
-
-  private onMouseUp(event: any) {
-    this.isDrawing = false;
-  }
-
-  private drawGrid() {
     const gap = BoardConfig.gridSize;
-    const canvasWidth = this.sys.canvas.width;
-    const canvasHeight = this.sys.canvas.height;
+    const width = this.sys.canvas.width ;
+    const height = this.sys.canvas.height;
 
-    this.grid.lineStyle(1, 0x00A8E8, 0.25);
+    grid.lineStyle(1, 0x00A8E8, 0.25);
 
     // Draw vertical lines through x-axis.
-    for (let x = 0, column = (canvasWidth / gap); x < column; x++) {
+    for (let x = 0, column = (width / gap); x < column; x++) {
       const dX = (x * gap);
-      this.grid.lineBetween(dX, 0, dX, canvasWidth);
+      grid.lineBetween(dX, 0, dX, width);
     }
 
     // Draw horizontal lines through y-axis.
-    for (let y = 0, row = (canvasHeight / gap); y < row; y++) {
+    for (let y = 0, row = (height / gap); y < row; y++) {
       const dY = (y * gap);
-      this.grid.lineBetween(0, dY, canvasWidth, dY);
+      grid.lineBetween(0, dY, width, dY);
     }
 
     // Draw middle line;
-    this.grid.lineStyle(1, 0x00A8E8, 1);
-    this.grid.lineBetween(canvasWidth / 2, 0, canvasWidth / 2, canvasHeight);
+    grid.lineStyle(1, 0x00A8E8, 1);
+    grid.lineBetween(width / 2, 0, width / 2, height);
 
-    this.grid.strokePath();
+    grid.strokePath();
   }
 }

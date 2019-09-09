@@ -16,43 +16,31 @@ export class Ship extends Phaser.GameObjects.Container {
   // Helper rectangle to help while positioning the ship.
   private collisionArea!: Phaser.GameObjects.Rectangle;
 
+  private interactive: boolean = false;
+
   /**
    * Constructor.
    * @param scene The scene this ship belongs to.
    * @param length Lenght of the ship based on the grid size.
    * @param orthogonal Orthogonality of the ship.
    */
-  constructor(scene: Phaser.Scene, length: number = 1, orthogonal: boolean = false) {
+  constructor(scene: Phaser.Scene, length: number = 1, orthogonal: boolean = false, interactive: boolean = false) {
     super(scene, 0, 0, []);
 
     this.extent = length;
     this.orthogonal = orthogonal;
+    this.interactive = interactive;
 
     // Create the ship sprite and it's colision area.
     this.refreshSprite();
 
-    // Register the events to be handled.
-    this.registerEvents();
+    // Register the events to be handled if interactive true.
+    if (this.interactive) {
+      this.registerEvents();
+    }
 
     // Add the created ship immediately to the scene.
     scene.add.existing(this);
-  }
-
-  /**
-   * Rotate the ship.
-   */
-  public rotate() {
-    this.orthogonal = !this.orthogonal;
-
-    this.refreshSprite();
-
-    // if the rotated ship colliding prevent the rotation.
-    if (this.isColliding) {
-      this.orthogonal = !this.orthogonal;
-      this.refreshSprite();
-    }
-
-    // this.checkCollideForAll();
   }
 
   /**
@@ -68,6 +56,7 @@ export class Ship extends Phaser.GameObjects.Container {
 
     // if snapGrid is true modify the x, y value to be fit in grid lines.
     if (snapToGrid) {
+      // was Math.floor
       x = Math.round(x / BoardConfig.gridSize) * BoardConfig.gridSize;
       y = Math.round(y / BoardConfig.gridSize) * BoardConfig.gridSize;
     }
@@ -82,6 +71,9 @@ export class Ship extends Phaser.GameObjects.Container {
     // Set the position using native method.
     this.setPosition(x, y);
 
+    // if not interactive don't check for errors.
+    if (!this.interactive) {return; }
+
     // if preventOverlap true and the ship is colliding don't move.
     if (preventOverlap && this.isColliding) {
       this.setPosition(lastX, lastY);
@@ -90,18 +82,20 @@ export class Ship extends Phaser.GameObjects.Container {
       return;
     }
 
-    this.checkCollideForAll();
+    this.checkError();
   }
 
   private refreshSprite(): void {
+
     // If exist, remove the old sprites from the displayList of the container thus scene.
     if (this.ship) { this.ship.destroy(); }
     if (this.collisionArea) { this.collisionArea.destroy(); }
 
-    let width = BoardConfig.gridSize,
-      height = BoardConfig.gridSize;
+    // Set base width and height.
+    let width  = BoardConfig.gridSize,
+        height = BoardConfig.gridSize;
 
-    // Calculate the height and the width based on the orthogonality of the ship.
+    // Calculate the width and the height based on the orthogonality of the ship.
     if (this.orthogonal) {
       height *= this.extent;
     } else {
@@ -113,18 +107,22 @@ export class Ship extends Phaser.GameObjects.Container {
     this.add(this.ship);
 
     // Create the helper rectangle for using while positioning.
-    this.collisionArea = new Phaser.GameObjects.Rectangle(this.scene, -BoardConfig.gridSize / 2, -BoardConfig.gridSize / 2, width + BoardConfig.gridSize, height + BoardConfig.gridSize, 0x00CCFF, 0.2).setOrigin(0);
-    this.collisionArea.setStrokeStyle(1, 0x00CCFF, 0.8);
-    this.addAt(this.collisionArea, 0);
+    if (this.interactive) {
+      this.collisionArea = new Phaser.GameObjects.Rectangle(this.scene, -BoardConfig.gridSize / 2, -BoardConfig.gridSize / 2, width + BoardConfig.gridSize, height + BoardConfig.gridSize, 0x00CCFF, 0.2).setOrigin(0);
+      this.collisionArea.setStrokeStyle(1, 0x00CCFF, 0.8);
+      this.addAt(this.collisionArea, 0);
+    }
 
     // If object is not interactive make it interactive.
     if (!this.input) { this.setInteractive(this.ship, Phaser.Geom.Rectangle.Contains); }
+
+    // Change the size of the hitArea on refresh. This is required when the shape of the sprite is changed.
     this.input.hitArea.setSize(this.ship.width, this.ship.height);
 
   }
 
   /**
-   * register the events to be handled for this ship object.
+   * Register the events to be handled for this ship object.
    */
   private registerEvents(): void {
 
@@ -132,28 +130,37 @@ export class Ship extends Phaser.GameObjects.Container {
     this.scene.input.setDraggable(this);
 
     this.on('dragstart', (p: any, x: any, y: any) => {
+
       this.collisionArea.fillAlpha = 0.4;
       this.collisionArea.strokeAlpha = 1;
+
       // Bring the selected ship to the top of the scene's display list.
       this.scene.children.bringToTop(this);
+
       this.hasFocus = true;
     });
 
     this.on('dragend', (p: any, x: any, y: any) => {
+
       this.collisionArea.fillAlpha = 0.2;
       this.collisionArea.strokeAlpha = 0.5;
+
       // in carefree mode try to place the ship correctly after the drag.
       // this._setPosition(this.x, this.y);
+
       this.hasFocus = false;
     });
 
     this.on('drag', (p: any, x: any, y: any) => {
+
       // aggresive snap.
-      // this._setPosition(x, y);
-      // console.log(this.isWithinBound);
+      this._setPosition(x, y);
+
       // carefree mode:
       // this._setPosition(x, y, false, false);
-      this._setPosition(x, y, true, false);
+
+      // this._setPosition(x, y, true, false);
+
     });
 
   }
@@ -177,18 +184,57 @@ export class Ship extends Phaser.GameObjects.Container {
     const w = this.scene.sys.canvas.width, h = this.scene.sys.canvas.height;
 
     // return !Phaser.Geom.Rectangle.Overlaps(this.ship.getBounds(), new Phaser.Geom.Rectangle(w / 2, 0, w / 2, h));
-    // We have to use this hack to determinate if the ship overflow out of the placement area.
+
+    // We have to use this hack to be sure if the ship is not overflowing out of the placement area.
     return !Phaser.Geom.Intersects.RectangleToValues(this.ship.getBounds(), w / 2, w, 0, h, -1);
   }
 
-  // Check Colliding for all of the ships.
-  private checkCollideForAll(): void {
+  private checkError(): void {
+
     const ships = this.scene.children.list.filter((child) => child instanceof Ship) as Ship[];
+
     ships.forEach((ship) => {
-      const flag = ship.isColliding || !ship.isWithinArea;
-      ship.collisionArea.fillColor = flag ? 0xFF0000 : 0x00CCFF;
-      ship.collisionArea.strokeColor = flag ? 0xFF0000 : 0x00CCFF;
+      const error = ship.isColliding || !ship.isWithinArea;
+      ship.collisionArea.fillColor = error ? 0xFF0000 : 0x00CCFF;
+      ship.collisionArea.strokeColor = error ? 0xFF0000 : 0x00CCFF;
     });
+
+  }
+
+  /**
+   * Rotate the ship.
+   */
+  private rotate() {
+    this.orthogonal = !this.orthogonal;
+
+    this.refreshSprite();
+
+    // if the rotated ship is colliding revert the rotation.
+    if (this.isColliding) {
+      this.orthogonal = !this.orthogonal;
+      this.refreshSprite();
+    }
+
+    this.checkError();
+  }
+
+  /**
+   * Limits the given number between [min, max]
+   * @param value value to be limited.
+   * @param min minimum limit of the value.
+   * @param max maximum limit of the value.
+   * @returns min if value < min, max if max < value, value if otherwise.
+   */
+  private getBetween(value: number, min: number, max: number): number {
+
+    if (value < min) {
+      return min;
+    } else if (value > max) {
+      return max;
+    } else {
+      return value;
+    }
+
   }
 
   /**
@@ -215,27 +261,7 @@ export class Ship extends Phaser.GameObjects.Container {
       if (focusedShip) {
         focusedShip.rotate();
       }
-      // console.log(event);
     });
-
-  }
-
-  /**
-   * Limits the given number between [min, max]
-   * @param value value to be limited.
-   * @param min minimum limit of the value.
-   * @param max maximum limit of the value.
-   * @returns min if value < min, max if max < value, value if otherwise.
-   */
-  private getBetween(value: number, min: number, max: number): number {
-
-    if (value < min) {
-      return min;
-    } else if (value > max) {
-      return max;
-    } else {
-      return value;
-    }
 
   }
 
