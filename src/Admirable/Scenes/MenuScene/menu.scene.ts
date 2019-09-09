@@ -19,6 +19,7 @@ export class MenuScene extends Phaser.Scene {
     console.log('MenuScene initialized');
   }
 
+  // Create
   public create(): void {
 
     this.grid = this.add.graphics();
@@ -62,9 +63,9 @@ export class MenuScene extends Phaser.Scene {
     startButton.on(MouseEvent.onClick, (e: any) => {
       this.scene.start('demo');
     });
-
   }
 
+  // Update
   public update(time: number): void {
     this.drawHorizon(time);
   }

@@ -1,12 +1,15 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { Table } from '../../Objects/UI/Table';
+import { Peer } from '../../P2P/Peer';
+import { Sender } from '../../P2P/Sender';
 
 @AdmirableScene({
   key: 'demo'
 })
 export class DemoScene extends Phaser.Scene {
 
+  // Create
   public create() {
 
     const button = new Button(this, 'Button', 960 - 250, 480 / 2);
@@ -70,5 +73,26 @@ export class DemoScene extends Phaser.Scene {
     table.showHead = true;
 
     this.add.existing(table);
+
+    // Create new peer
+    const peer = new Peer('test', {
+      host: 'localhost',
+      port: 9000,
+      path: '/'
+    });
+
+    // Create new connection from peer
+    const conn = peer.connect('test2');
+
+    // Create a sender object
+    const sender = new Sender(conn);
+
+    // Define some data that will send
+    const data = {
+      hello: 'hell'
+    };
+
+    // Send the data
+    sender.send(data);
   }
 }

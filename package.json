@@ -21,6 +21,7 @@
     "ts-loader": "^6.0.4",
     "tslint": "^5.18.0",
     "typescript": "^3.5.3",
+    "url-loader": "^2.1.0",
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.8.0",
@@ -28,6 +29,9 @@
   },
   "dependencies": {
     "@types/node": "^12.7.3",
+    "@types/peerjs": "0.0.30",
+    "peer": "^0.2.10",
+    "peerjs": "^1.0.4",
     "phaser": "^3.19.0"
   }
 }
