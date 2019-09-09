@@ -2,8 +2,12 @@ import { BoardConfig } from '../../board.config';
 
 export class Ship extends Phaser.GameObjects.Container {
 
-  public width: number;
-  public height: number;
+  public focused: boolean = false;
+
+  // Length of the ship in grid unit.
+  public extent: number = 1;
+
+  public orthogonal: boolean = false;
 
   // Helper rectangle to help while positioning the ship.
   public collisionArea!: Phaser.GameObjects.Rectangle;
@@ -11,24 +15,40 @@ export class Ship extends Phaser.GameObjects.Container {
   // Ship sprite.
   private ship!: Phaser.GameObjects.TileSprite;
 
-  constructor(scene: Phaser.Scene, width: number = 1, height: number = 1) {
+  /**
+   * Constructor.
+   * @param scene Scene object to attach this ship.
+   * @param length Lenght of the ship in defined grid unit.
+   * @param orthogonal orthogonality of the ship.
+   */
+  constructor(scene: Phaser.Scene, length: number = 1, orthogonal: boolean = false) {
     super(scene, 0, 0, []);
 
-    this.width = width;
-    this.height = height;
+    this.extent = length;
+    this.orthogonal = orthogonal;
 
-    // Create the ship sprite and add it to the container.
-    this.ship = scene.add.tileSprite(0, 0, BoardConfig.gridSize * width, BoardConfig.gridSize * height, 'ship').setOrigin(0);
-    this.add(this.ship);
+    // create sprite.
+    this.refreshSprite();
 
-    // Create the helper rectangle for using while positioning.
-    this.collisionArea = new Phaser.GameObjects.Rectangle(this.scene, -BoardConfig.gridSize / 2, -BoardConfig.gridSize / 2, this.ship.width + BoardConfig.gridSize, this.ship.height + BoardConfig.gridSize, 0x00CCFF, 0.2).setOrigin(0);
-    this.addAt(this.collisionArea, 0);
-
+    // register the events to handle.
     this.registerEvents();
 
     // Add the created ship immediately to the scene.
     scene.add.existing(this);
+  }
+
+  /**
+   * Rotate the ship.
+   */
+  public rotate() {
+    this.orthogonal = !this.orthogonal;
+    this.refreshSprite();
+    // if colliding prevent rotate.
+    if (this.isColliding) {
+      this.orthogonal = !this.orthogonal;
+      this.refreshSprite();
+    }
+    this.checkCollideForAll();
   }
 
   /**
@@ -40,7 +60,7 @@ export class Ship extends Phaser.GameObjects.Container {
   public _setPosition(x: number, y: number, snapToGrid: boolean = true, preventOverlap: boolean = true): void {
     // store the last position to be used when preventOverlap is true.
     const lastX = this.x,
-          lastY = this.y;
+      lastY = this.y;
 
     // if snapGrid is true modify the x, y value to be fit in grid lines.
     if (snapToGrid) {
@@ -50,7 +70,7 @@ export class Ship extends Phaser.GameObjects.Container {
 
     // Prevent to go outside of the canvas.
     const xMax = (this.scene.sys.canvas.width - this.ship.getBounds().width),
-          yMax = (this.scene.sys.canvas.height - this.ship.getBounds().height);
+      yMax = (this.scene.sys.canvas.height - this.ship.getBounds().height);
 
     x = this.getBetween(x, 0, xMax);
     y = this.getBetween(y, 0, yMax);
@@ -91,8 +111,6 @@ export class Ship extends Phaser.GameObjects.Container {
    * register the events to be handled for this ship object.
    */
   private registerEvents(): void {
-    // Set the container interactive for event handling.
-    this.setInteractive(this.ship, Phaser.Geom.Rectangle.Contains);
 
     // Set the container draggable on the scene.
     this.scene.input.setDraggable(this);
@@ -100,12 +118,14 @@ export class Ship extends Phaser.GameObjects.Container {
     this.on('dragstart', (p: any, x: any, y: any) => {
       // Bring the selected ship to the top of the scene's display list.
       this.scene.children.bringToTop(this);
+      this.focused = true;
     });
 
     this.on('dragend', (p: any, x: any, y: any) => {
       this.collisionArea.fillAlpha = 0.2;
       // in carefree mode try to place the ship correctly after the drag.
       // this._setPosition(this.x, this.y);
+      this.focused = false;
     });
 
     this.on('drag', (p: any, x: any, y: any) => {
@@ -115,6 +135,7 @@ export class Ship extends Phaser.GameObjects.Container {
       // carefree mode:
       // this._setPosition(x, y, false, false);
     });
+
   }
 
   /**
@@ -135,6 +156,35 @@ export class Ship extends Phaser.GameObjects.Container {
     ships.forEach((ship) => ship.collisionArea.fillColor = ship.isColliding ? 0xFF0000 : 0x00CCFF);
   }
 
+  private refreshSprite(): void {
+    // If exist, remove the old sprites from the displayList of the container thus scene.
+    if (this.ship) { this.ship.destroy(); }
+    if (this.collisionArea) { this.collisionArea.destroy(); }
+
+    let width = BoardConfig.gridSize,
+      height = BoardConfig.gridSize;
+
+    // Calculate the height and the width based on the orthogonality of the ship.
+    if (this.orthogonal) {
+      height *= this.extent;
+    } else {
+      width *= this.extent;
+    }
+
+    // Create the ship sprite and add it to the container.
+    this.ship = this.scene.add.tileSprite(0, 0, width, height, 'ship').setOrigin(0);
+    this.add(this.ship);
+
+    // Create the helper rectangle for using while positioning.
+    this.collisionArea = new Phaser.GameObjects.Rectangle(this.scene, -BoardConfig.gridSize / 2, -BoardConfig.gridSize / 2, width + BoardConfig.gridSize, height + BoardConfig.gridSize, 0x00CCFF, 0.2).setOrigin(0);
+    this.addAt(this.collisionArea, 0);
+
+    // If object is not interactive make it interactive.
+    if (!this.input) { this.setInteractive(this.ship, Phaser.Geom.Rectangle.Contains); }
+    this.input.hitArea.setSize(this.ship.width, this.ship.height);
+
+  }
+
   /**
    * @param scene a Phaser.Scene to be checked for colliding Ship objects.
    */
@@ -144,4 +194,20 @@ export class Ship extends Phaser.GameObjects.Container {
     const flag = ships.some((ship) => ship.isColliding);
     return flag;
   }
+
+  // tslint:disable-next-line: member-ordering
+  public static registerSceneEvents(scene: Phaser.Scene) {
+    const key = scene.input.keyboard.addKey('SPACE');
+
+    key.on('down', (event: any) => {
+      // Rotate.
+      const focusedShip = (scene.children.list.filter((child) => child instanceof Ship) as Ship[]).find((ship) => ship.focused);
+      if (focusedShip) {
+        focusedShip.rotate();
+      }
+      // console.log(event);
+    });
+
+  }
+
 }

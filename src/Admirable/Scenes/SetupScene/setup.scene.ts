@@ -17,16 +17,19 @@ export class SetupScene extends Phaser.Scene {
   }
 
   public create(): void {
+    Ship.registerSceneEvents(this);
     this.grid = this.add.graphics();
     this.drawGrid();
 
     // Random ships
     for (let i = 0; i < 10; i++) {
+
+      const length = Phaser.Math.Between(2, 4);
+      const vertical = !!Phaser.Math.Between(0, 1);
+
       const x = Phaser.Math.Between(0, 20) * BoardConfig.gridSize;
       const y = Phaser.Math.Between(0, 8) * BoardConfig.gridSize;
-      const width = Phaser.Math.Between(2, 4);
-      const axis = Phaser.Math.Between(0, 1);
-      const ship = new Ship(this, !axis ? 1 : width, axis ? 1 : width);
+      const ship = new Ship(this, length, vertical);
       ship._setPosition(x, y, true, false);
     }
 
@@ -43,7 +46,7 @@ export class SetupScene extends Phaser.Scene {
       }
 
       const ships = (this.children.list.filter((child) => child instanceof Ship) as Ship[]).map((ship) => {
-        return { x: ship.x, y: ship.y, width: ship.width, height: ship.height };
+        return { x: ship.x, y: ship.y, extent: ship.extent, orthogonal: ship.orthogonal };
       });
 
       this.scene.start('game', { ships });

@@ -32,9 +32,9 @@ export class GameScene extends Phaser.Scene {
 
     data.ships.forEach((s: Ship) => {
       // console.log(ship);
-      const ship = new Ship(this, s.width, s.height);
+      const ship = new Ship(this, s.extent, s.orthogonal);
       ship._setPosition(s.x, s.y);
-      // this.add.existing(ship);
+      this.add.existing(ship);
     });
 
     this.cursor = new Cursor(this, BoardConfig.gridSize);
