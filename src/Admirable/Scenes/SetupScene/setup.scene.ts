@@ -4,6 +4,7 @@ import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { BoardConfig } from '../../board.config';
 import { Notification } from '../../Objects/UI/Notification';
 import { Cursor } from '../../Objects/UI/Cursor';
+import { Math } from 'phaser';
 
 @AdmirableScene({
   key: 'setup'
@@ -57,7 +58,8 @@ export class SetupScene extends Phaser.Scene {
       this.scene.start('game', { ships });
     });
 
-    const shuffle =  new Button(this, 'RNG', bx, by - bh - 32, bw, bh);
+    const shuffle =  new Button(this, 'Shuffle', bx, by - bh - 32, bw, bh);
+    shuffle.text.setFontSize(32);
 
     shuffle.on(MouseEvent.onClick, () => {
       this.randomValidPlacement();
@@ -101,8 +103,12 @@ export class SetupScene extends Phaser.Scene {
   private randomValidPlacement() {
     let trial = 0;
     const ships = this.children.list.filter((child) => child instanceof Ship) as Ship[];
+
+    // Place all ships outside of the canvas.
+    ships.forEach((ship) => ship.setPosition(-64, -64));
+
+    // Start to place randomly.
     ships.forEach((ship) => {
-      // ship._setPosition(this.sys.canvas.width, 0, false, false);
 
       let x = Phaser.Math.Between(0, 14) * BoardConfig.gridSize,
           y = Phaser.Math.Between(0, 14) * BoardConfig.gridSize;

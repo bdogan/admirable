@@ -2,6 +2,7 @@ import { AdmirableScene } from '../admirable.scene';
 import { BoardConfig } from '../../board.config';
 import { Ship } from '../../Objects/Ship';
 import { Cursor } from '../../Objects/UI/Cursor';
+import { Notification } from '../../Objects/UI/Notification';
 
 @AdmirableScene({
   key: 'game'
@@ -27,6 +28,7 @@ export class GameScene extends Phaser.Scene {
     const hitBox = this.add.graphics();
 
     this.input.on('pointerdown', (pointer: any) => {
+
       const ships = this.children.list.filter((child) => child instanceof Ship) as Ship[];
 
       let  x = pointer.x, y = pointer.y;
@@ -41,6 +43,14 @@ export class GameScene extends Phaser.Scene {
 
       hitBox.fillRectShape(hitArea);
       console.log(pointer);
+
+      const succes = ['🤗', '🤩', '😲', '😂', '🤣'];
+      const failure = ['🤔',  '🤨', '😒', '😓', '😔', '😕'];
+
+      const emoji = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
+
+      Notification.create(this, emoji(hit ? succes : failure), 160, {backgroundColor: 'transparent', fontSize: '64px'});
+
     });
 
     Cursor.attach(this);
