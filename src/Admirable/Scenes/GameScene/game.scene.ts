@@ -1,6 +1,7 @@
 import { AdmirableScene } from '../admirable.scene';
 import { BoardConfig } from '../../board.config';
 import { Ship } from '../../Objects/Ship';
+import { Cursor } from '../../Objects/UI/Cursor';
 
 @AdmirableScene({
   key: 'game'
@@ -13,6 +14,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(data: any): void {
+
     this.showGrid();
 
     data.ships.forEach((s: Ship) => {
@@ -22,11 +24,7 @@ export class GameScene extends Phaser.Scene {
       this.add.existing(ship);
     });
 
-    const hitBox = this.add.graphics({
-      fillStyle: {
-        color: 0xCCCCCC
-      }
-    });
+    const hitBox = this.add.graphics();
 
     this.input.on('pointerdown', (pointer: any) => {
       const ships = this.children.list.filter((child) => child instanceof Ship) as Ship[];
@@ -39,11 +37,13 @@ export class GameScene extends Phaser.Scene {
       const hitArea = new Phaser.Geom.Rectangle(x, y, 32, 32);
       const hit = ships.some((ship) => Phaser.Geom.Rectangle.Overlaps(ship.getBounds(), hitArea));
 
-      hitBox.fillStyle(hit ? 0xFF0000 : 0xCCCCCC, 1);
+      hitBox.fillStyle(hit ? 0xFF0000 : 0x00008B, 1);
 
       hitBox.fillRectShape(hitArea);
       console.log(pointer);
     });
+
+    Cursor.attach(this);
 
   }
 

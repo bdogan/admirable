@@ -3,6 +3,7 @@ import { Ship } from '../../Objects/Ship';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { BoardConfig } from '../../board.config';
 import { Notification } from '../../Objects/UI/Notification';
+import { Cursor } from '../../Objects/UI/Cursor';
 
 @AdmirableScene({
   key: 'setup'
@@ -34,7 +35,6 @@ export class SetupScene extends Phaser.Scene {
     const bw = 160, bh = 64, bx = (this.sys.canvas.width) - (bw / 2) - 16, by = (this.sys.canvas.height) - (bh / 2) - 16;
     const button = new Button(this, 'DEPLOY', bx, by, bw, bh);
     button.text.setFontSize(32);
-
     button.on(MouseEvent.onClick, (e: any) => {
       if (!Ship.isPlacementValid(this)) {
         Notification.create(this, 'Placement is not valid');
@@ -49,6 +49,9 @@ export class SetupScene extends Phaser.Scene {
     });
 
     this.add.existing(button);
+
+    Cursor.attach(this);
+
   }
 
   private showGrid() {
