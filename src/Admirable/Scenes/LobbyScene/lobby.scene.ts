@@ -1,6 +1,7 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Peer } from '../../P2P';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
+import { Input } from '../../Objects/UI/Input';
 
 @AdmirableScene({
   key: 'lobby'
@@ -13,7 +14,6 @@ export class LobbyScene extends Phaser.Scene {
 
   // Create
   public create() {
-
     /*
     Host button
      */
@@ -139,5 +139,10 @@ export class LobbyScene extends Phaser.Scene {
         console.log(err);
       });
     });
+
+
+
+    const input = new Input(this, 'Test', 100, 100, 200, 40);
+    this.add.existing(input);
   }
 }
