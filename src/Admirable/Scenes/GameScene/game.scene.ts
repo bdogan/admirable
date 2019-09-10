@@ -3,6 +3,7 @@ import { BoardConfig } from '../../board.config';
 import { Ship } from '../../Objects/Ship';
 import { Cursor } from '../../Objects/UI/Cursor';
 import { Notification } from '../../Objects/UI/Notification';
+import { Enemy } from '../../Objects/Enemy';
 
 @AdmirableScene({
   key: 'game'
@@ -25,33 +26,35 @@ export class GameScene extends Phaser.Scene {
       this.add.existing(ship);
     });
 
-    const hitBox = this.add.graphics();
+    // const hitBox = this.add.graphics();
 
-    this.input.on('pointerdown', (pointer: any) => {
+    // this.input.on('pointerdown', (pointer: any) => {
 
-      const ships = this.children.list.filter((child) => child instanceof Ship) as Ship[];
+    //   const ships = this.children.list.filter((child) => child instanceof Ship) as Ship[];
 
-      let  x = pointer.x, y = pointer.y;
-      // Floor is better than round in this situation.
-      x = Math.floor(x / BoardConfig.gridSize) * BoardConfig.gridSize;
-      y = Math.floor(y / BoardConfig.gridSize) * BoardConfig.gridSize;
+    //   let  x = pointer.x, y = pointer.y;
+    //   // Floor is better than round in this situation.
+    //   x = Math.floor(x / BoardConfig.gridSize) * BoardConfig.gridSize;
+    //   y = Math.floor(y / BoardConfig.gridSize) * BoardConfig.gridSize;
 
-      const hitArea = new Phaser.Geom.Rectangle(x, y, 32, 32);
-      const hit = ships.some((ship) => Phaser.Geom.Rectangle.Overlaps(ship.getBounds(), hitArea));
+    //   const hitArea = new Phaser.Geom.Rectangle(x, y, 32, 32);
+    //   const hit = ships.some((ship) => Phaser.Geom.Rectangle.Overlaps(ship.getBounds(), hitArea));
 
-      hitBox.fillStyle(hit ? 0xFF0000 : 0x00008B, 1);
+    //   hitBox.fillStyle(hit ? 0xFF0000 : 0x00008B, 1);
 
-      hitBox.fillRectShape(hitArea);
-      console.log(pointer);
+    //   hitBox.fillRectShape(hitArea);
+    //   console.log(pointer);
 
-      const succes = ['🤗', '🤩', '😲', '😂', '🤣'];
-      const failure = ['🤔',  '🤨', '😒', '😓', '😔', '😕'];
+    //   const succes = ['🤗', '🤩', '😲', '😂', '🤣'];
+    //   const failure = ['🤔',  '🤨', '😒', '😓', '😔', '😕'];
 
-      const emoji = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
+    //   const emoji = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
 
-      Notification.create(this, emoji(hit ? succes : failure), 160, {backgroundColor: 'transparent', fontSize: '64px'});
+    //   Notification.create(this, emoji(hit ? succes : failure), 160, {backgroundColor: 'transparent', fontSize: '64px'});
 
-    });
+    // });
+    const ew = this.sys.canvas.width / 2, eh = this.sys.canvas.height;
+    Enemy.define(this, ew, 0, ew, eh);
 
     Cursor.attach(this);
 
