@@ -20,15 +20,24 @@ export class SetupScene extends Phaser.Scene {
     this.showGrid();
 
     // Random ships
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 8; i++) {
 
       const length = Phaser.Math.Between(2, 4);
       const vertical = !!Phaser.Math.Between(0, 1);
 
-      const x = Phaser.Math.Between(0, 20) * BoardConfig.gridSize;
-      const y = Phaser.Math.Between(0, 8) * BoardConfig.gridSize;
       const ship = new Ship(this, length, vertical, true);
+
+      let x = Phaser.Math.Between(0, 14) * BoardConfig.gridSize;
+      let y = Phaser.Math.Between(0, 14) * BoardConfig.gridSize;
+
+      if (ship.orthogonal) {
+        y = y - ship.extent * BoardConfig.gridSize;
+      } else {
+        x = x - ship.extent * BoardConfig.gridSize;
+      }
+
       ship._setPosition(x, y, true, false);
+
     }
 
     // Deploy Button
@@ -48,6 +57,13 @@ export class SetupScene extends Phaser.Scene {
       this.scene.start('game', { ships });
     });
 
+    const shuffle =  new Button(this, 'RNG', bx, by - bh - 32, bw, bh);
+
+    shuffle.on(MouseEvent.onClick, () => {
+      this.randomValidPlacement();
+    });
+
+    this.add.existing(shuffle);
     this.add.existing(button);
 
     Cursor.attach(this);
@@ -79,5 +95,42 @@ export class SetupScene extends Phaser.Scene {
     grid.lineBetween(width, 0, width, height);
 
     grid.strokePath();
+  }
+
+  // Randomly place the ships by using bruteforce.
+  private randomValidPlacement() {
+    let trial = 0;
+    const ships = this.children.list.filter((child) => child instanceof Ship) as Ship[];
+    ships.forEach((ship) => {
+      // ship._setPosition(this.sys.canvas.width, 0, false, false);
+
+      let x = Phaser.Math.Between(0, 14) * BoardConfig.gridSize,
+          y = Phaser.Math.Between(0, 14) * BoardConfig.gridSize;
+
+      if (ship.orthogonal) {
+        y = y - ship.extent * BoardConfig.gridSize;
+      } else {
+        x = x - ship.extent * BoardConfig.gridSize;
+      }
+
+      ship._setPosition(x, y, false, false);
+
+      while (ship.isColliding) {
+        trial++;
+
+        x = Phaser.Math.Between(0, 14) * BoardConfig.gridSize;
+        y = Phaser.Math.Between(0, 14) * BoardConfig.gridSize;
+
+        if (ship.orthogonal) {
+          y -= ship.extent * BoardConfig.gridSize;
+        } else {
+          x -= ship.extent * BoardConfig.gridSize;
+        }
+
+        ship._setPosition(x, y, true, false);
+      }
+
+    });
+    console.log('Total trial: ', trial);
   }
 }

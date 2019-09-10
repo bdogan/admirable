@@ -90,7 +90,7 @@ export class Ship extends Phaser.GameObjects.Container {
   /**
    * Rotate the ship.
    */
-  private rotate() {
+  public rotate() {
 
     this.orthogonal = !this.orthogonal;
     this.refreshSprite();
@@ -184,7 +184,7 @@ export class Ship extends Phaser.GameObjects.Container {
   /**
    * Determinate if the current ship collides with any other ships in the scene.
    */
-  private get isColliding(): boolean {
+  public get isColliding(): boolean {
 
     const ships = this.scene.children.list.filter((child) => child instanceof Ship && child !== this) as Ship[];
 
