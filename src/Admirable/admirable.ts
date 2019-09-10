@@ -8,9 +8,9 @@ export const Game = document.onreadystatechange = () => {
     return new AdmirableGame(AdmirableConfig({
       scene: [
         LobbyScene,
+        SetupScene,
         DemoScene,
         MenuScene,
-        SetupScene,
         GameScene,
       ],
     }));
