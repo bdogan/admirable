@@ -65,7 +65,7 @@ export class LobbyScene extends Phaser.Scene {
 
         const testData = {
           world: 'hello'
-        }
+        };
 
         setTimeout(() => {
           this.connection.send(testData);
