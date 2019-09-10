@@ -1,56 +1,143 @@
 import { AdmirableScene } from '../admirable.scene';
-import { Peer } from '../../P2P/Peer';
-import { Sender } from '../../P2P/Sender';
-import { Receiver } from '../../P2P/Receiver';
+import { Peer } from '../../P2P';
+import { Button, MouseEvent } from '../../Objects/UI/Button';
 
 @AdmirableScene({
   key: 'lobby'
 })
 export class LobbyScene extends Phaser.Scene {
-  private name!: string;
-  private peer: any;
-  private connection: any;
-  private receiver: any;
-  private sender: any;
+  private peer: Peer | null = null;
+  private connection: any | null = null;
+  private lastPeerId: any;
+  private remotePeerId: any;
 
+  // Create
   public create() {
-    this.name = 'test';
-    // Create new peer
-    this.peer = new Peer(this.name, {
-      host: 'localhost',
-      port: 9000,
-      path: '/'
+
+    /*
+    Host button
+     */
+    const hostButton = new Button(this, 'Host', this.sys.canvas.width / 2, this.sys.canvas.height / 3);
+    this.add.existing(hostButton);
+
+    // Hpst button click event
+    hostButton.on(MouseEvent.onClick, (e: any) => {
+      // Create a peer with random name
+      this.peer = new Peer(null, {
+        debug: 2,
+        config: {
+          iceServers: [
+            {
+              urls: 'stun:stun.l.google.com:19302',
+            }
+          ]
+        }
+      });
+
+      // Peer open event
+      this.peer.on('open', (id) => {
+        if (this.peer !== null) {
+          this.lastPeerId = this.peer.id;
+        }
+
+        console.log(this.lastPeerId);
+      });
+
+      // Peer connection event
+      this.peer.on('connection', (c) => {
+        c.on('data', (data) => {
+          console.log(data);
+        });
+
+        if (this.connection) {
+          c.on('open', () => {
+            c.send('Connected already.');
+            setTimeout(() => {
+              c.close();
+            }, 500);
+          });
+          return;
+        }
+
+        // Set global connection variable
+        this.connection = c;
+        console.log('Connected to: ' + this.connection.peer);
+
+        const testData = {
+          world: 'hello'
+        }
+
+        setTimeout(() => {
+          this.connection.send(testData);
+        }, 1000);
+      });
     });
 
-    // Define player object
-    const player = {
-      type: 'player',
-      name: this.name
-    };
+    /*
+    Join button
+     */
+    const joinButton = new Button(this, 'Join', this.sys.canvas.width / 2, this.sys.canvas.height / 2);
+    this.add.existing(joinButton);
 
-    // Define players array
-    const players = [];
+    // Join button click event
+    joinButton.on(MouseEvent.onClick, (e: any) => {
+      // Get remote peer id from prompt
+      this.remotePeerId = window.prompt('Peer ID: ');
 
-    // Add player object to players array
-    players.push(player);
+      // Create a peer with random name
+      this.peer = new Peer(null, {
+        debug: 2,
+        config: {
+          iceServers: [
+            {
+              urls: 'stun:stun.l.google.com:19302',
+            }
+          ]
+        }
+      });
 
-    // Set receiver
-    this.receiver = new Receiver(this.peer);
+      // If there's a connection already close it
+      if (this.connection) {
+        this.connection.close();
+      }
 
-    // Listen connection event
-    this.receiver.on('connection', (conn: any) => {
-        conn.on('data', (data: any) => {
-            console.log(data);
+      // Connect to remote peer
+      this.connection = this.peer.connect(this.remotePeerId, {
+        reliable: true
+      });
 
-            // Define enemy object
-            const enemy = {
-              type: 'enemy',
-              name: data.name
-            };
+      // Connection open event
+      this.connection.on('open', () => {
+        console.log('Connected to: ' + this.connection.peer);
 
-            // Add enemy object to players array
-            players.push(enemy);
-        });
+        const testData = {
+          hello: 'world'
+        };
+
+        this.connection.send(testData);
+      });
+
+      this.connection.on('data', (data: any) => {
+        console.log(data);
+      });
+
+      // Peer open event
+      this.peer.on('open', (id) => {
+        if (this.peer !== null) {
+          this.lastPeerId  = this.peer.id;
+        }
+      });
+
+      // Peer close event
+      this.peer.on('close', () => {
+        this.connection = null;
+        console.log('Connection destroyed.');
+      });
+
+      // Peer error handler
+      this.peer.on('error', (err) => {
+        console.log(err);
+      });
     });
   }
 }

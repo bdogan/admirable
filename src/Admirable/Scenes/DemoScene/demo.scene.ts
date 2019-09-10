@@ -73,26 +73,5 @@ export class DemoScene extends Phaser.Scene {
     table.showHead = true;
 
     this.add.existing(table);
-
-    // Create new peer
-    const peer = new Peer('test', {
-      host: 'localhost',
-      port: 9000,
-      path: '/'
-    });
-
-    // Create new connection from peer
-    const conn = peer.connect('test2');
-
-    // Create a sender object
-    const sender = new Sender(conn);
-
-    // Define some data that will send
-    const data = {
-      hello: 'world'
-    };
-
-    // Send the data
-    sender.send(data);
   }
 }
