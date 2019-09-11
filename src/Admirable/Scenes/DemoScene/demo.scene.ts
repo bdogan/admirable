@@ -1,8 +1,8 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { Table } from '../../Objects/UI/Table';
-import { Peer } from '../../P2P/Peer';
-import { Sender } from '../../P2P/Sender';
+import { Peer } from '../../Objects/P2P/Peer';
+import { Sender } from '../../Objects/P2P/Sender';
 
 @AdmirableScene({
   key: 'demo'
