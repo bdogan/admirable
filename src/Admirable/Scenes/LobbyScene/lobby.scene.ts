@@ -23,10 +23,13 @@ export class LobbyScene extends Phaser.Scene {
     // Hpst button click event
     hostButton.on(MouseEvent.onClick, (e: any) => {
       // Create a peer with random name
-      this.peer = new Peer({
-        config: {iceServers: [
-            { url: 'stun:stun.l.google.com:19302' },
-            { url: 'turn:homeo@turn.bistri.com:80', credential: 'homeo' }
+      this.peer = new Peer(null, {
+        debug: 2,
+        config: {
+          iceServers: [
+            {
+              urls: 'stun:stun.l.google.com:19302',
+            }
           ]
         }
       });
@@ -82,11 +85,14 @@ export class LobbyScene extends Phaser.Scene {
       this.remotePeerId = window.prompt('Peer ID: ');
 
       // Create a peer with random name
-      this.peer = new Peer({
-        config: {iceServers: [
-            { url: 'stun:stun.l.google.com:19302' },
-            { url: 'turn:homeo@turn.bistri.com:80', credential: 'homeo' }
-            ]
+      this.peer = new Peer(null, {
+        debug: 2,
+        config: {
+          iceServers: [
+            {
+              urls: 'stun:stun.l.google.com:19302',
+            }
+          ]
         }
       });
 
