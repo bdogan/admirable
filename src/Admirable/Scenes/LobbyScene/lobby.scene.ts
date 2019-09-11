@@ -111,7 +111,7 @@ export class LobbyScene extends Phaser.Scene {
 
       // Connect to remote peer
       this.connection = this.peer.connect(this.remotePeerId, {
-        reliable: true
+        reliable: false
       });
 
       // Connection open event

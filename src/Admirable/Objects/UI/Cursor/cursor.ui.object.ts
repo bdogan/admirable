@@ -25,13 +25,16 @@ export class Cursor {
   }
 
   private _setPosition(x: number, y: number, snapToGrid: boolean = true): void {
-
     if (snapToGrid) {
       x = Math.floor( x / BoardConfig.gridSize ) * BoardConfig.gridSize;
       y = Math.floor( y / BoardConfig.gridSize ) * BoardConfig.gridSize;
     }
 
-    this.shape.setPosition(x, y);
+    // Determinate if the position has been changed, and set the position if changed.
+    const isChanged = !!((this.shape.x - x) || (this.shape.y - y));
+    if (isChanged) {
+      this.shape.setPosition(x, y);
+    }
   }
 
   private registerEvents(): void {

@@ -7,8 +7,8 @@ export const Game = document.onreadystatechange = () => {
   if (document.readyState === 'complete') {
     return new AdmirableGame(AdmirableConfig({
       scene: [
-        LobbyScene,
         SetupScene,
+        LobbyScene,
         DemoScene,
         MenuScene,
         GameScene,
