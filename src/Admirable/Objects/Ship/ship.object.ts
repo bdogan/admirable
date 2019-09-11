@@ -180,10 +180,10 @@ export class Ship extends Phaser.GameObjects.Container {
 
     });
 
-    // x and y is relative to the mousedown position and it feels more natural dragging but p.x and p.y is more accurate.
+    // x and y is relative to the mousedown position and it feels more natural while dragging, but p.x and p.y is more accurate.
     this.on('drag', (p: Phaser.Input.Pointer, x: any, y: any) => {
 
-      this._setPosition(x, y);
+      this._setPosition(p.x, p.y);
 
     });
 

@@ -4,7 +4,6 @@ import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { BoardConfig } from '../../board.config';
 import { Notification } from '../../Objects/UI/Notification';
 import { Cursor } from '../../Objects/UI/Cursor';
-import { Math } from 'phaser';
 
 @AdmirableScene({
   key: 'setup'

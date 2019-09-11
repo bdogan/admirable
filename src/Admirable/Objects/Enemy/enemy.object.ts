@@ -42,7 +42,7 @@ export class Enemy extends Phaser.GameObjects.Zone {
 
     const hit =  this.hitControl(_hitArea);
 
-    this.hitArea.fillStyle(!hit ? 0x000000 : 0xFF0000, !hit ? 0.5 : 1);
+    this.hitArea.fillStyle(!hit ? 0x000000 : 0xFF0000, 1);
     this.hitArea.fillRectShape(_hitArea);
 
     const succes = ['🤗', '🤩', '😲', '😂', '🤣'];
