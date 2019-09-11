@@ -1,5 +1,5 @@
 import { AdmirableScene } from '../admirable.scene';
-import { Peer } from '../../P2P';
+import { Peer } from '../../Objects/P2P';
 
 @AdmirableScene({
   key: 'room'
@@ -10,21 +10,39 @@ export class RoomScene extends Phaser.Scene {
   private localId: any;
   private remoteId: any;
   private isHost: boolean = true;
+  private status!: Phaser.GameObjects.Text;
 
   public create(data: any): void {
-    if (data.host) {
+    this.isHost = data.isHost;
+
+    this.status = new Phaser.GameObjects.Text(this, 100, 100, '', {
+      fontFamily: 'Munro',
+      fontSize: '32px',
+      color: '#FFFFFF',
+    });
+
+    this.add.existing(this.status);
+
+    if (this.isHost) {
       this.host(data);
-    }
-    else {
+    } else {
       this.join(data);
     }
+
+    this.input.on('pointerdown', (e: any) => {
+      if ((this.connection !== undefined) && (this.connection !== null)) {
+        this.connection.send({ x: e.x, y: e.y });
+      }
+    });
   }
 
   private host(data: any) {
     this.peer = data.peer;
     this.localId = data.localId;
 
-    // Peer connection event
+    this.status.text = 'Waiting partner...';
+
+      // Peer connection event
     this.peer.on('connection', (c) => {
       c.on('data', (d) => {
         console.log(d);
@@ -42,7 +60,7 @@ export class RoomScene extends Phaser.Scene {
 
       // Set global connection variable
       this.connection = c;
-      console.log('Connected to: ' + this.connection.peer);
+      this.status.text = 'Connected to: ' + this.connection.peer;
 
       const testData = {
         world: 'hello'
@@ -51,7 +69,9 @@ export class RoomScene extends Phaser.Scene {
       setTimeout(() => {
         this.connection.send(testData);
       }, 1000);
+
     });
+
   }
 
   private join(data: any): void {
@@ -69,9 +89,9 @@ export class RoomScene extends Phaser.Scene {
       reliable: false
     });
 
-    // Connection open event
+    // Link open event
     this.connection.on('open', () => {
-      console.log('Connected to: ' + this.connection.peer);
+      this.status.text =  'Connected to: ' + this.connection.peer;
 
       const testData = {
         hello: 'world'
@@ -87,12 +107,12 @@ export class RoomScene extends Phaser.Scene {
     // Peer close event
     this.peer.on('close', () => {
       this.connection = null;
-      console.log('Connection destroyed.');
+      this.status.text = 'Link destroyed.';
     });
 
     // Peer error handler
     this.peer.on('error', (err) => {
-      console.log(err);
+      this.status.text = err;
     });
   }
 }

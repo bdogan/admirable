@@ -65,7 +65,7 @@ export class Input extends Phaser.GameObjects.Container {
     });
 
     this.scene.input.keyboard.on('keydown', (e: any) => {
-      if (true) {
+      if (this.labelOn) {
         // e.preventDefault();
         if (e.code === 'Backspace') {
           if (this.label.text.length > 0) {
@@ -76,9 +76,9 @@ export class Input extends Phaser.GameObjects.Container {
           e.which <= 90) || (e.which >= 97 &&
           e.which <= 122)) {
           this.label.text += e.key;
-          this.text = this.label.text;
         }
       }
+      this.text = this.label.text;
     });
   }
 
