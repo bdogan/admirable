@@ -51,6 +51,9 @@ export class Ship extends Phaser.GameObjects.Container {
    * @param preventOverlap prevent the ship to be placed on the other ships.
    */
   public _setPosition(x: number, y: number, snapToGrid: boolean = true, preventOverlap: boolean = true): void {
+
+    console.log(this.x - x, this.y - y);
+
     // store the last position to be used when preventOverlap is true.
     const lastX = this.x,  lastY = this.y;
 
@@ -58,6 +61,12 @@ export class Ship extends Phaser.GameObjects.Container {
       // Modify the x and y value to be fit in the nearest grid area.
       x = Math.floor(x / BoardConfig.gridSize) * BoardConfig.gridSize;
       y = Math.floor(y / BoardConfig.gridSize) * BoardConfig.gridSize;
+    }
+
+    // Determinate if the position has been changed. If not, just return.
+    const isChanged = !!((this.x - x) || (this.y - y));
+    if (!isChanged) {
+      return;
     }
 
     // Prevent to go outside of the canvas.
@@ -176,7 +185,7 @@ export class Ship extends Phaser.GameObjects.Container {
     // x and y is relative to the mousedown position and it feels more natural dragging but p.x and p.y is more accurate.
     this.on('drag', (p: Phaser.Input.Pointer, x: any, y: any) => {
 
-      this._setPosition(p.x, p.y);
+      this._setPosition(x, y);
 
     });
   }
