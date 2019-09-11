@@ -1,6 +1,7 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Peer } from '../../P2P';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
+import { Input } from '../../Objects/UI/Input';
 
 @AdmirableScene({
   key: 'lobby'
@@ -13,7 +14,6 @@ export class LobbyScene extends Phaser.Scene {
 
   // Create
   public create() {
-
     /*
     Host button
      */
@@ -23,13 +23,10 @@ export class LobbyScene extends Phaser.Scene {
     // Hpst button click event
     hostButton.on(MouseEvent.onClick, (e: any) => {
       // Create a peer with random name
-      this.peer = new Peer(null, {
-        debug: 2,
-        config: {
-          iceServers: [
-            {
-              urls: 'stun:stun.l.google.com:19302',
-            }
+      this.peer = new Peer({
+        config: {iceServers: [
+            { url: 'stun:stun.l.google.com:19302' },
+            { url: 'turn:homeo@turn.bistri.com:80', credential: 'homeo' }
           ]
         }
       });
@@ -85,14 +82,11 @@ export class LobbyScene extends Phaser.Scene {
       this.remotePeerId = window.prompt('Peer ID: ');
 
       // Create a peer with random name
-      this.peer = new Peer(null, {
-        debug: 2,
-        config: {
-          iceServers: [
-            {
-              urls: 'stun:stun.l.google.com:19302',
-            }
-          ]
+      this.peer = new Peer({
+        config: {iceServers: [
+            { url: 'stun:stun.l.google.com:19302' },
+            { url: 'turn:homeo@turn.bistri.com:80', credential: 'homeo' }
+            ]
         }
       });
 
@@ -139,5 +133,8 @@ export class LobbyScene extends Phaser.Scene {
         console.log(err);
       });
     });
+
+    const input = new Input(this, 'Test', 100, 100, 200, 40);
+    this.add.existing(input);
   }
 }

@@ -45,12 +45,12 @@ export class GameScene extends Phaser.Scene {
     //   hitBox.fillRectShape(hitArea);
     //   console.log(pointer);
 
-    //   const succes = ['🤗', '🤩', '😲', '😂', '🤣'];
+    //   const success = ['🤗', '🤩', '😲', '😂', '🤣'];
     //   const failure = ['🤔',  '🤨', '😒', '😓', '😔', '😕'];
 
     //   const emoji = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
 
-    //   Notification.create(this, emoji(hit ? succes : failure), 160, {backgroundColor: 'transparent', fontSize: '64px'});
+    //   Notification.create(this, emoji(hit ? success : failure), 160, {backgroundColor: 'transparent', fontSize: '64px'});
 
     // });
     const ew = this.sys.canvas.width / 2, eh = this.sys.canvas.height;
