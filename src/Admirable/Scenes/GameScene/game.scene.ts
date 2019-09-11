@@ -1,8 +1,7 @@
 import { AdmirableScene } from '../admirable.scene';
 import { BoardConfig } from '../../board.config';
-import { Ship } from '../../Objects/Ship';
+import { Ship, Dock } from '../../Objects/Ship';
 import { Cursor } from '../../Objects/UI/Cursor';
-import { Notification } from '../../Objects/UI/Notification';
 import { Enemy } from '../../Objects/Enemy';
 
 @AdmirableScene({
@@ -18,13 +17,8 @@ export class GameScene extends Phaser.Scene {
   public create(data: any): void {
 
     this.showGrid();
-
-    data.ships.forEach((s: Ship) => {
-      // console.log(ship);
-      const ship = new Ship(this, s.extent, s.orthogonal);
-      ship._setPosition(s.x, s.y);
-      this.add.existing(ship);
-    });
+    const dock = new Dock(this);
+    dock.build(data.exported);
 
     const ew = this.sys.canvas.width / 2, eh = this.sys.canvas.height;
     Enemy.define(this, ew, 0, ew, eh);

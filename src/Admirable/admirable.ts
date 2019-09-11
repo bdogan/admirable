@@ -8,8 +8,8 @@ export const Game = document.onreadystatechange = () => {
     return new AdmirableGame(AdmirableConfig({
       scene: [
         LobbyScene,
-        RoomScene,
         SetupScene,
+        RoomScene,
         DemoScene,
         MenuScene,
         GameScene,

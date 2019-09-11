@@ -1,6 +1,9 @@
 import { BoardConfig } from '../../board.config';
+import { Dock } from './dock.object';
 
 export class Ship extends Phaser.GameObjects.Container {
+
+  public dock!: Dock;
 
   public hasFocus: boolean = false;
 
@@ -24,9 +27,10 @@ export class Ship extends Phaser.GameObjects.Container {
    * @param length Lenght of the ship based on the grid size.
    * @param orthogonal Orthogonality of the ship.
    */
-  constructor(scene: Phaser.Scene, length: number = 1, orthogonal: boolean = false, interactive: boolean = false) {
+  constructor(dock: Dock, scene: Phaser.Scene, length: number = 1, orthogonal: boolean = false, interactive: boolean = false) {
     super(scene, 0, 0, []);
 
+    this.dock = dock;
     this.extent = length;
     this.orthogonal = orthogonal;
     this.interactive = interactive;
@@ -194,7 +198,7 @@ export class Ship extends Phaser.GameObjects.Container {
    */
   public get isColliding(): boolean {
 
-    const ships = this.scene.children.list.filter((child) => child instanceof Ship && child !== this) as Ship[];
+    const ships = this.dock.ships.filter((ship) => ship !== this);
 
     const flag = ships.some((ship) => Phaser.Geom.Rectangle.Overlaps(this.collisionArea.getBounds(), ship.collisionArea.getBounds()));
 
@@ -204,7 +208,7 @@ export class Ship extends Phaser.GameObjects.Container {
   /**
    * Determinate if the ship is inside of the placement area.
    */
-  private get isWithinArea(): boolean {
+  public get isWithinArea(): boolean {
     const w = this.scene.sys.canvas.width, h = this.scene.sys.canvas.height;
     // We have to use this hack to determinate if the ship is overflowing out of the placement area.
     return !Phaser.Geom.Intersects.RectangleToValues(this.ship.getBounds(), w / 2, w, 0, h, -1);
@@ -215,7 +219,7 @@ export class Ship extends Phaser.GameObjects.Container {
 
   private checkError(): void {
 
-    const ships = this.scene.children.list.filter((child) => child instanceof Ship) as Ship[];
+    const ships = this.dock.ships;
 
     ships.forEach((ship) => {
       const error = ship.isColliding || !ship.isWithinArea;
@@ -241,40 +245,6 @@ export class Ship extends Phaser.GameObjects.Container {
     } else {
       return value;
     }
-
-  }
-
-  /**
-   * @param scene The scene to be checked for colliding Ship objects.
-   */
-  // tslint:disable-next-line: member-ordering
-  public static isPlacementValid(scene: Phaser.Scene): boolean {
-    const ships = scene.children.list.filter((child) => child instanceof Ship) as Ship[];
-
-    // Check and return as soon as possible if any ship on the scene is coliding or outside of the placement area.
-    const error = ships.some((ship) => ship.isColliding || !ship.isWithinArea);
-
-    // If Error is true that means placement is not valid. This methods return value and the error is adverse.
-    return !error;
-  }
-
-  /**
-   * Register the neccessary events to be handled by the scene.
-   * @param scene The scene this event's to be added.
-   */
-  // tslint:disable-next-line: member-ordering
-  public static registerSceneEvents(scene: Phaser.Scene) {
-    const key = scene.input.keyboard.addKey('SPACE');
-
-    key.on('down', (event: any) => {
-      // Rotate when space is pressed.
-      const focusedShip = (scene.children.list.filter((child) => child instanceof Ship) as Ship[]).find((ship) => ship.hasFocus);
-
-      if (focusedShip) {
-        focusedShip.rotate();
-      }
-
-    });
 
   }
 
