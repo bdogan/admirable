@@ -29,7 +29,7 @@ export class RoomScene extends Phaser.Scene {
       this.join(data);
     }
 
-    this.input.on('pointerdown', (e: any) => {
+    this.input.on('pointermove', (e: any) => {
       if ((this.connection !== undefined) && (this.connection !== null)) {
         this.connection.send({ x: e.x, y: e.y, text: 'x: ' + e.x + ' y: ' + e.y });
       }
