@@ -11,6 +11,7 @@ export class RoomScene extends Phaser.Scene {
   private remoteId: any;
   private isHost: boolean = true;
   private status!: Phaser.GameObjects.Text;
+  private circ!: any;
 
   public create(data: any): void {
     this.isHost = data.isHost;
@@ -20,6 +21,8 @@ export class RoomScene extends Phaser.Scene {
       fontSize: '32px',
       color: '#FFFFFF',
     });
+
+    this.circ = this.add.circle(200, 200, 50, 0xFF0000, 1);
 
     this.add.existing(this.status);
 
@@ -47,6 +50,10 @@ export class RoomScene extends Phaser.Scene {
       c.on('data', (d) => {
         this.status.text = d.text;
         console.log(d);
+        if (d.x !== undefined) {
+          this.circ.x = d.x;
+          this.circ.y = d.y;
+        }
       });
 
       if (this.connection) {
@@ -106,6 +113,10 @@ export class RoomScene extends Phaser.Scene {
     this.connection.on('data', (d: { x: number, y: number, text: string }) => {
       this.status.text =  d.text;
       console.log(d);
+      if (d.x !== undefined) {
+        this.circ.x = d.x;
+        this.circ.y = d.y;
+      }
     });
 
     // Peer close event

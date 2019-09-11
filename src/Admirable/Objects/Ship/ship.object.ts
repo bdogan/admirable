@@ -3,8 +3,6 @@ import { Dock } from './dock.object';
 
 export class Ship extends Phaser.GameObjects.Container {
 
-  public dock!: Dock;
-
   public hasFocus: boolean = false;
 
   // Extension of the ship based on the grid size.
@@ -13,6 +11,7 @@ export class Ship extends Phaser.GameObjects.Container {
   // Orthogonality of the ship. True if it's vertical.
   public orthogonal: boolean = false;
 
+  private dock: Dock;
   // Ship sprite.
   private ship!: Phaser.GameObjects.TileSprite;
 
