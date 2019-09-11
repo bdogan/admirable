@@ -31,7 +31,7 @@ export class RoomScene extends Phaser.Scene {
 
     this.input.on('pointerdown', (e: any) => {
       if ((this.connection !== undefined) && (this.connection !== null)) {
-        this.connection.send({ x: e.x, y: e.y });
+        this.connection.send({ x: e.x, y: e.y, text: 'x: ' + e.x + ' y: ' + e.y });
       }
     });
   }
@@ -45,12 +45,13 @@ export class RoomScene extends Phaser.Scene {
       // Peer connection event
     this.peer.on('connection', (c) => {
       c.on('data', (d) => {
+        this.status.text = d.text;
         console.log(d);
       });
 
       if (this.connection) {
         c.on('open', () => {
-          c.send('Connected already.');
+          c.send({ text: 'Connected already.' });
           setTimeout(() => {
             c.close();
           }, 500);
@@ -63,12 +64,12 @@ export class RoomScene extends Phaser.Scene {
       this.status.text = 'Connected to: ' + this.connection.peer;
 
       const testData = {
-        world: 'hello'
+        text: 'Hello from receiver'
       };
 
       setTimeout(() => {
         this.connection.send(testData);
-      }, 1000);
+      }, 3000);
 
     });
 
@@ -94,13 +95,16 @@ export class RoomScene extends Phaser.Scene {
       this.status.text =  'Connected to: ' + this.connection.peer;
 
       const testData = {
-        hello: 'world'
+        text: 'Hello from sender'
       };
 
-      this.connection.send(testData);
+      setTimeout(() => {
+        this.connection.send(testData);
+      }, 3000);
     });
 
-    this.connection.on('data', (d: any) => {
+    this.connection.on('data', (d: { x: number, y: number, text: string }) => {
+      this.status.text =  d.text;
       console.log(d);
     });
 
