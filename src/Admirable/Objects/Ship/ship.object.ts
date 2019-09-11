@@ -52,8 +52,6 @@ export class Ship extends Phaser.GameObjects.Container {
    */
   public _setPosition(x: number, y: number, snapToGrid: boolean = true, preventOverlap: boolean = true): void {
 
-    console.log(this.x - x, this.y - y);
-
     // store the last position to be used when preventOverlap is true.
     const lastX = this.x,  lastY = this.y;
 
@@ -188,6 +186,7 @@ export class Ship extends Phaser.GameObjects.Container {
       this._setPosition(x, y);
 
     });
+
   }
 
   /**
