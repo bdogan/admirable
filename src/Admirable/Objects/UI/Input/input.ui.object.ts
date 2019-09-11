@@ -37,9 +37,11 @@ export class Input extends Phaser.GameObjects.Container {
     this.height = h;
     this.text = text;
 
-    this.rect = new Phaser.GameObjects.Rectangle(scene, 0, 0, this.pWidth, this.pHeight, 0xFFFFFF);
-    this.rect.setStrokeStyle(2, 0x888888, 1);
-    this.rect.setOrigin(0, 0);
+    this.rect = new Phaser.GameObjects.Rectangle(scene, 0, 0, this.pWidth, this.pHeight, 0xFFFFFF)
+      .setStrokeStyle(2, 0x888888, 1)
+      .setOrigin(0, 0);
+
+    this.add(this.rect);
 
     this.label = new Phaser.GameObjects.Text(scene, this.rect.x + 10, this.rect.y + 5, this.pText, {
       fontFamily: 'Munro',
@@ -47,11 +49,13 @@ export class Input extends Phaser.GameObjects.Container {
       color: '0x444444',
     });
 
-    this.list = [this.rect, this.label];
+    this.add(this.label);
 
-    this.on('pointerdown', (p: any) => {
-      if (p.x > this.rect.x && p.x < this.rect.x + this.rect.width &&
-        p.y > this.rect.y && p.y < this.rect.y + this.rect.height) {
+    this.rect.setInteractive().on('pointerdown', (p: any) => {
+      if (p.x > this.x &&
+        p.x < this.x + this.pWidth &&
+        p.y > this.y &&
+        p.y < this.y + this.pHeight) {
         this.labelOn = true;
         this.rect.strokeColor = 0xFF0000;
       } else {
@@ -60,9 +64,9 @@ export class Input extends Phaser.GameObjects.Container {
       }
     });
 
-    this.scene.input.keyboard.on('keyboard', (e: any) => {
-      if (this.labelOn) {
-        e.preventDefault();
+    this.scene.input.keyboard.on('keydown', (e: any) => {
+      if (true) {
+        // e.preventDefault();
         if (e.code === 'Backspace') {
           if (this.label.text.length > 0) {
             this.label.text = this.label.text.substring(0, this.label.text.length - 1);
@@ -76,5 +80,10 @@ export class Input extends Phaser.GameObjects.Container {
         }
       }
     });
+  }
+
+  public setText(text: string) {
+    this.text = text;
+    this.label.text = this.text;
   }
 }
