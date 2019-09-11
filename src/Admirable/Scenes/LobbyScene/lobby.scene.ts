@@ -14,13 +14,20 @@ export class LobbyScene extends Phaser.Scene {
 
   // Create
   public create() {
+
+    /*
+    Input
+     */
+    const input = new Input(this, 'Test', this.sys.canvas.width / 2 - 256 / 2, this.sys.canvas.height / 2, 256, 40);
+    this.add.existing(input);
+
     /*
     Host button
      */
     const hostButton = new Button(this, 'Host', this.sys.canvas.width / 2, this.sys.canvas.height / 3);
     this.add.existing(hostButton);
 
-    // Hpst button click event
+    // Host button click event
     hostButton.on(MouseEvent.onClick, (e: any) => {
       // Create a peer with random name
       this.peer = new Peer(null, {
@@ -40,6 +47,7 @@ export class LobbyScene extends Phaser.Scene {
           this.lastPeerId = this.peer.id;
         }
 
+        input.setText(this.lastPeerId);
         console.log(this.lastPeerId);
       });
 
@@ -76,13 +84,13 @@ export class LobbyScene extends Phaser.Scene {
     /*
     Join button
      */
-    const joinButton = new Button(this, 'Join', this.sys.canvas.width / 2, this.sys.canvas.height / 2);
+    const joinButton = new Button(this, 'Join', this.sys.canvas.width / 2, this.sys.canvas.height / 1.5);
     this.add.existing(joinButton);
 
     // Join button click event
     joinButton.on(MouseEvent.onClick, (e: any) => {
       // Get remote peer id from prompt
-      this.remotePeerId = window.prompt('Peer ID: ');
+      this.remotePeerId = input.text;
 
       // Create a peer with random name
       this.peer = new Peer(null, {
@@ -140,7 +148,5 @@ export class LobbyScene extends Phaser.Scene {
       });
     });
 
-    const input = new Input(this, 'Test', 100, 100, 200, 40);
-    this.add.existing(input);
   }
 }
