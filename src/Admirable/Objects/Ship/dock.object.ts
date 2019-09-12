@@ -46,6 +46,21 @@ export class Dock {
    * @param orthogonality randomize the orthogonality of the ships.
    */
   public randomizePlacement(orthogonality?: boolean) {
+
+    const randomPlace = (ship: Ship) => {
+
+      let x = Phaser.Math.Between(0, 14) * BoardConfig.gridSize,
+          y = Phaser.Math.Between(0, 14) * BoardConfig.gridSize;
+
+      if (ship.orthogonal) {
+        y = y - ship.extent * BoardConfig.gridSize;
+      } else {
+        x = x - ship.extent * BoardConfig.gridSize;
+      }
+
+      ship._setPosition(x, y, false, false);
+    };
+
     let trial = 0;
     const ships = this.ships;
 
@@ -60,38 +75,20 @@ export class Dock {
     // Start to place randomly.
     ships.forEach((ship) => {
 
-      let x = Phaser.Math.Between(0, 14) * BoardConfig.gridSize,
-          y = Phaser.Math.Between(0, 14) * BoardConfig.gridSize;
-
-      if (ship.orthogonal) {
-        y = y - ship.extent * BoardConfig.gridSize;
-      } else {
-        x = x - ship.extent * BoardConfig.gridSize;
-      }
-
-      ship._setPosition(x, y, false, false);
+      randomPlace(ship);
 
       while (ship.isColliding) {
         trial++;
-
-        x = Phaser.Math.Between(0, 14) * BoardConfig.gridSize;
-        y = Phaser.Math.Between(0, 14) * BoardConfig.gridSize;
-
-        if (ship.orthogonal) {
-          y -= ship.extent * BoardConfig.gridSize;
-        } else {
-          x -= ship.extent * BoardConfig.gridSize;
-        }
-
-        ship._setPosition(x, y, true, false);
+        randomPlace(ship);
       }
 
     });
+
     console.log('Total trial: ', trial);
   }
 
   public get isPlacementValid(): boolean {
-    // Search for any error, if error is true placement is invalid.
+    // Checks for any ship that out of the area or colliding.
     return !this.ships.some((ship) => !ship.isWithinArea || ship.isColliding);
   }
 

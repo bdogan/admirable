@@ -1,6 +1,6 @@
 import { AdmirableScene } from '../admirable.scene';
 import { BoardConfig } from '../../board.config';
-import { Ship, Dock } from '../../Objects/Ship';
+import { Dock } from '../../Objects/Ship';
 import { Cursor } from '../../Objects/UI/Cursor';
 import { Enemy } from '../../Objects/Enemy';
 

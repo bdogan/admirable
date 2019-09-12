@@ -12,10 +12,11 @@ export class Ship extends Phaser.GameObjects.Container {
   public orthogonal: boolean = false;
 
   private dock: Dock;
+
   // Ship sprite.
   private ship!: Phaser.GameObjects.TileSprite;
 
-  // Collision  rectangle to help while positioning the ship.
+  // Collision rectangle to help while positioning the ship.
   private collisionArea!: Phaser.GameObjects.Rectangle;
 
   private interactive: boolean = false;
@@ -165,7 +166,7 @@ export class Ship extends Phaser.GameObjects.Container {
     this.scene.input.setDraggable(this);
 
     this.on('dragstart', (p: any, x: any, y: any) => {
-
+      this.scene.input.setDefaultCursor('none');
       this.hasFocus = true;
 
       // Bring the selected ship to the top of the scene's display list.
@@ -176,7 +177,7 @@ export class Ship extends Phaser.GameObjects.Container {
     });
 
     this.on('dragend', (p: any, x: any, y: any) => {
-
+      this.scene.input.setDefaultCursor('default');
       this.hasFocus = false;
 
       this.collisionArea.alpha = 0.5;

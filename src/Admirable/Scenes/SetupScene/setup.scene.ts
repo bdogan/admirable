@@ -4,6 +4,9 @@ import { BoardConfig } from '../../board.config';
 import { Notification } from '../../Objects/UI/Notification';
 import { Cursor } from '../../Objects/UI/Cursor';
 import { Dock, IExport } from '../../Objects/Ship';
+import { Link } from '../../Objects/Link';
+
+const connection = Link.getInstance();
 
 @AdmirableScene({
   key: 'setup'
@@ -64,6 +67,13 @@ export class SetupScene extends Phaser.Scene {
     this.add.existing(button);
 
     Cursor.attach(this);
+
+    // console.log(connection);
+
+    this.input.on(MouseEvent.onDown, (p: Phaser.Input.Pointer) => {
+      // console.log({x: p.x, y: p.y});
+      connection.connection.send({x: p.x, y: p.y});
+    });
 
   }
 
