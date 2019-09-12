@@ -1,16 +1,21 @@
 import Peer from 'peerjs';
 
-export class Link {
+export interface IPayLoad {
+  type: string;
+  data?: object;
+}
 
-  public static getInstance(): Link {
-    if (!Link.instance) {
-      Link.instance = new Link();
+export class Transmission extends Phaser.Events.EventEmitter {
+
+  public static getInstance(): Transmission {
+    if (!Transmission.instance) {
+      Transmission.instance = new Transmission();
     }
 
-    return Link.instance;
+    return Transmission.instance;
   }
 
-  private static instance: Link;
+  private static instance: Transmission;
 
   public connection!: Peer.DataConnection;
   private peer!: Peer;
@@ -20,8 +25,9 @@ export class Link {
     this.init(id);
     this.peer.on('connection', (c) => {
       this.connection = c;
-      this.connection.on('data', (d) => {
-        console.log(d);
+
+      this.connection.on('data', (d: IPayLoad) => {
+        this.emit(d.type, d.data);
       });
     });
   }
@@ -30,8 +36,9 @@ export class Link {
     // Init empty to connect.
     this.init();
     this.connection = this.peer.connect(id);
-    this.connection.on('data', (d) => {
-      console.log(d);
+
+    this.connection.on('data', (d: IPayLoad) => {
+      this.emit(d.type, d.data);
     });
   }
 
@@ -46,6 +53,10 @@ export class Link {
         ]
       }
     });
+  }
+
+  public transmit(data: IPayLoad) {
+    this.connection.send(data);
   }
 
 }

@@ -4,9 +4,10 @@ import { BoardConfig } from '../../board.config';
 import { Notification } from '../../Objects/UI/Notification';
 import { Cursor } from '../../Objects/UI/Cursor';
 import { Dock, IExport } from '../../Objects/Ship';
-import { Link } from '../../Objects/Link';
+import { Transmission } from '../../Objects/Transmission';
+import { IPayLoad } from '../../Objects/Transmission/transmission.object';
 
-const connection = Link.getInstance();
+const transmission = Transmission.getInstance();
 
 @AdmirableScene({
   key: 'setup'
@@ -14,8 +15,16 @@ const connection = Link.getInstance();
 
 export class SetupScene extends Phaser.Scene {
 
+  private isPlayerReay: boolean = false;
+  private isEnemyReady: boolean = false;
+
   public init(): void {
     console.log('SetupScene initialized.');
+
+    transmission.on('enemy.ready', () => {
+      this.isEnemyReady = true;
+      console.log(this.isEnemyReady);
+    });
   }
 
   public create(): void {
@@ -39,42 +48,41 @@ export class SetupScene extends Phaser.Scene {
     // Deploy Button
     const bw = 160, bh = 64, bx = (this.sys.canvas.width) - (bw / 2) - 16, by = (this.sys.canvas.height) - (bh / 2) - 16;
 
-    const button = new Button(this, 'DEPLOY', bx, by, bw, bh);
+    const button = new Button(this, 'READY', bx, by, bw, bh);
 
     button.text.setFontSize(32);
 
     button.on(MouseEvent.onClick, (e: any) => {
 
       if (!dock.isPlacementValid) {
-        Notification.create(this, 'Placement is not valid');
+        Notification.create(this, 'Placement is not valid!');
+        return;
+      }
+
+      transmission.transmit({type: 'enemy.ready'} as IPayLoad);
+
+      if (!this.isEnemyReady) {
+        Notification.create(this, 'Enemy is not ready!');
         return;
       }
 
       this.scene.start('game', {exported: dock.export()});
-
     });
 
+    this.add.existing(button);
+
+    // Shuffle button.
     const shuffle =  new Button(this, 'Shuffle', bx, by - bh - 32, bw, bh);
     shuffle.text.setFontSize(32);
 
     shuffle.on(MouseEvent.onClick, () => {
-
       dock.randomizePlacement(true);
-
     });
 
     this.add.existing(shuffle);
-    this.add.existing(button);
 
+    // Attach custom cursor to the scene.
     Cursor.attach(this);
-
-    // console.log(connection);
-
-    this.input.on(MouseEvent.onDown, (p: Phaser.Input.Pointer) => {
-      // console.log({x: p.x, y: p.y});
-      connection.connection.send({x: p.x, y: p.y});
-    });
-
   }
 
   private showGrid() {
