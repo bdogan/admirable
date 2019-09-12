@@ -4,7 +4,7 @@ import { Table } from '../../Objects/UI/Table';
 import { Peer } from '../../Objects/P2P/Peer';
 import { Sender } from '../../Objects/P2P/Sender';
 import { Transmission } from '../../Objects/Transmission';
-import { IPayLoad } from '../../Objects/Transmission/transmission.object';
+import { IPayload } from '../../Objects/Transmission/transmission.object';
 
 const connection = Transmission.getInstance();
 

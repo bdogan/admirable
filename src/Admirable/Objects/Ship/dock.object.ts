@@ -65,7 +65,7 @@ export class Dock {
    */
   public randomizePlacement(orthogonality?: boolean) {
 
-    const randomPlace = (ship: Ship) => {
+    const randomlyPlace = (ship: Ship) => {
 
       let x = Phaser.Math.Between(0, 14) * BoardConfig.gridSize,
           y = Phaser.Math.Between(0, 14) * BoardConfig.gridSize;
@@ -82,7 +82,7 @@ export class Dock {
     let trial = 0;
     const ships = this.ships;
 
-    // First of all Place all ships outside of the canvas.
+    // First of all Place all the ships outside of the canvas.
     ships.forEach((ship) => {
       ship.setPosition(-64, -64);
       if (orthogonality && Math.random() < 0.5) {
@@ -93,11 +93,11 @@ export class Dock {
     // Start to place randomly.
     ships.forEach((ship) => {
 
-      randomPlace(ship);
+      randomlyPlace(ship);
 
       while (ship.isColliding) {
         trial++;
-        randomPlace(ship);
+        randomlyPlace(ship);
       }
 
     });

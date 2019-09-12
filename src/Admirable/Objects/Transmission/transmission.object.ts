@@ -1,6 +1,6 @@
 import Peer from 'peerjs';
 
-export interface IPayLoad {
+export interface IPayload {
   type: string;
   data?: object;
 }
@@ -26,7 +26,7 @@ export class Transmission extends Phaser.Events.EventEmitter {
     this.peer.on('connection', (c) => {
       this.connection = c;
 
-      this.connection.on('data', (d: IPayLoad) => {
+      this.connection.on('data', (d: IPayload) => {
         this.emit(d.type, d.data);
       });
     });
@@ -37,7 +37,7 @@ export class Transmission extends Phaser.Events.EventEmitter {
     this.init();
     this.connection = this.peer.connect(id);
 
-    this.connection.on('data', (d: IPayLoad) => {
+    this.connection.on('data', (d: IPayload) => {
       this.emit(d.type, d.data);
     });
   }
@@ -55,8 +55,11 @@ export class Transmission extends Phaser.Events.EventEmitter {
     });
   }
 
-  public transmit(data: IPayLoad) {
-    this.connection.send(data);
+  public transmit(data: IPayload) {
+    console.log(this.connection);
+    if (this.connection) {
+      this.connection.send(data);
+    }
   }
 
 }
