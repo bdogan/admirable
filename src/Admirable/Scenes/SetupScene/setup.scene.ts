@@ -6,8 +6,15 @@ import { Cursor } from '../../Objects/UI/Cursor';
 import { Dock, IExport } from '../../Objects/Ship';
 import { Transmission } from '../../Objects/Transmission';
 import { IPayLoad } from '../../Objects/Transmission/transmission.object';
+import { Link } from '../../Objects/Link';
 
 const transmission = Transmission.getInstance();
+
+const shipTopImg = require('../../Objects/Ship/Images/ship_top.png');
+const shipMiddleImg = require('../../Objects/Ship/Images/ship_middle.png');
+const shipBottomImg = require('../../Objects/Ship/Images/ship_bottom.png');
+
+const link = Link.getInstance();
 
 @AdmirableScene({
   key: 'setup'
@@ -25,6 +32,12 @@ export class SetupScene extends Phaser.Scene {
       this.isEnemyReady = true;
       console.log(this.isEnemyReady);
     });
+  }
+
+  public preload(): void {
+    this.load.image('ship_top', shipTopImg);
+    this.load.image('ship_middle', shipMiddleImg);
+    this.load.image('ship_bottom', shipBottomImg);
   }
 
   public create(): void {

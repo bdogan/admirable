@@ -137,7 +137,7 @@ export class Ship extends Phaser.GameObjects.Container {
     }
 
     // Create the ship sprite and add it to the container.
-    this.ship = this.scene.add.tileSprite(0, 0, width, height, 'ship').setOrigin(0);
+    this.ship = this.scene.add.tileSprite(0, 0, width, height, 'ship_middle').setOrigin(0);
     this.add(this.ship);
 
     if (this.interactive) {

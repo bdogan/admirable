@@ -3,4 +3,5 @@ export { GameScene } from './GameScene/';
 export { MenuScene } from './MenuScene/';
 export { SetupScene } from './SetupScene/';
 export { LobbyScene } from './LobbyScene/';
-export { RoomScene } from './RoomScene/';
+export { HostScene } from './HostScene/';
+export { JoinScene } from './JoinScene/';
