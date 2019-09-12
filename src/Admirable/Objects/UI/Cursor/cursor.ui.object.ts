@@ -47,11 +47,13 @@ export class Cursor {
     });
 
     this.scene.input.on(MouseEvent.onDown, (pointer: Phaser.Input.Pointer) => {
+      // this.shape.visible = false;
       this.shape.setFillStyle(0xFFFF00, 0.1);
       this.shape.setStrokeStyle(2, 0xFFFF00, 1);
     });
 
     this.scene.input.on(MouseEvent.onUp, (pointer: Phaser.Input.Pointer) => {
+      // this.shape.visible = true;
       this.shape.setFillStyle(0xFFFF00, 0);
       this.shape.setStrokeStyle(1, 0xFFFFFF, 1);
     });
