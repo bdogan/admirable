@@ -11,6 +11,7 @@ export class Ship extends Phaser.GameObjects.Container {
   // Orthogonality of the ship. True if it's vertical.
   public orthogonal: boolean = false;
 
+  // The dock this ship belongs to.
   private dock: Dock;
 
   // Ship sprite.
@@ -206,15 +207,12 @@ export class Ship extends Phaser.GameObjects.Container {
   }
 
   /**
-   * Determinate if the ship is inside of the placement area.
+   * Determinate if the ship is the inside of the placement area.
    */
-  public get isWithinArea(): boolean {
-    const w = this.scene.sys.canvas.width, h = this.scene.sys.canvas.height;
-    // We have to use this hack to determinate if the ship is overflowing out of the placement area.
-    return !Phaser.Geom.Intersects.RectangleToValues(this.ship.getBounds(), w / 2, w, 0, h, -1);
+  public get isWithin(): boolean {
 
-    // Inefficient old method
-    // return !Phaser.Geom.Rectangle.Overlaps(this.ship.getBounds(), new Phaser.Geom.Rectangle(w / 2, 0, w / 2, h));
+    return this.dock.contains(this.ship.getBounds());
+
   }
 
   private checkError(): void {
@@ -222,7 +220,7 @@ export class Ship extends Phaser.GameObjects.Container {
     const ships = this.dock.ships;
 
     ships.forEach((ship) => {
-      const error = ship.isColliding || !ship.isWithinArea;
+      const error = ship.isColliding || !ship.isWithin;
       ship.collisionArea.fillColor = error ? 0xFF0000 : 0x00CCFF;
       ship.collisionArea.strokeColor = error ? 0xFF0000 : 0x00CCFF;
     });

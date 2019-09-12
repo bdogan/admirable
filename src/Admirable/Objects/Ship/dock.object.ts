@@ -13,15 +13,26 @@ export class Dock {
   public scene: Phaser.Scene;
   public ships: Ship[];
 
+  // Dock valid area.
+  public area: Phaser.Geom.Rectangle;
+
   private setup: boolean;
 
   constructor(scene: Phaser.Scene, setup: boolean = false) {
     this.scene = scene;
     this.ships = [];
     this.setup = setup;
+
+    // The area this dock to be placed abstractly.
+    this.area = new Phaser.Geom.Rectangle(0, 0, this.scene.sys.canvas.width / 2, this.scene.sys.canvas.height);
+
     this.registerSceneEvents(scene);
   }
 
+  /**
+   * Build the dock with the given ships.
+   * @param ships Ship array to build with this dock.
+   */
   public build(ships: IExport[]): void {
     // this.ships = []; this.ships.foreach ship.destoy?.
     ships.forEach((ship) => {
@@ -32,11 +43,18 @@ export class Dock {
 
   }
 
+  /**
+   * Export the ships as an array.
+   */
   public export(): IExport[] {
     // tslint:disable-next-line: no-angle-bracket-type-assertion
     return this.ships.map((ship: Ship) => <IExport> {x: ship.x, y: ship.y, extent: ship.extent, orthogonal: ship.orthogonal});
   }
 
+  /**
+   * Import the ships to the Dock.
+   * @param exported Exported ship array.
+   */
   public import(exported: IExport[]): void {
     this.build(exported);
   }
@@ -87,9 +105,25 @@ export class Dock {
     console.log('Total trial: ', trial);
   }
 
+  /**
+   * Checks if the overall placement of the ships are valid.
+   */
   public get isPlacementValid(): boolean {
     // Checks for any ship that out of the area or colliding.
-    return !this.ships.some((ship) => !ship.isWithinArea || ship.isColliding);
+    return !this.ships.some((ship) => !ship.isWithin || ship.isColliding);
+  }
+
+  /**
+   * Checks if the given rectangle is inside of the Dock's placement area.
+   * @param rectangle rectangle to be checked.
+   */
+  public contains(rectangle: Phaser.Geom.Rectangle): boolean {
+    return (
+      (rectangle.x >= this.area.x && rectangle.x <= this.area.right) &&
+      (rectangle.right >= this.area.x && rectangle.right <= this.area.right) &&
+      (rectangle.y >= this.area.y && rectangle.y <= this.area.bottom) &&
+      (rectangle.bottom >= this.area.y && rectangle.bottom <= this.area.bottom)
+    );
   }
 
   /**

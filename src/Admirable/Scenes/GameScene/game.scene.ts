@@ -3,10 +3,15 @@ import { BoardConfig } from '../../board.config';
 import { Dock } from '../../Objects/Ship';
 import { Cursor } from '../../Objects/UI/Cursor';
 import { Enemy } from '../../Objects/Enemy';
+import { Notification } from '../../Objects/UI/Notification';
+import { Transmission } from '../../Objects/Transmission';
+
+const transmission = Transmission.getInstance();
 
 @AdmirableScene({
   key: 'game'
 })
+
 export class GameScene extends Phaser.Scene {
 
   public init(data: any): void {
@@ -20,8 +25,12 @@ export class GameScene extends Phaser.Scene {
     const dock = new Dock(this);
     dock.build(data.exported);
 
+    // use once.
+    // transmission.once('enemy.ready', () => {
+    Notification.create(this, 'Enemy is ready.');
     const ew = this.sys.canvas.width / 2, eh = this.sys.canvas.height;
-    Enemy.define(this, ew, 0, ew, eh);
+    Enemy.define(transmission , this, ew, 0, ew, eh);
+    // });
 
     Cursor.attach(this);
 
