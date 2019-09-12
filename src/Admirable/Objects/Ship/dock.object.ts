@@ -52,7 +52,7 @@ export class Dock {
     // First of all Place all ships outside of the canvas.
     ships.forEach((ship) => {
       ship.setPosition(-64, -64);
-      if (orthogonality && !!Phaser.Math.Between(0, 1)) {
+      if (orthogonality && Math.random() < 0.5) {
         ship.rotate();
       }
     });
@@ -99,7 +99,6 @@ export class Dock {
    * Register the neccessary events to be handled by the scene.
    * @param scene The scene this event's to be added.
    */
-  // tslint:disable-next-line: member-ordering
   private registerSceneEvents(scene: Phaser.Scene) {
     const key = scene.input.keyboard.addKey('SPACE');
 

@@ -25,6 +25,8 @@ export class Enemy extends Phaser.GameObjects.Zone {
   private registerEvents(): void {
     this.setInteractive();
     this.on('pointerdown', (p: Phaser.Input.Pointer, x: number, y: number) => {
+
+      // use relative x, y
       this.hit(p.x, p.y);
     });
   }
