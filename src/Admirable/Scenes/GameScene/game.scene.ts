@@ -4,9 +4,10 @@ import { Dock } from '../../Objects/Ship';
 import { Cursor } from '../../Objects/UI/Cursor';
 import { Enemy } from '../../Objects/Enemy';
 import { Notification } from '../../Objects/UI/Notification';
-import { Transmission } from '../../Objects/Transmission';
+import { transmission } from '../../Objects/Transmission';
+import { gameState } from '../../Objects/GameState/gameState.object';
 
-const transmission = Transmission.getInstance();
+// const transmission = Transmission.getInstance();
 
 @AdmirableScene({
   key: 'game'
@@ -17,6 +18,16 @@ export class GameScene extends Phaser.Scene {
   public init(data: any): void {
     console.log('GameScene initialized.');
     console.log('passed data: ', data);
+
+    // Set player is ready and transmit this to the enemy. We can do this in setup scene's deploy on click.
+    gameState.isPlayerReady = true;
+
+    transmission.transmit({type: 'enemy.ready'});
+
+    transmission.on('enemy.ready', () => {
+      Notification.create(this, 'Enemy is ready to be destroyed!', 800);
+    });
+
   }
 
   public create(data: any): void {
@@ -25,12 +36,8 @@ export class GameScene extends Phaser.Scene {
     const dock = new Dock(this);
     dock.build(data.exported);
 
-    // use once.
-    // transmission.once('enemy.ready', () => {
-    Notification.create(this, 'Enemy is ready.');
     const ew = this.sys.canvas.width / 2, eh = this.sys.canvas.height;
-    Enemy.define(transmission , this, ew, 0, ew, eh);
-    // });
+    Enemy.define(this, ew, 0, ew, eh);
 
     Cursor.attach(this);
 

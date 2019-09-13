@@ -4,10 +4,10 @@ import { BoardConfig } from '../../board.config';
 import { Notification } from '../../Objects/UI/Notification';
 import { Cursor } from '../../Objects/UI/Cursor';
 import { Dock, IExport } from '../../Objects/Ship';
-import { Transmission } from '../../Objects/Transmission';
+import { transmission } from '../../Objects/Transmission';
 import { IPayload } from '../../Objects/Transmission/transmission.object';
-
-const transmission = Transmission.getInstance();
+import { gameState } from '../../Objects/GameState/gameState.object';
+// const transmission = Transmission.getInstance();
 
 @AdmirableScene({
   key: 'setup'
@@ -15,17 +15,14 @@ const transmission = Transmission.getInstance();
 
 export class SetupScene extends Phaser.Scene {
 
-  private isPlayerReay: boolean = false;
-  private isEnemyReady: boolean = false;
-
   public init(): void {
     console.log('SetupScene initialized.');
 
-    transmission.on('enemy.ready', () => {
-      Notification.create(this, 'Enemy is ready.');
-      this.isEnemyReady = true;
-      console.log(this.isEnemyReady);
-    });
+    // transmission.on('enemy.ready', () => {
+    //   Notification.create(this, 'Enemy is ready.');
+    //   this.isEnemyReady = true;
+    //   console.log(this.isEnemyReady);
+    // });
   }
 
   public create(): void {
@@ -60,12 +57,12 @@ export class SetupScene extends Phaser.Scene {
         return;
       }
 
-      transmission.transmit({type: 'enemy.ready'} as IPayload);
+      // transmission.transmit({type: 'enemy.ready'} as IPayload);
 
-      if (!this.isEnemyReady) {
-        Notification.create(this, 'Enemy is not ready!');
-        return;
-      }
+      // if (!this.isEnemyReady) {
+      //   Notification.create(this, 'Enemy is not ready!');
+      //   return;
+      // }
 
       this.scene.start('game', {exported: dock.export()});
     });

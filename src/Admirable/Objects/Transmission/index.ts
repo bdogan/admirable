@@ -1,1 +1,1 @@
-export { Transmission } from './transmission.object';
+export { transmission } from './transmission.object';

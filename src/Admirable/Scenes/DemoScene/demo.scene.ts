@@ -3,10 +3,10 @@ import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { Table } from '../../Objects/UI/Table';
 import { Peer } from '../../Objects/P2P/Peer';
 import { Sender } from '../../Objects/P2P/Sender';
-import { Transmission } from '../../Objects/Transmission';
+import { transmission } from '../../Objects/Transmission';
 import { IPayload } from '../../Objects/Transmission/transmission.object';
 
-const connection = Transmission.getInstance();
+// const connection = Transmission.getInstance();
 
 @AdmirableScene({
   key: 'demo'
@@ -19,7 +19,7 @@ export class DemoScene extends Phaser.Scene {
     const k = new Button(this, 'host', 64, 64, 120, 48);
     this.add.existing(k);
     k.on(MouseEvent.onClick, () => {
-      connection.host('TEST98');
+      transmission.host('TEST98');
       // connection.connection.send({type: 'host.ready'} as IPayLoad);
       this.scene.start('setup');
     });
@@ -28,7 +28,7 @@ export class DemoScene extends Phaser.Scene {
     this.add.existing(m);
 
     m.on(MouseEvent.onClick, () => {
-      connection.join('TEST98');
+      transmission.join('TEST98');
       // connection.connection.send({type: 'host.ready', data: {}} as IPayLoad);
       // connection.connection.send({type: 'peer.conected', data: {}} as IPayLoad);
       this.scene.start('setup');

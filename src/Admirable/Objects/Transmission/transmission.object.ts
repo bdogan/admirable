@@ -5,7 +5,10 @@ export interface IPayload {
   data?: object;
 }
 
-export class Transmission extends Phaser.Events.EventEmitter {
+/**
+ * Simple singleton class to hold the whole connection through game session.
+ */
+class Transmission extends Phaser.Events.EventEmitter {
 
   public static getInstance(): Transmission {
     if (!Transmission.instance) {
@@ -55,11 +58,15 @@ export class Transmission extends Phaser.Events.EventEmitter {
     });
   }
 
+  // Send data to be emitted by the otherside of the wire.
   public transmit(data: IPayload) {
-    console.log(this.connection);
-    if (this.connection) {
+    // console.log(this.connection);
+    // if (this.connection) {
       this.connection.send(data);
-    }
+    // }
   }
 
 }
+
+// now we dont have to use singleton. but it's still convinced to use.
+export const transmission = Transmission.getInstance();
