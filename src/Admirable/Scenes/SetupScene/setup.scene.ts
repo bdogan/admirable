@@ -17,12 +17,6 @@ export class SetupScene extends Phaser.Scene {
 
   public init(): void {
     console.log('SetupScene initialized.');
-
-    // transmission.on('enemy.ready', () => {
-    //   Notification.create(this, 'Enemy is ready.');
-    //   this.isEnemyReady = true;
-    //   console.log(this.isEnemyReady);
-    // });
   }
 
   public create(): void {
@@ -51,6 +45,12 @@ export class SetupScene extends Phaser.Scene {
     button.text.setFontSize(32);
 
     button.on(MouseEvent.onClick, (e: any) => {
+
+      // If connection between pairs not established don't go to the game scene.
+      if (!transmission.connection) {
+        Notification.create(this, 'Enemy is not connected', 200);
+        return;
+      }
 
       if (!dock.isPlacementValid) {
         Notification.create(this, 'Placement is not valid!');

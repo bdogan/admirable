@@ -5,6 +5,7 @@ import { Peer } from '../../Objects/P2P/Peer';
 import { Sender } from '../../Objects/P2P/Sender';
 import { transmission } from '../../Objects/Transmission';
 import { IPayload } from '../../Objects/Transmission/transmission.object';
+import { gameState } from '../../Objects/GameState/gameState.object';
 
 // const connection = Transmission.getInstance();
 
@@ -19,8 +20,8 @@ export class DemoScene extends Phaser.Scene {
     const k = new Button(this, 'host', 64, 64, 120, 48);
     this.add.existing(k);
     k.on(MouseEvent.onClick, () => {
+      gameState.turn = true;
       transmission.host('TEST98');
-      // connection.connection.send({type: 'host.ready'} as IPayLoad);
       this.scene.start('setup');
     });
 
@@ -29,8 +30,6 @@ export class DemoScene extends Phaser.Scene {
 
     m.on(MouseEvent.onClick, () => {
       transmission.join('TEST98');
-      // connection.connection.send({type: 'host.ready', data: {}} as IPayLoad);
-      // connection.connection.send({type: 'peer.conected', data: {}} as IPayLoad);
       this.scene.start('setup');
     });
 

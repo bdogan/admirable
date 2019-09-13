@@ -30,10 +30,14 @@ export class Enemy extends Phaser.GameObjects.Zone {
     this.setInteractive();
 
     this.on('pointerdown', (p: Phaser.Input.Pointer, x: number, y: number) => {
-
       if (!gameState.turn) {
+        Notification.create(this.scene, 'Not your turn', 100);
         return;
       }
+
+      console.log(gameState);
+
+      transmission.transmit({type: 'debug', data: {p: 'düzgün'}});
 
       const _x = this.snap(x), _y =  this.snap(y);
       transmission.transmit({type: 'enemy.hit', data: {x: _x, y: _y}});
@@ -50,18 +54,23 @@ export class Enemy extends Phaser.GameObjects.Zone {
       this.hitArea.fillStyle(h ? 0xFF0000 : 0x000000, 1);
       this.hitArea.fillRectShape(this.hitBox);
 
-      if (!h) {
-        // gameState.turn = false;
-        // transmission.transmit({type: 'enemy.turn'});
-      }
-
-      // console.log(d, this.hitBox);
     });
 
     transmission.on('enemy.onHit', (data: {hit: boolean, x: number, y: number}) => {
       this.hitBox.setPosition(data.x + this.scene.sys.canvas.width / 2, data.y);
       this.hitArea.fillStyle(data.hit ? 0xFF0000 : 0x000000, 1);
       this.hitArea.fillRectShape(this.hitBox);
+
+      if (!data.hit) {
+        Notification.create(this.scene, 'Miss', 250);
+        gameState.turn = false;
+        transmission.transmit({type: 'enemy.turn'});
+      }
+
+    });
+
+    transmission.on('enemy.turn', () => {
+      Notification.create(this.scene, 'Your Turn', 480);
     });
 
     // digusting cursor:
