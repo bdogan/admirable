@@ -20,9 +20,10 @@ export class DemoScene extends Phaser.Scene {
     const k = new Button(this, 'host', 64, 64, 120, 48);
     this.add.existing(k);
     k.on(MouseEvent.onClick, () => {
+      // Host goes first.
       gameState.turn = true;
       transmission.host('TEST98');
-      this.scene.start('setup');
+      // this.scene.start('setup');
     });
 
     const m = new Button(this, 'join', 220, 64, 120, 48);
@@ -30,20 +31,23 @@ export class DemoScene extends Phaser.Scene {
 
     m.on(MouseEvent.onClick, () => {
       transmission.join('TEST98');
+    });
+
+    transmission.once('connection.established', () => {
       this.scene.start('setup');
     });
 
-    const t = new Button(this, 'send', 380, 64, 120, 48);
-    this.add.existing(t);
-    t.on(MouseEvent.onClick, (p: any) => {
-      // connection.connection.send({type: 'peer.ready', data: {x: p.x, y: p.y}} as IPayLoad);
-    });
+    // const t = new Button(this, 'send', 380, 64, 120, 48);
+    // this.add.existing(t);
+    // t.on(MouseEvent.onClick, (p: any) => {
+    //   // connection.connection.send({type: 'peer.ready', data: {x: p.x, y: p.y}} as IPayLoad);
+    // });
 
-    const l =  new Button(this, 'change scene', 360, 400, 280, 48);
-    this.add.existing(l);
-    l.on(MouseEvent.onClick, () => {
-      this.scene.start('setup');
-    });
+    // const l =  new Button(this, 'change scene', 360, 400, 280, 48);
+    // this.add.existing(l);
+    // l.on(MouseEvent.onClick, () => {
+    //   this.scene.start('setup');
+    // });
 
     // connection.on('enemy.ready', (d: IPayLoad) => {
     //   console.log('enemy is ready with this info ', d);

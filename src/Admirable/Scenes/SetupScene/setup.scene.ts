@@ -48,7 +48,7 @@ export class SetupScene extends Phaser.Scene {
 
       // If connection between pairs not established don't go to the game scene.
       if (!transmission.connection) {
-        Notification.create(this, 'Enemy is not connected', 200);
+        Notification.create(this, 'Wait for an opponent.', 200);
         return;
       }
 

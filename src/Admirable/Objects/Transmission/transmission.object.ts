@@ -26,12 +26,21 @@ class Transmission extends Phaser.Events.EventEmitter {
   public host(id: string) {
     // init with given id.
     this.init(id);
+
+    // Triggering when a peer is connected.
     this.peer.on('connection', (c) => {
       this.connection = c;
 
+      // Start listening for the incoming data from the peer when the connection is established.
       this.connection.on('data', (d: IPayload) => {
         this.emit(d.type, d.data);
       });
+
+    });
+
+    this.peer.on('open', (c) => {
+      // When the connection is established emit the connection.established event.
+      this.emit('connection.established');
     });
   }
 
@@ -40,8 +49,13 @@ class Transmission extends Phaser.Events.EventEmitter {
     this.init();
     this.connection = this.peer.connect(id);
 
-    this.connection.on('data', (d: IPayload) => {
-      this.emit(d.type, d.data);
+    this.peer.on('open', () => {
+
+      this.connection.on('data', (d: IPayload) => {
+        this.emit(d.type, d.data);
+      });
+
+      this.emit('connection.established');
     });
   }
 

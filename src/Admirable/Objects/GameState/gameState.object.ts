@@ -21,5 +21,3 @@ transmission.once('enemy.ready', () => {
 transmission.on('enemy.turn', () => {
   gameState.turn = true;
 });
-
-
