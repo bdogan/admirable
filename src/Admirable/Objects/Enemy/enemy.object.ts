@@ -47,11 +47,11 @@ export class Enemy extends Phaser.GameObjects.Zone {
     this.transmission.on('enemy.hit', (d: {x: number, y: number}) => {
       this.hitBox.setPosition(d.x - this.scene.sys.canvas.width / 2, d.y);
 
-      const k = this.hitControl();
+      const h = this.hitControl();
 
-      this.transmission.transmit({type: 'enemy.onHit', data:{hit: k, x: d.x, y: d.y}});
+      this.transmission.transmit({type: 'enemy.onHit', data: {hit: h, x: d.x, y: d.y}});
 
-      this.hitArea.fillStyle(k ? 0xFF0000 : 0x000000, 1);
+      this.hitArea.fillStyle(h ? 0xFF0000 : 0x000000, 1);
       this.hitArea.fillRectShape(this.hitBox);
       console.log(d, this.hitBox);
     });
@@ -66,15 +66,26 @@ export class Enemy extends Phaser.GameObjects.Zone {
     const k = new Phaser.GameObjects.Rectangle(this.scene, 0, 0, BoardConfig.gridSize, BoardConfig.gridSize).setOrigin(0);
     k.setStrokeStyle(3, 0xFF0000, 1);
     this.scene.add.existing(k);
+    let s_x = 0, s_y = 0;
     this.scene.input.on('pointermove', (p: Phaser.Input.Pointer) => {
       const _x = this.snap(p.x), _y = this.snap(p.y);
+
+      const isChanged = !!((s_x - _x) || (s_y - _y));
+
+      if (!isChanged) {
+        return;
+      }
+
+      s_x = _x;
+      s_y = _y;
+
       this.transmission.transmit({type: 'enemy.cursor', data: {x: _x, y: _y}});
     });
 
     this.transmission.on('enemy.cursor', (d: {x: number, y: number}) => {
       let _x = d.x;
       const _y = d.y;
-      if (d.x >= this.scene.sys.canvas.width / 2){
+      if (d.x >= this.scene.sys.canvas.width / 2) {
         _x = d.x - this.scene.sys.canvas.width / 2;
       } else {
         _x = d.x +  this.scene.sys.canvas.width / 2;

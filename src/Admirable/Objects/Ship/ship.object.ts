@@ -207,7 +207,7 @@ export class Ship extends Phaser.GameObjects.Container {
   }
 
   /**
-   * Determinate if the ship is the inside of the placement area.
+   * Determinate if the ship is inside of the placement area.
    */
   public get isWithin(): boolean {
 

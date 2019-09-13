@@ -4,7 +4,7 @@ import { Table } from '../../Objects/UI/Table';
 import { Peer } from '../../Objects/P2P/Peer';
 import { Sender } from '../../Objects/P2P/Sender';
 import { Transmission } from '../../Objects/Transmission';
-import { IPayLoad } from '../../Objects/Transmission/transmission.object';
+import { IPayload } from '../../Objects/Transmission/transmission.object';
 
 const connection = Transmission.getInstance();
 
@@ -29,17 +29,17 @@ export class DemoScene extends Phaser.Scene {
     m.on(MouseEvent.onClick, () => {
       connection.join('TEST98');
       // connection.connection.send({type: 'host.ready', data: {}} as IPayLoad);
-      // connection.connection.send({type: 'peer.connected', data: {}} as IPayLoad);
+      // connection.connection.send({type: 'peer.conected', data: {}} as IPayLoad);
       this.scene.start('setup');
     });
 
-    const t = new Button(this, 'send', 360, 64, 120, 48);
+    const t = new Button(this, 'send', 380, 64, 120, 48);
     this.add.existing(t);
-    t.on(MouseEvent.onClick, () => {
-      connection.connection.send({a: 'b'});
+    t.on(MouseEvent.onClick, (p: any) => {
+      // connection.connection.send({type: 'peer.ready', data: {x: p.x, y: p.y}} as IPayLoad);
     });
 
-    const l =  new Button(this, 'change scene', 360, 400, 120, 48);
+    const l =  new Button(this, 'change scene', 360, 400, 280, 48);
     this.add.existing(l);
     l.on(MouseEvent.onClick, () => {
       this.scene.start('setup');

@@ -5,7 +5,7 @@ import { Notification } from '../../Objects/UI/Notification';
 import { Cursor } from '../../Objects/UI/Cursor';
 import { Dock, IExport } from '../../Objects/Ship';
 import { Transmission } from '../../Objects/Transmission';
-import { IPayLoad } from '../../Objects/Transmission/transmission.object';
+import { IPayload } from '../../Objects/Transmission/transmission.object';
 
 const transmission = Transmission.getInstance();
 
@@ -26,6 +26,7 @@ export class SetupScene extends Phaser.Scene {
     console.log('SetupScene initialized.');
 
     transmission.on('enemy.ready', () => {
+      Notification.create(this, 'Enemy is ready.');
       this.isEnemyReady = true;
       console.log(this.isEnemyReady);
     });
@@ -69,7 +70,7 @@ export class SetupScene extends Phaser.Scene {
         return;
       }
 
-      transmission.transmit({type: 'enemy.ready'} as IPayLoad);
+      transmission.transmit({type: 'enemy.ready'} as IPayload);
 
       if (!this.isEnemyReady) {
         Notification.create(this, 'Enemy is not ready!');
