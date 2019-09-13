@@ -24,6 +24,7 @@ export class JoinScene extends Phaser.Scene {
     // Join remote client
     transmission.join(data.remoteId);
 
+    // Placeholder text
     this.status.text = 'Trying connect to: ' + data.remoteId;
 
     // Peer open event
@@ -31,15 +32,7 @@ export class JoinScene extends Phaser.Scene {
       console.log(c);
       this.status.text = 'Connected to: ' + transmission.remoteId;
 
-      // If a connection already opened
-      transmission.connection.on('open', () => {
-        transmission.connection.send({text: 'Connected already.'});
-        setTimeout(() => {
-          transmission.connection.close();
-        }, 500);
-      });
-
-      // Change scene after 3 minutes
+      // Change scene after 1 minute
       setTimeout(() => {
         this.scene.start('setup');
       }, 1000);

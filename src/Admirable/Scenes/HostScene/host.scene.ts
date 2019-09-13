@@ -45,5 +45,13 @@ export class HostScene extends Phaser.Scene {
       });
       }
     });
+
+    // Peer error handler
+    transmission.peer.on('error', (err) => {
+      this.status.text = err;
+      setTimeout(() => {
+        this.scene.start('menu');
+      }, 3000);
+    });
   }
 }
