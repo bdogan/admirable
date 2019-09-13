@@ -80,9 +80,7 @@ export class Transmission extends Phaser.Events.EventEmitter {
     }
 
     // Connect remote client
-    this.connection = this.pPeer.connect(id, {
-      reliable: true
-    });
+    this.connection = this.pPeer.connect(id);
 
     this.pRemoteId = this.connection.peer;
 

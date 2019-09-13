@@ -11,6 +11,8 @@ export class MenuScene extends Phaser.Scene {
 
   private grid!: Phaser.GameObjects.Graphics;
 
+  private music: any;
+
   public preload() {
     this.load.image('logo', logoImg);
     this.load.image('battleship', battleshipImg);
@@ -24,11 +26,14 @@ export class MenuScene extends Phaser.Scene {
   // Create
   public create(): void {
 
-    const music = this.sound.add('menu_music', {
+    this.music = this.sound.add('menu_music', {
       volume: .7,
       loop: true,
     });
-    music.play();
+
+    if (!this.music.isPlaying) {
+      this.music.play();
+    }
 
     this.grid = this.add.graphics();
 
@@ -70,6 +75,7 @@ export class MenuScene extends Phaser.Scene {
 
     startButton.on(MouseEvent.onClick, (e: any) => {
       this.scene.start('lobby');
+      this.music.stop();
     });
   }
 

@@ -27,7 +27,8 @@ export class JoinScene extends Phaser.Scene {
     this.status.text = 'Trying connect to: ' + data.remoteId;
 
     // Peer open event
-    transmission.connection.on('open', () => {
+    transmission.connection.on('open', (c: any) => {
+      console.log(c);
       this.status.text = 'Connected to: ' + transmission.remoteId;
 
       // If a connection already opened
