@@ -24,6 +24,8 @@ export class JoinScene extends Phaser.Scene {
     // Join remote client
     transmission.join(data.remoteId);
 
+    this.status.text = 'Trying connect to: ' + data.remoteId;
+
     // Peer open event
     transmission.connection.on('open', () => {
       this.status.text = 'Connected to: ' + transmission.remoteId;
@@ -40,6 +42,14 @@ export class JoinScene extends Phaser.Scene {
       setTimeout(() => {
         this.scene.start('setup');
       }, 1000);
+    });
+
+    // Peer error handler
+    transmission.peer.on('error', (err) => {
+      this.status.text = err;
+      setTimeout(() => {
+        this.scene.start('menu');
+      }, 3000);
     });
   }
 }

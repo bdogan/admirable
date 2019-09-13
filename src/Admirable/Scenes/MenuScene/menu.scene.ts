@@ -38,7 +38,7 @@ export class MenuScene extends Phaser.Scene {
     const imgLogo = this.add.image(0, 0, 'logo');
     imgLogo.setPosition(this.sys.canvas.width / 2, -imgLogo.height);
 
-    // Continuous animation for batlleship.
+    // Continuous animation for battleship.
     this.tweens.add({
       targets: [imgBattleShip],
       y: this.sys.game.canvas.height + 50,
