@@ -2,6 +2,7 @@ import { AdmirableScene } from '../admirable.scene';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
 const logoImg = require('./Images/admirable-logotype.png');
 const battleshipImg = require('./Images/battleship.png');
+const menuMusic = require('./Musics/admirable-menu.ogg');
 
 @AdmirableScene({
   key: 'menu'
@@ -13,6 +14,7 @@ export class MenuScene extends Phaser.Scene {
   public preload() {
     this.load.image('logo', logoImg);
     this.load.image('battleship', battleshipImg);
+    this.load.audio('menu_music', menuMusic);
   }
 
   public init(): void {
@@ -21,6 +23,12 @@ export class MenuScene extends Phaser.Scene {
 
   // Create
   public create(): void {
+
+    const music = this.sound.add('menu_music', {
+      volume: .7,
+      loop: true,
+    });
+    music.play();
 
     this.grid = this.add.graphics();
 

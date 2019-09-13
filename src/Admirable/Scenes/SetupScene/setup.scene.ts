@@ -6,15 +6,12 @@ import { Cursor } from '../../Objects/UI/Cursor';
 import { Dock, IExport } from '../../Objects/Ship';
 import { Transmission } from '../../Objects/Transmission';
 import { IPayLoad } from '../../Objects/Transmission/transmission.object';
-import { Link } from '../../Objects/Link';
 
 const transmission = Transmission.getInstance();
 
 const shipTopImg = require('../../Objects/Ship/Images/ship_top.png');
 const shipMiddleImg = require('../../Objects/Ship/Images/ship_middle.png');
 const shipBottomImg = require('../../Objects/Ship/Images/ship_bottom.png');
-
-const link = Link.getInstance();
 
 @AdmirableScene({
   key: 'setup'
