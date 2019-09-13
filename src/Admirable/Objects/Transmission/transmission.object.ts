@@ -1,6 +1,6 @@
 import { Peer } from '../P2P/Peer';
 
-export interface IPayLoad {
+export interface IPayload {
   type: string;
   data?: object;
 }
@@ -59,9 +59,8 @@ export class Transmission extends Phaser.Events.EventEmitter {
     this.pPeer.on('connection', (c: any) => {
       this.connection = c;
 
-      this.connection.on('data', (d: IPayload) => {
       this.pIsConnected = true;
-      this.connection.on('data', (d: IPayLoad) => {
+      this.connection.on('data', (d: IPayload) => {
         this.emit(d.type, d.data);
       });
 
@@ -80,7 +79,6 @@ export class Transmission extends Phaser.Events.EventEmitter {
       this.connection.close();
     }
 
-    this.connection.on('data', (d: IPayload) => {
     // Connect remote client
     this.connection = this.pPeer.connect(id, {
       reliable: true
@@ -89,7 +87,7 @@ export class Transmission extends Phaser.Events.EventEmitter {
     this.pRemoteId = this.connection.peer;
 
     // Data event
-    this.connection.on('data', (d: IPayLoad) => {
+    this.connection.on('data', (d: IPayload) => {
       this.emit(d.type, d.data);
     });
 
