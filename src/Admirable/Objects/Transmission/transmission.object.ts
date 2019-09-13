@@ -1,4 +1,4 @@
-import { Peer } from '../P2P/Peer';
+import Peer from 'peerjs';
 
 export interface IPayload {
   type: string;
@@ -55,7 +55,6 @@ export class Transmission extends Phaser.Events.EventEmitter {
 
   // Host method
   public host(id: string) {
-    // init with given id.
     this.pPeer.on('connection', (c: any) => {
       this.connection = c;
 
@@ -72,8 +71,6 @@ export class Transmission extends Phaser.Events.EventEmitter {
 
   // Join method
   public join(id: string) {
-    // Init empty to connect.
-
     // If there's a connection already close it
     if (this.connection) {
       this.connection.close();
@@ -107,17 +104,6 @@ export class Transmission extends Phaser.Events.EventEmitter {
     });
     this.isHost = isHost;
     this.pLocalId = this.peer.id;
-
-    // Peer close event
-    this.peer.on('close', () => {
-      this.connection = null;
-      return 'Link destroyed.';
-    });
-
-    // Peer error handler
-    this.peer.on('error', (err) => {
-      return err;
-    });
   }
 
   public transmit(data: IPayload) {
