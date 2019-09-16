@@ -34,6 +34,11 @@ export class Enemy extends Phaser.GameObjects.Zone {
       transmission.transmit({type: 'debug', data: {p: 'düzgün'}});
       console.log(gameState);
 
+      if (!gameState.isEnemyReady) {
+        Notification.create(this.scene, 'Enemy is not ready yet.', 300);
+        return;
+      }
+
       if (!gameState.turn) {
         Notification.create(this.scene, 'Not your turn', 100);
         return;

@@ -27,9 +27,19 @@ class Transmission extends Phaser.Events.EventEmitter {
     // init with given id.
     this.init(id);
 
+    this.peer.on('open', (c) => {
+      // When the connection is established emit the connection.established event.
+      this.emit('connection.established');
+    });
+
     // Triggering when a peer is connected.
     this.peer.on('connection', (c) => {
       this.connection = c;
+
+      // Doing like this we can wait a peer to be connected to the host and then change the scene on the both end.
+      // this.connection.on('open', () => {
+      //   this.emit('connection.established');
+      // });
 
       // Start listening for the incoming data from the peer when the connection is established.
       this.connection.on('data', (d: IPayload) => {
@@ -38,24 +48,23 @@ class Transmission extends Phaser.Events.EventEmitter {
 
     });
 
-    this.peer.on('open', (c) => {
-      // When the connection is established emit the connection.established event.
-      this.emit('connection.established');
-    });
   }
 
   public join(id: string) {
     // Init empty to connect.
     this.init();
     this.connection = this.peer.connect(id);
+    this.peer.on('open', (c) => {
 
-    this.peer.on('open', () => {
+      // if connection established with the host, yield the corresponding event to be handled once the connection is safe to use.
+      this.connection.on('open', () => {
+        this.emit('connection.established');
+      });
 
       this.connection.on('data', (d: IPayload) => {
         this.emit(d.type, d.data);
       });
 
-      this.emit('connection.established');
     });
   }
 
@@ -72,12 +81,9 @@ class Transmission extends Phaser.Events.EventEmitter {
     });
   }
 
-  // Send data to be emitted by the otherside of the wire.
+  // Send the data to be emitted by the otherside of the wire.
   public transmit(data: IPayload) {
-    // console.log(this.connection);
-    // if (this.connection) {
       this.connection.send(data);
-    // }
   }
 
 }
