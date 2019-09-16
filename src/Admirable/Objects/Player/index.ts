@@ -1,1 +1,1 @@
-export { Player } from './player.object';
+export { player, Player } from './player.object';

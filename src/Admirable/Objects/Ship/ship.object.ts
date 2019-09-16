@@ -11,6 +11,8 @@ export class Ship extends Phaser.GameObjects.Container {
   // Orthogonality of the ship. True if it's vertical.
   public orthogonal: boolean = false;
 
+  public life: number;
+
   // The dock this ship belongs to.
   private dock: Dock;
 
@@ -33,6 +35,7 @@ export class Ship extends Phaser.GameObjects.Container {
 
     this.dock = dock;
     this.extent = length;
+    this.life = this.extent;
     this.orthogonal = orthogonal;
     this.interactive = interactive;
 

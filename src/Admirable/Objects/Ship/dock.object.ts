@@ -16,12 +16,9 @@ export class Dock {
   // Dock valid area.
   public area: Phaser.Geom.Rectangle;
 
-  private setup: boolean;
-
-  constructor(scene: Phaser.Scene, setup: boolean = false) {
+  constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.ships = [];
-    this.setup = setup;
 
     // The area this dock to be placed abstractly.
     this.area = new Phaser.Geom.Rectangle(0, 0, this.scene.sys.canvas.width / 2, this.scene.sys.canvas.height);
@@ -33,10 +30,10 @@ export class Dock {
    * Build the dock with the given ships.
    * @param ships Ship array to build with this dock.
    */
-  public build(ships: IExport[]): void {
+  public build(ships: IExport[], setup: boolean = false): void {
     // this.ships = []; this.ships.foreach ship.destoy?.
     ships.forEach((ship) => {
-      const _ship = new Ship(this, this.scene, ship.extent, ship.orthogonal, this.setup);
+      const _ship = new Ship(this, this.scene, ship.extent, ship.orthogonal, setup);
       _ship._setPosition(ship.x, ship.y);
       this.ships.push(_ship);
     });
@@ -124,6 +121,11 @@ export class Dock {
       (rectangle.y >= this.area.y && rectangle.y <= this.area.bottom) &&
       (rectangle.bottom >= this.area.y && rectangle.bottom <= this.area.bottom)
     );
+  }
+
+  // Returns the overall sum of the ship's life.
+  public get life(): number {
+    return this.ships.reduce((total, ship) => total + ship.life, 0);
   }
 
   /**

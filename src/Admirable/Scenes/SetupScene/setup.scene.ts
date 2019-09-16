@@ -6,7 +6,7 @@ import { Cursor } from '../../Objects/UI/Cursor';
 import { Dock, IExport } from '../../Objects/Ship';
 import { Transmission } from '../../Objects/Transmission';
 import { IPayload } from '../../Objects/Transmission/transmission.object';
-import { Player } from '../../Objects/Player';
+import { Player, player } from '../../Objects/Player';
 
 const transmission = Transmission.getInstance();
 
@@ -58,9 +58,11 @@ export class SetupScene extends Phaser.Scene {
       {x: startX + 2 * 32, y: startY + 7 * 32, extent: 2, orthogonal: true},
     ];
 
-    const dock = new Dock(this, true);
+    // set player's scene.
+    player.scene = this;
 
-    dock.build(starterShips);
+    // Build player's ship with the starterShip array in setup mode.
+    player.dock.build(starterShips, true);
 
     // Deploy Button
     const bw = 160, bh = 64, bx = (this.sys.canvas.width) - (bw / 2) - 16, by = (this.sys.canvas.height) - (bh / 2) - 16;
@@ -70,13 +72,13 @@ export class SetupScene extends Phaser.Scene {
     this.readyButton.text.setFontSize(32);
 
     this.readyButton.on('player.ready', () => {
-      const player = Player.getInstance(0, dock.ships.length);
-      this.scene.start('game', {exported: dock.export()});
+      // const player = Player.getInstance(0, dock.ships.length);
+      this.scene.start('game', {exported: player.dock.export()});
     });
 
     this.readyButton.on(MouseEvent.onClick, (e: any) => {
 
-      if (!dock.isPlacementValid) {
+      if (!player.dock.isPlacementValid) {
         Notification.create(this, 'Placement is not valid!');
         return;
       }
@@ -84,12 +86,12 @@ export class SetupScene extends Phaser.Scene {
       this.readyClicked = true;
       this.readyButton.disable();
 
-      transmission.transmit({type: 'enemy.ready'} as IPayload);
+      // transmission.transmit({type: 'enemy.ready'} as IPayload);
 
-      if (!this.isEnemyReady) {
-        Notification.create(this, 'Enemy is not ready!');
-        return;
-      }
+      // if (!this.isEnemyReady) {
+      //   Notification.create(this, 'Enemy is not ready!');
+      //   return;
+      // }
 
       this.readyButton.emit('player.ready');
     });
@@ -101,7 +103,7 @@ export class SetupScene extends Phaser.Scene {
     shuffle.text.setFontSize(32);
 
     shuffle.on(MouseEvent.onClick, () => {
-      dock.randomizePlacement(true);
+      player.dock.randomizePlacement(true);
     });
 
     this.add.existing(shuffle);
