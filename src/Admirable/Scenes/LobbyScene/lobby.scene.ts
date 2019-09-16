@@ -3,6 +3,8 @@ import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { Input } from '../../Objects/UI/Input';
 import { Transmission } from '../../Objects/Transmission';
 
+const lobbyMusic = require('./Musics/admirable-lobby.ogg');
+
 const transmission = Transmission.getInstance();
 
 @AdmirableScene({
@@ -10,8 +12,26 @@ const transmission = Transmission.getInstance();
 })
 export class LobbyScene extends Phaser.Scene {
 
+  private music: any;
+
+  public preload(): void {
+    this.load.audio('lobby_music', lobbyMusic);
+  }
+
   // Create
-  public create() {
+  public create(): void {
+
+    // Add music to scene
+    this.music = this.sound.add('lobby_music', {
+      volume: .7,
+      loop: true,
+    });
+
+    // Play music with condition
+    if (!this.music.isPlaying) {
+      this.music.play();
+    }
+
     /*
     Host Input
      */

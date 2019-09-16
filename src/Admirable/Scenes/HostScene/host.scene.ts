@@ -33,7 +33,7 @@ export class HostScene extends Phaser.Scene {
     if (transmission.connection) {
       this.status.text = 'Connected to: ' + transmission.remoteId;
 
-      // Change scene after 3 minutes
+      // Change scene after 1 minutes
       setTimeout(() => {
         this.scene.start('setup');
       }, 1000);

@@ -13,24 +13,27 @@ export class MenuScene extends Phaser.Scene {
 
   private music: any;
 
+  // Preload
   public preload() {
     this.load.image('logo', logoImg);
     this.load.image('battleship', battleshipImg);
     this.load.audio('menu_music', menuMusic);
   }
 
+  // Init
   public init(): void {
     console.log('MenuScene initialized');
   }
 
   // Create
   public create(): void {
-
+    // Add music to scene
     this.music = this.sound.add('menu_music', {
       volume: .7,
       loop: true,
     });
 
+    // Play music with condition
     if (!this.music.isPlaying) {
       this.music.play();
     }

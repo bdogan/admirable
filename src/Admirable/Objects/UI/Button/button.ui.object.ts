@@ -16,18 +16,30 @@ export class Button extends Phaser.GameObjects.Container {
   public text: Phaser.GameObjects.Text;
   private background: Phaser.GameObjects.Rectangle;
 
+  private currentScene!: Phaser.Scene;
+
   /**
    * clickState helps us to ensure if the click event happened within the button's bounds.
    */
   private clickState: boolean = false;
 
-  constructor(scene: Phaser.Scene, text: string, x: number, y: number, width: number = 256, height: number = 64) {
+  private pDisabled: boolean = false;
+  public get disabled(): boolean {
+    return this.pDisabled;
+  }
+  public set disabled(v: boolean) {
+    this.pDisabled = v;
+  }
+
+  public constructor(scene: Phaser.Scene, text: string, x: number, y: number, width: number = 256, height: number = 64) {
     super(scene, 0, 0, []);
 
     this.x = x; // + width / 2;
     this.y = y; // + height / 2;
     this.width  = width;
     this.height = height;
+
+    this.currentScene = scene;
 
     // button background.
     this.background = new Phaser.GameObjects.Rectangle(scene, 0, 0, this.width, this.height, 0x00A8E8);
@@ -40,14 +52,28 @@ export class Button extends Phaser.GameObjects.Container {
     // Set the container interactive to handle event inputs.
     this.setInteractive(this.background, Phaser.Geom.Rectangle.Contains);
 
+    this.enable();
+
+    // workaround for cursor style freezing problem  whenever scene changes.
+    scene.events.once('shutdown', () => {
+      scene.input.setDefaultCursor('default');
+    });
+
+    // Add the button container to the scene at object creation.
+    // scene.add.existing(this);
+  }
+
+  public enable() {
+    this.disabled = false;
+    this.background.setFillStyle(0x00A8E8, 1);
     this.on(MouseEvent.onEnter, (e: any) => {
-      scene.input.setDefaultCursor('pointer');
+      this.currentScene.input.setDefaultCursor('pointer');
 
       this.background.setFillStyle(0x00A8E8, 0.5);
     });
 
     this.on(MouseEvent.onLeave, (e: any) => {
-      scene.input.setDefaultCursor('default');
+      this.currentScene.input.setDefaultCursor('default');
 
       this.background.setFillStyle(0x00A8E8);
 
@@ -66,14 +92,14 @@ export class Button extends Phaser.GameObjects.Container {
         this.emit(MouseEvent.onClick, e);
       }
     });
-
-    // workaround for cursor style freezing problem  whenever scene changes.
-    scene.events.once('shutdown', () => {
-      scene.input.setDefaultCursor('default');
-    });
-
-    // Add the button container to the scene at object creation.
-    // scene.add.existing(this);
+  }
+  public disable() {
+    this.disabled = true;
+    this.background.setFillStyle(0x00A8E8, 0.5);
+    this.off(MouseEvent.onEnter);
+    this.off(MouseEvent.onDown);
+    this.off(MouseEvent.onLeave);
+    this.off(MouseEvent.onUp);
   }
 
 }

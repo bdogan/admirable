@@ -6,6 +6,7 @@ import { Cursor } from '../../Objects/UI/Cursor';
 import { Dock, IExport } from '../../Objects/Ship';
 import { Transmission } from '../../Objects/Transmission';
 import { IPayload } from '../../Objects/Transmission/transmission.object';
+import { Player } from '../../Objects/Player';
 
 const transmission = Transmission.getInstance();
 
@@ -19,8 +20,10 @@ const shipBottomImg = require('../../Objects/Ship/Images/ship_bottom.png');
 
 export class SetupScene extends Phaser.Scene {
 
-  private isPlayerReay: boolean = false;
   private isEnemyReady: boolean = false;
+  private readyClicked: boolean = false;
+
+  private readyButton!: Button;
 
   public init(): void {
     console.log('SetupScene initialized.');
@@ -29,6 +32,9 @@ export class SetupScene extends Phaser.Scene {
       Notification.create(this, 'Enemy is ready.');
       this.isEnemyReady = true;
       console.log(this.isEnemyReady);
+      if (this.readyClicked) {
+        this.readyButton.emit('player.ready');
+      }
     });
   }
 
@@ -59,16 +65,24 @@ export class SetupScene extends Phaser.Scene {
     // Deploy Button
     const bw = 160, bh = 64, bx = (this.sys.canvas.width) - (bw / 2) - 16, by = (this.sys.canvas.height) - (bh / 2) - 16;
 
-    const button = new Button(this, 'READY', bx, by, bw, bh);
+    this.readyButton = new Button(this, 'READY', bx, by, bw, bh);
 
-    button.text.setFontSize(32);
+    this.readyButton.text.setFontSize(32);
 
-    button.on(MouseEvent.onClick, (e: any) => {
+    this.readyButton.on('player.ready', () => {
+      const player = Player.getInstance(0, dock.ships.length);
+      this.scene.start('game', {exported: dock.export()});
+    });
+
+    this.readyButton.on(MouseEvent.onClick, (e: any) => {
 
       if (!dock.isPlacementValid) {
         Notification.create(this, 'Placement is not valid!');
         return;
       }
+
+      this.readyClicked = true;
+      this.readyButton.disable();
 
       transmission.transmit({type: 'enemy.ready'} as IPayload);
 
@@ -77,10 +91,10 @@ export class SetupScene extends Phaser.Scene {
         return;
       }
 
-      this.scene.start('game', {exported: dock.export()});
+      this.readyButton.emit('player.ready');
     });
 
-    this.add.existing(button);
+    this.add.existing(this.readyButton);
 
     // Shuffle button.
     const shuffle =  new Button(this, 'Shuffle', bx, by - bh - 32, bw, bh);
