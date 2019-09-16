@@ -1,1 +1,1 @@
-export {Table} from './table.ui.object';
+export { Table } from './table.ui.object';
