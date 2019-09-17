@@ -25,7 +25,7 @@ export class HostScene extends Phaser.Scene {
     this.status.text = 'Waiting partner... Host: ' + transmission.localId;
 
     // Host client
-    transmission.host(transmission.localId);
+    transmission.host();
 
     // Peer connection event
     transmission.peer.on('connection', (c: any) => {
@@ -53,5 +53,6 @@ export class HostScene extends Phaser.Scene {
         this.scene.start('menu');
       }, 3000);
     });
+
   }
 }

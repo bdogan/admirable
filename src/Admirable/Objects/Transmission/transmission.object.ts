@@ -54,7 +54,7 @@ export class Transmission extends Phaser.Events.EventEmitter {
   }
 
   // Host method
-  public host(id: string) {
+  public host() {
     this.pPeer.on('connection', (c: any) => {
       this.connection = c;
 
@@ -70,14 +70,14 @@ export class Transmission extends Phaser.Events.EventEmitter {
   }
 
   // Join method
-  public join(id: string) {
+  public join(hostId: string) {
     // If there's a connection already close it
     if (this.connection) {
       this.connection.close();
     }
 
     // Connect remote client
-    this.connection = this.pPeer.connect(id);
+    this.connection = this.pPeer.connect(hostId);
 
     this.pRemoteId = this.connection.peer;
 
@@ -91,7 +91,7 @@ export class Transmission extends Phaser.Events.EventEmitter {
   }
 
   // Init method
-  public init(id?: any, isHost: boolean = true): any {
+  public init(id?: any): any {
     this.pPeer = new Peer(id, {
       debug: 2,
       config: {
@@ -102,8 +102,8 @@ export class Transmission extends Phaser.Events.EventEmitter {
         ]
       }
     });
-    this.isHost = isHost;
-    this.pLocalId = this.peer.id;
+    this.isHost = true;
+    this.pLocalId = this.pPeer.id;
   }
 
   public transmit(data: IPayload) {

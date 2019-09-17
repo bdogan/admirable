@@ -2,6 +2,10 @@ import { AdmirableScene } from '../admirable.scene';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { Input } from '../../Objects/UI/Input';
 import { Transmission } from '../../Objects/Transmission';
+import { Table } from '../../Objects/UI/Table';
+
+const axios = require('axios');
+const storageConfig = require('../../storage.config').StorageConfig;
 
 const lobbyMusic = require('./Musics/admirable-lobby.ogg');
 
@@ -32,38 +36,62 @@ export class LobbyScene extends Phaser.Scene {
       this.music.play();
     }
 
-    /*
-    Host Input
-     */
-    const input = new Input(this, 'admirable', this.sys.canvas.width / 2 - 256 / 2, this.sys.canvas.height / 3.5, 256, 40);
-    this.add.existing(input);
+    transmission.host();
 
-    /*
-    Host button
-     */
-    const hostButton = new Button(this, 'Host', this.sys.canvas.width / 2, this.sys.canvas.height / 2);
-    this.add.existing(hostButton);
+    const list: any[] = [];
+    let objs: any;
+    const buttons: Button[] = [];
 
-    // Host button click event
-    hostButton.on(MouseEvent.onClick, (e: any) => {
-      transmission.init(input.text, true);
+    axios.get(storageConfig.url + '/online')
+      .then((response: any) => {
+        if (response.data.result !== undefined || response.data.result !== null || response.data.result !== {}) {
+          objs = response.data.result;
 
-      // Start scene
-      this.scene.start('host');
-    });
+          const ids = Object.keys(objs);
+          const values = Object.values(objs);
 
-    /*
-    Join button
-     */
-    const joinButton = new Button(this, 'Join', this.sys.canvas.width / 2, this.sys.canvas.height / 1.5);
-    this.add.existing(joinButton);
+          let a = 0;
+          for (const i of ids) {
+            /*list.push([
+              i,
+              objs[i].username,
+              objs[i].time,
+            ]);*/
 
-    // Join button click event
-    joinButton.on(MouseEvent.onClick, (e: any) => {
-      transmission.init(null, false);
+            const button = new Button(this, objs[i].username, 300, a * 50 + 50, 500, 50);
 
-      // Start scene
-      this.scene.start('join', { remoteId: input.text });
-    });
+            button.on(MouseEvent.onDown, (e: any) => {
+              transmission.join(i);
+              this.scene.start('setup');
+            });
+
+            this.add.existing(button);
+            buttons.push(button);
+
+            a++;
+          }
+
+          transmission.peer.on('connection', (c: any) => {
+            this.scene.start('setup');
+          });
+
+          transmission.peer.on('disconnected  ', () => {
+            axios.delete(storageConfig.url + '/online/' + transmission.peer.id);
+          });
+
+          if (window.closed) {
+            axios.delete(storageConfig.url + '/online/' + transmission.peer.id);
+          }
+
+          /*
+          const table = new Table(this, 10, 10, 600, 400, [['ID', 'Username', 'Time'], ...list]);
+
+          table.showHead = true;
+
+          this.add.existing(table);
+           */
+        }
+      });
+
   }
 }

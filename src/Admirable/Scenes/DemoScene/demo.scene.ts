@@ -18,7 +18,8 @@ export class DemoScene extends Phaser.Scene {
     const k = new Button(this, 'host', 64, 64, 120, 48);
     this.add.existing(k);
     k.on(MouseEvent.onClick, () => {
-      connection.host('TEST98');
+      connection.init('TEST98');
+      connection.host();
       // connection.connection.send({type: 'host.ready'} as IPayload);
       this.scene.start('setup');
     });
@@ -27,9 +28,10 @@ export class DemoScene extends Phaser.Scene {
     this.add.existing(m);
 
     m.on(MouseEvent.onClick, () => {
+      connection.init();
       connection.join('TEST98');
       // connection.connection.send({type: 'host.ready', data: {}} as IPayload);
-      // connection.connection.send({type: 'peer.conected', data: {}} as IPayload);
+      // connection.connection.send({type: 'peer.connected', data: {}} as IPayload);
       this.scene.start('setup');
     });
 

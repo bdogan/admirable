@@ -65,7 +65,10 @@ export class Enemy extends Phaser.GameObjects.Zone {
 
       this.hitArea.fillStyle(h ? 0xFF0000 : 0x000000, 1);
       this.hitArea.fillRectShape(this.hitBox);
-    //   console.log(d, this.hitBox);
+      console.log(d, this.hitBox);
+      if (h) {
+        this.scene.cameras.main.shake(160, 0.02, true);
+      }
     });
 
     transmission.on('enemy.onHit', (data: {hit: boolean, x: number, y: number}) => {

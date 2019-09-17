@@ -1,8 +1,14 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
+import { Input } from '../../Objects/UI/Input';
+import { Transmission } from '../../Objects/Transmission';
 const logoImg = require('./Images/admirable-logotype.png');
 const battleshipImg = require('./Images/battleship.png');
 const menuMusic = require('./Musics/admirable-menu.ogg');
+const axios = require('axios');
+const storageConfig = require('../../storage.config').StorageConfig;
+
+const transmission = Transmission.getInstance();
 
 @AdmirableScene({
   key: 'menu'
@@ -71,12 +77,28 @@ export class MenuScene extends Phaser.Scene {
       duration: 2000
     });
 
+    const input = new Input(this, 'admirable', this.sys.canvas.width / 2 - 300 / 2, this.sys.canvas.height / 2.5, 300, 40);
+    this.add.existing(input);
+
     // Add start button to the scene.
-    const startButton = new Button(this, 'START', 960 / 2, 480 / 2);
+    const startButton = new Button(this, 'START', this.sys.canvas.width / 2, this.sys.canvas.height / 1.75);
 
     this.add.existing(startButton);
 
+    transmission.init(null);
+    startButton.disable();
+
+    transmission.peer.on('open', () => {
+      input.setText(transmission.peer.id);
+      startButton.enable();
+    });
+
     startButton.on(MouseEvent.onClick, (e: any) => {
+      axios.post(storageConfig.url + '/online/' + transmission.peer.id, {
+        username: input.text,
+        time: Date.now()
+      });
+
       this.scene.start('lobby');
       this.music.stop();
     });

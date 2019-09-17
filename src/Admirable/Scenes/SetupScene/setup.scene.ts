@@ -128,6 +128,7 @@ export class SetupScene extends Phaser.Scene {
     }
 
     // Draw horizontal lines through y-axis.
+
     for (let y = 0, row = (height / gap); y < row; y++) {
       const dY = (y * gap);
       grid.lineBetween(0, dY, width, dY);
