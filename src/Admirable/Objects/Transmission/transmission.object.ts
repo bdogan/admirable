@@ -109,8 +109,17 @@ export class Transmission extends Phaser.Events.EventEmitter {
   public transmit(data: IPayload) {
     // console.log(this.connection);
     // if (this.connection) {
-      this.connection.send(data);
+    this.connection.send(data);
     // }
+  }
+
+  /**
+   * Triggers the given emit at the both sides.
+   * @param data data to be emitted by the both sides.
+   */
+  public sync(data: IPayload) {
+    this.emit(data.type, data.data);
+    this.transmit(data);
   }
 }
 

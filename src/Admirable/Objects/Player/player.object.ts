@@ -24,9 +24,9 @@ export class Player {
   }
 
   constructor() {
-    transmission.on('player.hit', () => {
-      console.log('test');
-    });
+    // transmission.on('player.hit', () => {
+    //   console.log('test');
+    // });
   }
 }
 

@@ -10,7 +10,7 @@ interface IOnHit {hit: boolean; point: IPoint; }
 
 export class Enemy extends Phaser.GameObjects.Zone {
 
-  public static define(scene: Phaser.Scene, x: number, y: number, width: number, height: number): Phaser.GameObjects.Zone {
+  public static define(scene: Phaser.Scene, x: number, y: number, width: number, height: number): Enemy {
     const zone = new Enemy(scene, x, y, width, height);
     return zone;
   }
@@ -35,6 +35,17 @@ export class Enemy extends Phaser.GameObjects.Zone {
     this.registerEvents();
   }
 
+  public _clear() {
+    // this.destroy();
+    // this.hitArea.clear();
+    transmission.off('enemy.hit');
+    transmission.off('player.onHit');
+    // this.hittedArea = [];
+    this.hitArea.clear();
+    this.hittedArea = [];
+    this.scene.children.remove(this);
+  }
+
   private registerEvents(): void {
     this.setInteractive();
 
@@ -46,7 +57,7 @@ export class Enemy extends Phaser.GameObjects.Zone {
       const isHittedBefore = this.hittedArea.some((h) => h.x === hitPoint.x && h.y === hitPoint.y);
 
       if (isHittedBefore) {
-        Notification.create(this.scene, 'You\'ve already hitted that area.', 350);
+        Notification.create('You\'ve already hitted that area.', 350);
         return;
       }
 
@@ -62,7 +73,6 @@ export class Enemy extends Phaser.GameObjects.Zone {
 
       // Enemy checks the hit.
       const hit = this.hitControl();
-
       // Enemy sends the hit result back to the player.
       transmission.transmit({ type: 'player.onHit', data: {hit, point: data} as IOnHit });
 
@@ -78,6 +88,7 @@ export class Enemy extends Phaser.GameObjects.Zone {
 
     // Player's onHit method to draw rectangle according to hit result.
     transmission.on('player.onHit', (data: IOnHit) => {
+      console.log('hitted');
       this.hitBox.setPosition(data.point.x, data.point.y);
       this.hitArea.fillStyle(data.hit ? 0xFF0000 : 0x000000, 1);
       this.hitArea.fillRectShape(this.hitBox);
@@ -87,13 +98,16 @@ export class Enemy extends Phaser.GameObjects.Zone {
   }
 
   private hitControl(): boolean {
+    console.log('pop');
     const ship = player.dock.ships.find((_ship) => Phaser.Geom.Rectangle.Overlaps(_ship.getBounds(), this.hitBox));
+    console.log('ship ', ship);
     let hit = false;
 
     if (ship) {
       ship.life--;
       hit = true;
       transmission.emit('score.update');
+      Notification.create(player.life.toString(), 200);
     }
 
     return hit;

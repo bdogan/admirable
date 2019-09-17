@@ -6,6 +6,7 @@ import { Enemy } from '../../Objects/Enemy';
 import { Notification } from '../../Objects/UI/Notification';
 import { Transmission } from '../../Objects/Transmission';
 import { player } from '../../Objects/Player';
+import { gameState, Turn } from '../../Objects/GameState';
 
 const transmission = Transmission.getInstance();
 
@@ -15,7 +16,17 @@ const transmission = Transmission.getInstance();
 
 export class GameScene extends Phaser.Scene {
 
+  private scoreLabel!: Phaser.GameObjects.Text;
+
   public init(data: any): void {
+    this.scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Life: ' + player.life, {
+      fontFamily: 'Munro',
+      fontSize: '20px',
+      color: '#FFFFFF'
+    });
+
+    this.add.existing(this.scoreLabel);
+
     console.log('GameScene initialized.');
     console.log('passed data: ', data);
   }
@@ -26,11 +37,24 @@ export class GameScene extends Phaser.Scene {
     player.dock.build(data.exported);
 
     const ew = this.sys.canvas.width / 2, eh = this.sys.canvas.height;
-    Enemy.define(this, ew, 0, ew, eh);
+    const e = Enemy.define(this, ew, 0, ew, eh);
 
     this.showGrid();
     Cursor.attach(this);
     this.showScore();
+
+    transmission.once('game.end', () => {
+      Notification.create('Game Over! You\'ll be directed to setup.', 2000);
+      setTimeout(() => {
+        // this.scene.stop();
+        e._clear();
+        this.scene.stop();
+        this.scene.start('setup');
+      }, 2000);
+
+      // transmission.off('game.end');
+    });
+
   }
 
   private showGrid() {
@@ -63,16 +87,14 @@ export class GameScene extends Phaser.Scene {
   }
 
   private showScore() {
-    const scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Life: ' + player.life, {
-      fontFamily: 'Munro',
-      fontSize: '20px',
-      color: '#FFFFFF'
-    });
-
-    this.add.existing(scoreLabel);
-
     transmission.on('score.update', () => {
-      scoreLabel.setText('Life: ' + player.life);
+      this.scoreLabel.setText('Life: ' + player.life.toString());
+
+      if (player.life === 0) {
+        transmission.sync({type: 'game.end'});
+      }
+
     });
+
   }
 }

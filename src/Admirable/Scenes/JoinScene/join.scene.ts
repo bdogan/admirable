@@ -1,5 +1,6 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Transmission } from '../../Objects/Transmission';
+import { gameState, Turn } from '../../Objects/GameState';
 
 const transmission = Transmission.getInstance();
 
@@ -30,7 +31,6 @@ export class JoinScene extends Phaser.Scene {
     // PeerObject open event
     transmission.connection.on('open', () => {
       this.status.text = 'Connected to: ' + transmission.remoteId;
-
       // Change scene after 1 minute
       setTimeout(() => {
         this.scene.start('setup');

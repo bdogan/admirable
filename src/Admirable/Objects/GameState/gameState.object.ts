@@ -1,7 +1,9 @@
 import { Player, player } from '../Player';
+import { transmission } from '../Transmission';
+import { Data } from 'phaser';
+import { Notification } from '../UI/Notification';
 
 export enum Turn {
-  uncertain,
   player,
   enemy
 }
@@ -11,7 +13,7 @@ class GameState {
   public turn: Turn;
 
   constructor() {
-    this.turn = Turn.player;
+    this.turn = Turn.enemy;
   }
 
 }

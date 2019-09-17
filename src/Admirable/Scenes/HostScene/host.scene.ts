@@ -1,5 +1,6 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Transmission } from '../../Objects/Transmission';
+import { gameState, Turn } from '../../Objects/GameState';
 
 const transmission = Transmission.getInstance();
 
@@ -29,20 +30,21 @@ export class HostScene extends Phaser.Scene {
 
     // PeerObject connection event
     transmission.peer.on('connection', (c: any) => {
-    // If connected
-    if (transmission.connection) {
-      this.status.text = 'Connected to: ' + transmission.remoteId;
 
-      // Change scene after 1 minutes
-      setTimeout(() => {
-        this.scene.start('setup');
-      }, 1000);
+      // If connected
+      if (transmission.connection) {
+        this.status.text = 'Connected to: ' + transmission.remoteId;
+        this.flipCoin();
+        // Change scene after 1 minutes
+        setTimeout(() => {
+          this.scene.start('setup');
+        }, 1000);
 
-      // Host data receiving event
-      transmission.connection.on('data', (d: any) => {
-        this.status.text = d.text;
-        console.log(d);
-      });
+        // Host data receiving event
+        transmission.connection.on('data', (d: any) => {
+          this.status.text = d.text;
+          console.log(d);
+        });
       }
     });
 
@@ -55,4 +57,21 @@ export class HostScene extends Phaser.Scene {
     });
 
   }
+
+  /**
+   * Decide who goes first. Host flip's the coin when a peer connected.
+   */
+  private flipCoin(): void {
+    const coin: boolean = Math.random() < 0.5;
+
+    // if true, host goes first.
+    if (coin) {
+      gameState.turn = Turn.player;
+    }
+
+    // notify the peer about who goes first.
+    transmission.transmit({type: 'game.turn', data: {turn: gameState.turn}});
+
+  }
+
 }
