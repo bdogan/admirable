@@ -27,7 +27,7 @@ export class JoinScene extends Phaser.Scene {
     // Placeholder text
     this.status.text = 'Trying connect to: ' + data.remoteId;
 
-    // Peer open event
+    // PeerObject open event
     transmission.connection.on('open', () => {
       this.status.text = 'Connected to: ' + transmission.remoteId;
 
@@ -37,7 +37,7 @@ export class JoinScene extends Phaser.Scene {
       }, 1000);
     });
 
-    // Peer error handler
+    // PeerObject error handler
     transmission.peer.on('error', (err) => {
       this.status.text = err;
       setTimeout(() => {

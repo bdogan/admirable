@@ -77,7 +77,7 @@ export class MenuScene extends Phaser.Scene {
       duration: 2000
     });
 
-    const input = new Input(this, 'admirable', this.sys.canvas.width / 2 - 300 / 2, this.sys.canvas.height / 2.5, 300, 40);
+    const input = new Input(this, '...', this.sys.canvas.width / 2 - 300 / 2, this.sys.canvas.height / 2.5, 300, 40);
     this.add.existing(input);
 
     // Add start button to the scene.
@@ -89,17 +89,19 @@ export class MenuScene extends Phaser.Scene {
     startButton.disable();
 
     transmission.peer.on('open', () => {
-      input.setText(transmission.peer.id);
+      // input.setText(transmission.peer.id);
+      input.setText('admirable' + (Math.floor(Math.random() * 9999) + 1000));
       startButton.enable();
     });
 
     startButton.on(MouseEvent.onClick, (e: any) => {
       axios.post(storageConfig.url + '/online/' + transmission.peer.id, {
+        id: transmission.peer.id,
         username: input.text,
         time: Date.now()
       });
 
-      this.scene.start('lobby');
+      this.scene.start('lobby', { username: input.text});
       this.music.stop();
     });
   }

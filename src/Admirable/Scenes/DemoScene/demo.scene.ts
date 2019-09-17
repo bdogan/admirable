@@ -1,8 +1,7 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { Table } from '../../Objects/UI/Table';
-import { Peer } from '../../Objects/P2P/Peer';
-import { Sender } from '../../Objects/P2P/Sender';
+import { PeerObject } from '../../Objects/P2P/peer.object';
 import { Transmission } from '../../Objects/Transmission';
 import { IPayload } from '../../Objects/Transmission/transmission.object';
 

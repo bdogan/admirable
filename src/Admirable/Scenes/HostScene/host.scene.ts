@@ -27,7 +27,7 @@ export class HostScene extends Phaser.Scene {
     // Host client
     transmission.host();
 
-    // Peer connection event
+    // PeerObject connection event
     transmission.peer.on('connection', (c: any) => {
     // If connected
     if (transmission.connection) {
@@ -46,7 +46,7 @@ export class HostScene extends Phaser.Scene {
       }
     });
 
-    // Peer error handler
+    // PeerObject error handler
     transmission.peer.on('error', (err) => {
       this.status.text = err;
       setTimeout(() => {

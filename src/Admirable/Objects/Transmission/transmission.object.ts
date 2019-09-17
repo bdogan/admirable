@@ -1,4 +1,4 @@
-import Peer from 'peerjs';
+import { Peer } from '../P2P';
 
 export interface IPayload {
   type: string;
@@ -20,7 +20,7 @@ export class Transmission extends Phaser.Events.EventEmitter {
 
   public connection!: any;
 
-  // Peer
+  // PeerObject
   private pPeer!: Peer;
   public get peer() {
     return this.pPeer;

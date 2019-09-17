@@ -3,6 +3,7 @@ import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { Input } from '../../Objects/UI/Input';
 import { Transmission } from '../../Objects/Transmission';
 import { Table } from '../../Objects/UI/Table';
+import { player } from '../../Objects/Player';
 
 const axios = require('axios');
 const storageConfig = require('../../storage.config').StorageConfig;
@@ -23,7 +24,7 @@ export class LobbyScene extends Phaser.Scene {
   }
 
   // Create
-  public create(): void {
+  public create(data: any): void {
 
     // Add music to scene
     this.music = this.sound.add('lobby_music', {
@@ -41,27 +42,40 @@ export class LobbyScene extends Phaser.Scene {
     const list: any[] = [];
     let objs: any;
     const buttons: Button[] = [];
+    let ids: any[];
+    let values: any[];
+
+    const scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Username: ' + data.username, {
+      fontFamily: 'Munro',
+      fontSize: '20px',
+      color: '#FFFFFF'
+    });
+
+    this.add.existing(scoreLabel);
 
     axios.get(storageConfig.url + '/online')
       .then((response: any) => {
         if (response.data.result !== undefined || response.data.result !== null || response.data.result !== {}) {
           objs = response.data.result;
 
-          const ids = Object.keys(objs);
-          const values = Object.values(objs);
+          ids = Object.keys(objs);
+          values = Object.values(objs);
 
           let a = 0;
-          for (const i of ids) {
+          for (const i of values) {
+            if (i.id === transmission.peer.id || i.id === null || i.id === undefined) {
+              continue;
+            }
             /*list.push([
               i,
               objs[i].username,
               objs[i].time,
             ]);*/
 
-            const button = new Button(this, objs[i].username, 300, a * 50 + 50, 500, 50);
+            const button = new Button(this, i.username, 300, a * 50 + 50, 500, 50);
 
             button.on(MouseEvent.onDown, (e: any) => {
-              transmission.join(i);
+              transmission.join(i.id);
               this.scene.start('setup');
             });
 
@@ -91,6 +105,21 @@ export class LobbyScene extends Phaser.Scene {
           this.add.existing(table);
            */
         }
+      })
+      .then(() => {
+        const timeUpdater = setInterval(() => {
+          axios.patch(storageConfig.url + '/online/' + transmission.peer.id, {
+            time: Date.now()
+          });
+        }, 10000);
+
+        const remover = setInterval(() => {
+          values.forEach((e: any) => {
+            if (e.time < (Date.now() - 60 * 1000)) {
+              axios.delete(storageConfig.url + '/online/' + e.id);
+            }
+          });
+        }, 1000);
       });
 
   }
