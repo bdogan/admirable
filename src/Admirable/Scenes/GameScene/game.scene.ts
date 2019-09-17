@@ -22,27 +22,15 @@ export class GameScene extends Phaser.Scene {
 
   public create(data: any): void {
 
-    this.showGrid();
-
     player.scene = this;
     player.dock.build(data.exported);
-
-    const scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Life: ' + player.life, {
-      fontFamily: 'Munro',
-      fontSize: '20px',
-      color: '#FFFFFF'
-    });
-
-    this.add.existing(scoreLabel);
-
-    transmission.on('score.update', () => {
-      scoreLabel.setText('Life: ' + player.life);
-    });
 
     const ew = this.sys.canvas.width / 2, eh = this.sys.canvas.height;
     Enemy.define(this, ew, 0, ew, eh);
 
+    this.showGrid();
     Cursor.attach(this);
+    this.showScore();
   }
 
   private showGrid() {
@@ -72,5 +60,19 @@ export class GameScene extends Phaser.Scene {
     grid.lineBetween(width / 2, 0, width / 2, height);
 
     grid.strokePath();
+  }
+
+  private showScore() {
+    const scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Life: ' + player.life, {
+      fontFamily: 'Munro',
+      fontSize: '20px',
+      color: '#FFFFFF'
+    });
+
+    this.add.existing(scoreLabel);
+
+    transmission.on('score.update', () => {
+      scoreLabel.setText('Life: ' + player.life);
+    });
   }
 }

@@ -3,8 +3,8 @@ import { MouseEvent } from '../Button';
 
 export class Cursor {
 
-  public static attach(scene: Phaser.Scene): Cursor {
-    const cursor = new Cursor(scene);
+  public static attach(scene: Phaser.Scene, isInteractive: boolean = true): Cursor {
+    const cursor = new Cursor(scene, isInteractive);
     return cursor;
   }
 
@@ -14,17 +14,19 @@ export class Cursor {
   // The scene cursor have been attached.
   private scene: Phaser.Scene;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene, isInteractive: boolean = true) {
     this.scene = scene;
-    this.shape = new Phaser.GameObjects.Rectangle(scene, 200, 200, BoardConfig.gridSize, BoardConfig.gridSize).setOrigin(0);
+    this.shape = new Phaser.GameObjects.Rectangle(scene, 0, 0, BoardConfig.gridSize, BoardConfig.gridSize).setOrigin(0);
 
     this.shape.setStrokeStyle(1, 0xFFFFFF, 1);
     scene.add.existing(this.shape);
 
-    this.registerEvents();
+    if (isInteractive) {
+      this.registerEvents();
+    }
   }
 
-  private _setPosition(x: number, y: number, snapToGrid: boolean = true): void {
+  public _setPosition(x: number, y: number, snapToGrid: boolean = true): void {
     if (snapToGrid) {
       x = Math.floor( x / BoardConfig.gridSize ) * BoardConfig.gridSize;
       y = Math.floor( y / BoardConfig.gridSize ) * BoardConfig.gridSize;
