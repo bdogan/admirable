@@ -46,7 +46,7 @@ export class Enemy extends Phaser.GameObjects.Zone {
       const isHittedBefore = this.hittedArea.some((h) => h.x === hitPoint.x && h.y === hitPoint.y);
 
       if (isHittedBefore) {
-        Notification.create(this.scene, 'You\'ve already hitted that area.', 350);
+        Notification.create('You\'ve already hitted that area.', 350);
         return;
       }
 

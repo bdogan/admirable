@@ -34,7 +34,7 @@ export class GameScene extends Phaser.Scene {
     this.showScore();
 
     transmission.on('game.end', () => {
-      Notification.create(this, 'Game Over!', 2000);
+      Notification.create('Game Over!', 2000);
     });
 
   }

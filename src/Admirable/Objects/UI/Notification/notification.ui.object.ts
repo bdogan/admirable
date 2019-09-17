@@ -1,13 +1,15 @@
+import { player } from '../../Player';
+
 type FontStyle = Phaser.Types.GameObjects.Text.TextStyle;
 
 export class Notification {
 
   /**
-   * Create a notification object and add it to the given scene.
+   * Create a notification object and add it to the player's current scene.
    */
-  public static create(scene: Phaser.Scene, text: string, timeout: number = 1000, style: FontStyle = {}) {
-    const notification = new Notification(scene, text, timeout, style);
-    scene.add.existing(notification.text);
+  public static create(text: string, timeout: number = 1000, style: FontStyle = {}) {
+    const notification = new Notification(player.scene, text, timeout, style);
+    player.scene.add.existing(notification.text);
   }
 
   private scene: Phaser.Scene;

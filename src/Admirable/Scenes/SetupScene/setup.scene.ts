@@ -29,7 +29,7 @@ export class SetupScene extends Phaser.Scene {
     console.log('SetupScene initialized.');
 
     transmission.on('enemy.ready', () => {
-      Notification.create(this, 'Enemy is ready.');
+      Notification.create('Enemy is ready.');
       this.isEnemyReady = true;
 
       if (this.readyClicked) {
@@ -79,7 +79,7 @@ export class SetupScene extends Phaser.Scene {
     this.readyButton.on(MouseEvent.onClick, (e: any) => {
 
       if (!player.dock.isPlacementValid) {
-        Notification.create(this, 'Placement is not valid!');
+        Notification.create('Placement is not valid!');
         return;
       }
 
@@ -89,7 +89,7 @@ export class SetupScene extends Phaser.Scene {
       transmission.transmit({type: 'enemy.ready'} as IPayload);
 
       if (!this.isEnemyReady) {
-        Notification.create(this, 'Enemy is not ready!');
+        Notification.create('Enemy is not ready!');
         return;
       }
 
