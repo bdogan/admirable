@@ -5,7 +5,7 @@ import { Cursor } from '../../Objects/UI/Cursor';
 import { Enemy } from '../../Objects/Enemy';
 import { Notification } from '../../Objects/UI/Notification';
 import { Transmission } from '../../Objects/Transmission';
-import { Player } from '../../Objects/Player';
+import { player } from '../../Objects/Player';
 
 const transmission = Transmission.getInstance();
 
@@ -15,8 +15,6 @@ const transmission = Transmission.getInstance();
 
 export class GameScene extends Phaser.Scene {
 
-  private player!: Player;
-
   public init(data: any): void {
     console.log('GameScene initialized.');
     console.log('passed data: ', data);
@@ -25,12 +23,11 @@ export class GameScene extends Phaser.Scene {
   public create(data: any): void {
 
     this.showGrid();
-    const dock = new Dock(this);
-    dock.build(data.exported);
 
-    this.player = Player.getInstance(0, dock.ships.length);
+    player.scene = this;
+    player.dock.build(data.exported);
 
-    const scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Score: ' + this.player.score, {
+    const scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Score: ' + player.life, {
       fontFamily: 'Munro',
       fontSize: '20px',
       color: '#FFFFFF'
@@ -38,14 +35,8 @@ export class GameScene extends Phaser.Scene {
 
     this.add.existing(scoreLabel);
 
-    console.log(this.player);
-
-    // use once.
-    // transmission.once('enemy.ready', () => {
-    Notification.create(this, 'Enemy is ready.');
     const ew = this.sys.canvas.width / 2, eh = this.sys.canvas.height;
-    Enemy.define(transmission , this, ew, 0, ew, eh);
-    // });
+    Enemy.define(transmission, this, ew, 0, ew, eh);
 
     Cursor.attach(this);
   }
