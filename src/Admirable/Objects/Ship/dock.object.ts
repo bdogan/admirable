@@ -32,11 +32,14 @@ export class Dock {
    */
   public build(ships: IExport[], setup: boolean = false): void {
     // this.ships = []; this.ships.foreach ship.destoy?.
+    const _ships: Ship[] = [];
     ships.forEach((ship) => {
       const _ship = new Ship(this, this.scene, ship.extent, ship.orthogonal, setup);
       _ship._setPosition(ship.x, ship.y);
-      this.ships.push(_ship);
+      _ships.push(_ship);
     });
+
+    this.ships = _ships;
 
   }
 
