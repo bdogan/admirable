@@ -4,13 +4,12 @@ import { Input } from '../../Objects/UI/Input';
 import { Transmission } from '../../Objects/Transmission';
 import { Table } from '../../Objects/UI/Table';
 import { player } from '../../Objects/Player';
-
-const axios = require('axios');
-const storageConfig = require('../../storage.config').StorageConfig;
+import { Network } from '../../Objects/Network/network.object';
 
 const lobbyMusic = require('./Musics/admirable-lobby.ogg');
 
 const transmission = Transmission.getInstance();
+const network = Network.getInstance();
 
 @AdmirableScene({
   key: 'lobby'
@@ -39,12 +38,14 @@ export class LobbyScene extends Phaser.Scene {
 
     transmission.host();
 
+    const onlineList: any[] = [];
+/*
     const list: any[] = [];
     let objs: any;
     const buttons: Button[] = [];
     let ids: any[];
     let values: any[];
-
+*/
     const scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Username: ' + data.username, {
       fontFamily: 'Munro',
       fontSize: '20px',
@@ -53,6 +54,18 @@ export class LobbyScene extends Phaser.Scene {
 
     this.add.existing(scoreLabel);
 
+    network.listOnline()
+      .then((res) => {
+        onlineList.push(res);
+        console.log(onlineList);
+        const buttons: Button[] = [];
+      });
+    /*
+    network.listPotentialEnemies(transmission.peer.id).then((res) => {
+      console.log(res);
+    });
+*/
+    /*
     axios.get(storageConfig.url + '/online')
       .then((response: any) => {
         if (response.data.result !== undefined || response.data.result !== null || response.data.result !== {}) {
@@ -66,11 +79,11 @@ export class LobbyScene extends Phaser.Scene {
             if (i.id === transmission.peer.id || i.id === null || i.id === undefined) {
               continue;
             }
-            /*list.push([
+            list.push([
               i,
               objs[i].username,
               objs[i].time,
-            ]);*/
+            ]);
 
             const button = new Button(this, i.username, 300, a * 50 + 50, 500, 50);
 
@@ -97,13 +110,12 @@ export class LobbyScene extends Phaser.Scene {
             axios.delete(storageConfig.url + '/online/' + transmission.peer.id);
           }
 
-          /*
           const table = new Table(this, 10, 10, 600, 400, [['ID', 'Username', 'Time'], ...list]);
 
           table.showHead = true;
 
           this.add.existing(table);
-           */
+
         }
       })
       .then(() => {
@@ -121,6 +133,6 @@ export class LobbyScene extends Phaser.Scene {
           });
         }, 1000);
       });
-
+*/
   }
 }

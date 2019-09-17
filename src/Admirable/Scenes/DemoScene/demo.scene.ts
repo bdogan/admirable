@@ -1,9 +1,9 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { Table } from '../../Objects/UI/Table';
-import { PeerObject } from '../../Objects/P2P/peer.object';
 import { Transmission } from '../../Objects/Transmission';
 import { IPayload } from '../../Objects/Transmission/transmission.object';
+import { Network } from '../../Objects/Network/network.object';
 
 const connection = Transmission.getInstance();
 
@@ -14,6 +14,17 @@ export class DemoScene extends Phaser.Scene {
 
   // Create
   public create() {
+
+    const network = new Network();
+
+    network.listOnline().then((res) => {
+      console.log(res);
+    });
+
+    // network.updateLastSeen('asd');
+
+    network.clearOffline();
+
     const k = new Button(this, 'host', 64, 64, 120, 48);
     this.add.existing(k);
     k.on(MouseEvent.onClick, () => {

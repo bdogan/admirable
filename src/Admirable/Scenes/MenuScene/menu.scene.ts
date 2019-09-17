@@ -2,13 +2,14 @@ import { AdmirableScene } from '../admirable.scene';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
 import { Input } from '../../Objects/UI/Input';
 import { Transmission } from '../../Objects/Transmission';
+import { Network } from '../../Objects/Network/network.object';
+
 const logoImg = require('./Images/admirable-logotype.png');
 const battleshipImg = require('./Images/battleship.png');
 const menuMusic = require('./Musics/admirable-menu.ogg');
-const axios = require('axios');
-const storageConfig = require('../../storage.config').StorageConfig;
 
 const transmission = Transmission.getInstance();
+const network = Network.getInstance();
 
 @AdmirableScene({
   key: 'menu'
@@ -95,11 +96,7 @@ export class MenuScene extends Phaser.Scene {
     });
 
     startButton.on(MouseEvent.onClick, (e: any) => {
-      axios.post(storageConfig.url + '/online/' + transmission.peer.id, {
-        id: transmission.peer.id,
-        username: input.text,
-        time: Date.now()
-      });
+      network.logOn(transmission.peer.id, input.text);
 
       this.scene.start('lobby', { username: input.text});
       this.music.stop();
