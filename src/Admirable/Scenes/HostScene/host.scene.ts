@@ -53,5 +53,6 @@ export class HostScene extends Phaser.Scene {
         this.scene.start('menu');
       }, 3000);
     });
+
   }
 }
