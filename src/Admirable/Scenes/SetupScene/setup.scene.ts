@@ -31,7 +31,7 @@ export class SetupScene extends Phaser.Scene {
     transmission.on('enemy.ready', () => {
       Notification.create(this, 'Enemy is ready.');
       this.isEnemyReady = true;
-      console.log(this.isEnemyReady);
+
       if (this.readyClicked) {
         this.readyButton.emit('player.ready');
       }
@@ -86,12 +86,12 @@ export class SetupScene extends Phaser.Scene {
       this.readyClicked = true;
       this.readyButton.disable();
 
-      // transmission.transmit({type: 'enemy.ready'} as IPayload);
+      transmission.transmit({type: 'enemy.ready'} as IPayload);
 
-      // if (!this.isEnemyReady) {
-      //   Notification.create(this, 'Enemy is not ready!');
-      //   return;
-      // }
+      if (!this.isEnemyReady) {
+        Notification.create(this, 'Enemy is not ready!');
+        return;
+      }
 
       this.readyButton.emit('player.ready');
     });

@@ -6,6 +6,7 @@ import { Enemy } from '../../Objects/Enemy';
 import { Notification } from '../../Objects/UI/Notification';
 import { Transmission } from '../../Objects/Transmission';
 import { player } from '../../Objects/Player';
+import { gameState, Turn } from '../../Objects/GameState';
 
 const transmission = Transmission.getInstance();
 
@@ -31,6 +32,11 @@ export class GameScene extends Phaser.Scene {
     this.showGrid();
     Cursor.attach(this);
     this.showScore();
+
+    transmission.on('game.end', () => {
+      Notification.create(this, 'Game Over!', 2000);
+    });
+
   }
 
   private showGrid() {
@@ -73,6 +79,12 @@ export class GameScene extends Phaser.Scene {
 
     transmission.on('score.update', () => {
       scoreLabel.setText('Life: ' + player.life);
+
+      if (player.life === 0) {
+        transmission.sync({type: 'game.end'});
+      }
+
     });
+
   }
 }
