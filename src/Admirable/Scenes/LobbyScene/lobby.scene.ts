@@ -39,13 +39,7 @@ export class LobbyScene extends Phaser.Scene {
     transmission.host();
 
     const onlineList: any[] = [];
-/*
-    const list: any[] = [];
-    let objs: any;
-    const buttons: Button[] = [];
-    let ids: any[];
-    let values: any[];
-*/
+
     const scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Username: ' + data.username, {
       fontFamily: 'Munro',
       fontSize: '20px',
@@ -54,41 +48,19 @@ export class LobbyScene extends Phaser.Scene {
 
     this.add.existing(scoreLabel);
 
-    network.listOnline()
-      .then((res) => {
-        onlineList.push(res);
-        console.log(onlineList);
+    console.log(network.username);
+
+    network.listPotentialEnemies(transmission.peer.id)
+    .then((res) => {
+        onlineList.push(...res);
         const buttons: Button[] = [];
-      });
-    /*
-    network.listPotentialEnemies(transmission.peer.id).then((res) => {
-      console.log(res);
-    });
-*/
-    /*
-    axios.get(storageConfig.url + '/online')
-      .then((response: any) => {
-        if (response.data.result !== undefined || response.data.result !== null || response.data.result !== {}) {
-          objs = response.data.result;
 
-          ids = Object.keys(objs);
-          values = Object.values(objs);
-
-          let a = 0;
-          for (const i of values) {
-            if (i.id === transmission.peer.id || i.id === null || i.id === undefined) {
-              continue;
-            }
-            list.push([
-              i,
-              objs[i].username,
-              objs[i].time,
-            ]);
-
-            const button = new Button(this, i.username, 300, a * 50 + 50, 500, 50);
+        let a = 0;
+        res.forEach((e) => {
+            const button = new Button(this, `${e.username} - ${e.id}`, this.sys.canvas.width / 2, a * 50 + 50, 800, 50);
 
             button.on(MouseEvent.onDown, (e: any) => {
-              transmission.join(i.id);
+              transmission.join(e.id);
               this.scene.start('setup');
             });
 
@@ -96,43 +68,18 @@ export class LobbyScene extends Phaser.Scene {
             buttons.push(button);
 
             a++;
-          }
+        });
 
-          transmission.peer.on('connection', (c: any) => {
-            this.scene.start('setup');
-          });
+    })
+    .then(() => {
+        transmission.peer.on('connection', (c: any) => {
+          this.scene.start('setup');
+        });
 
-          transmission.peer.on('disconnected  ', () => {
-            axios.delete(storageConfig.url + '/online/' + transmission.peer.id);
-          });
+        const updater = setInterval(() => {
+          network.updateLastSeen(transmission.peer.id);
+        }, 60);
+    });
 
-          if (window.closed) {
-            axios.delete(storageConfig.url + '/online/' + transmission.peer.id);
-          }
-
-          const table = new Table(this, 10, 10, 600, 400, [['ID', 'Username', 'Time'], ...list]);
-
-          table.showHead = true;
-
-          this.add.existing(table);
-
-        }
-      })
-      .then(() => {
-        const timeUpdater = setInterval(() => {
-          axios.patch(storageConfig.url + '/online/' + transmission.peer.id, {
-            time: Date.now()
-          });
-        }, 10000);
-
-        const remover = setInterval(() => {
-          values.forEach((e: any) => {
-            if (e.time < (Date.now() - 60 * 1000)) {
-              axios.delete(storageConfig.url + '/online/' + e.id);
-            }
-          });
-        }, 1000);
-      });
-*/
   }
 }

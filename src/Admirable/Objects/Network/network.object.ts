@@ -13,7 +13,7 @@ export class Network extends Phaser.Events.EventEmitter {
   private static instance: Network;
   private url: string;
   private onlineUrl: string;
-  private timeOut: number = 60; // Seconds
+  private timeOut: number = 120; // Seconds
 
   private pId!: string;
   public get id(): string {
@@ -54,14 +54,10 @@ export class Network extends Phaser.Events.EventEmitter {
       });
   }
 
-  public listPotentialEnemies(id: string) {
-    return this.listOnline().then((res) => {
-      return res.forEach((e) => {
-        if (e.id === id) {
-          return;
-        }
-        return e;
-      });
+  // List users except player and offline ones 
+  public listPotentialEnemies(selfId: string) {
+    return this.listOnline().then((res: any[]) => {
+      return res.filter((e) => e.id !== selfId && e.time > (Date.now() - (this.timeOut * 1000)));
     });
   }
 
@@ -78,9 +74,12 @@ export class Network extends Phaser.Events.EventEmitter {
 
   // Add a register to network
   public logOn(id: string, username: string) {
+    this.id = id;
+    this.username = username;
+
     return Axios({
       method: 'post',
-      url: this.onlineUrl,
+      url: `${this.onlineUrl}/${id}`,
       data: {
         id: `${id}`,
         username: `${username}`,
