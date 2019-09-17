@@ -1,7 +1,9 @@
 import { BoardConfig } from '../../board.config';
 import { Ship } from '../Ship';
 import { Notification } from '../UI/Notification';
-import { Transmission } from '../Transmission';
+import { transmission } from '../Transmission';
+import { gameState, Turn } from '../GameState';
+import { player } from '../Player';
 
 enum EnemyEvent {
   onHit = 'onhit',
@@ -9,20 +11,20 @@ enum EnemyEvent {
 
 export class Enemy extends Phaser.GameObjects.Zone {
 
-  public static define(transmission: Transmission, scene: Phaser.Scene, x: number, y: number, width: number, height: number): Phaser.GameObjects.Zone {
-    const zone = new Enemy(transmission, scene, x, y, width, height);
+  public static define(scene: Phaser.Scene, x: number, y: number, width: number, height: number): Phaser.GameObjects.Zone {
+    const zone = new Enemy(scene, x, y, width, height);
     return zone;
   }
 
-  private transmission: Transmission;
+  // Collection of the previously hitted grid area's.
+  private hittedArea: Array<{x: number, y: number}> = [];
 
   private hitArea: Phaser.GameObjects.Graphics;
 
   private hitBox: Phaser.Geom.Rectangle;
 
-  constructor(transmission: Transmission, scene: Phaser.Scene, x: number, y: number, width: number, height: number) {
+  constructor(scene: Phaser.Scene, x: number, y: number, width: number, height: number) {
     super(scene, x, y, width, height);
-    this.transmission = transmission;
     this.hitArea = new Phaser.GameObjects.Graphics(scene);
     this.hitBox = new Phaser.Geom.Rectangle(0, 0, BoardConfig.gridSize, BoardConfig.gridSize);
 
@@ -36,27 +38,37 @@ export class Enemy extends Phaser.GameObjects.Zone {
     this.setInteractive();
 
     this.on('pointerdown', (p: Phaser.Input.Pointer) => {
-      const _x = this.snap(p.x), _y =  this.snap(p.y);
-      // this.hitBox.setPosition(_x, _y);
-      // this.hitArea.fillStyle(0xFF0000, 1);
-      // this.hitArea.fillRectShape(this.hitBox);
+      if (gameState.turn !== Turn.player) {
+        Notification.create(this.scene, 'It\'s not your turn.', 300);
+        return;
+      }
+      const _x = this.snap(p.x), _y =  this.snap(p.y), hitPoint = {x: _x, y: _y};
 
-      this.transmission.transmit({type: 'enemy.hit', data: {x: _x, y: _y}});
+      // Determinate if the area hitted before.
+      const isHittedBefore = this.hittedArea.some((h) => h.x === hitPoint.x && h.y === hitPoint.y);
+
+      if (isHittedBefore) {
+        Notification.create(this.scene, 'You\'ve already hitted that area.', 350);
+        return;
+      }
+
+      this.hittedArea.push(hitPoint);
+      transmission.transmit({type: 'enemy.hit', data: hitPoint});
     });
 
-    this.transmission.on('enemy.hit', (d: {x: number, y: number}) => {
+    transmission.on('enemy.hit', (d: {x: number, y: number}) => {
       this.hitBox.setPosition(d.x - this.scene.sys.canvas.width / 2, d.y);
 
       const h = this.hitControl();
 
-      this.transmission.transmit({type: 'enemy.onHit', data: {hit: h, x: d.x, y: d.y}});
+      transmission.transmit({type: 'enemy.onHit', data: {hit: h, x: d.x, y: d.y}});
 
       this.hitArea.fillStyle(h ? 0xFF0000 : 0x000000, 1);
       this.hitArea.fillRectShape(this.hitBox);
-      console.log(d, this.hitBox);
+    //   console.log(d, this.hitBox);
     });
 
-    this.transmission.on('enemy.onHit', (data: {hit: boolean, x: number, y: number}) => {
+    transmission.on('enemy.onHit', (data: {hit: boolean, x: number, y: number}) => {
       this.hitBox.setPosition(data.x, data.y);
       this.hitArea.fillStyle(data.hit ? 0xFF0000 : 0x000000, 1);
       this.hitArea.fillRectShape(this.hitBox);
@@ -79,10 +91,10 @@ export class Enemy extends Phaser.GameObjects.Zone {
       s_x = _x;
       s_y = _y;
 
-      this.transmission.transmit({type: 'enemy.cursor', data: {x: _x, y: _y}});
+      transmission.transmit({type: 'enemy.cursor', data: {x: _x, y: _y}});
     });
 
-    this.transmission.on('enemy.cursor', (d: {x: number, y: number}) => {
+    transmission.on('enemy.cursor', (d: {x: number, y: number}) => {
       let _x = d.x;
       const _y = d.y;
       if (d.x >= this.scene.sys.canvas.width / 2) {
@@ -97,10 +109,18 @@ export class Enemy extends Phaser.GameObjects.Zone {
   }
 
   private hitControl(): boolean {
-    const c = this.scene.children.list.filter((child) => child instanceof Ship) as Ship[];
+    // const c = this.scene.children.list.filter((child) => child instanceof Ship) as Ship[];
+    const ship = player.dock.ships.find((_ship) => Phaser.Geom.Rectangle.Overlaps(_ship.getBounds(), this.hitBox));
+    let hit = false;
 
-    const hit = c.some((ship) => Phaser.Geom.Rectangle.Overlaps(ship.getBounds(), this.hitBox));
+    if ( ship ) {
+      ship.life -= 1;
+      hit = true;
+    }
 
+    transmission.emit('score.update');
+
+    console.log(player.life);
     return hit;
   }
 

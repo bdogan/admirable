@@ -27,7 +27,7 @@ export class GameScene extends Phaser.Scene {
     player.scene = this;
     player.dock.build(data.exported);
 
-    const scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Score: ' + player.life, {
+    const scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Life: ' + player.life, {
       fontFamily: 'Munro',
       fontSize: '20px',
       color: '#FFFFFF'
@@ -35,8 +35,12 @@ export class GameScene extends Phaser.Scene {
 
     this.add.existing(scoreLabel);
 
+    transmission.on('score.update', () => {
+      scoreLabel.setText('Life: ' + player.life);
+    });
+
     const ew = this.sys.canvas.width / 2, eh = this.sys.canvas.height;
-    Enemy.define(transmission, this, ew, 0, ew, eh);
+    Enemy.define(this, ew, 0, ew, eh);
 
     Cursor.attach(this);
   }

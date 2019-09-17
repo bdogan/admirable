@@ -11,7 +11,7 @@ class GameState {
   public turn: Turn;
 
   constructor() {
-    this.turn = Turn.uncertain;
+    this.turn = Turn.player;
   }
 
 }

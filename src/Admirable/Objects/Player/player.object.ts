@@ -1,4 +1,5 @@
 import { Dock } from '../Ship';
+import { transmission } from '../Transmission';
 
 export class Player {
   private _scene!: Phaser.Scene;
@@ -20,6 +21,12 @@ export class Player {
 
   public get life(): number {
     return this.dock.life;
+  }
+
+  constructor() {
+    transmission.on('player.hit', () => {
+      console.log('test');
+    });
   }
 }
 

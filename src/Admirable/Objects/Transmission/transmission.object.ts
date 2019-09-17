@@ -107,9 +107,11 @@ export class Transmission extends Phaser.Events.EventEmitter {
   }
 
   public transmit(data: IPayload) {
-    console.log(this.connection);
-    if (this.connection) {
+    // console.log(this.connection);
+    // if (this.connection) {
       this.connection.send(data);
-    }
+    // }
   }
 }
+
+export const transmission = Transmission.getInstance();
