@@ -38,20 +38,16 @@ export class Enemy extends Phaser.GameObjects.Zone {
   }
 
   public _clear() {
-    // this.destroy();
-    // this.hitArea.clear();
-    // transmission.off('enemy.hit');
-    // transmission.off('player.onHit');
-    // this.off('pointerdown');
-    // this.hittedArea = [];
-
-    // The 4 row below is doesn't work as intended.
+    // The 4 row below doesn't work as intended this is an internal problem of the Paser's EventEmitter.
     // transmission.removeListener('enemy.hit');
     // transmission.removeListener('player.onHit');
     // transmission.removeAllListeners('enemy.hit');
     // transmission.removeAllListeners('player.onHit');
-    // and this works but using this removes all listeners.
+
+    // and this works but using this removes all the listeners attached to transmission.
+    // we attach transmission listeners on the scenes, so this isn't a problem.
     transmission.removeAllListeners();
+
     this.hitArea.clear();
     this.hittedArea = [];
     this.scene.children.remove(this);
@@ -61,6 +57,8 @@ export class Enemy extends Phaser.GameObjects.Zone {
     this.setInteractive();
 
     this.on('pointerdown', (p: Phaser.Input.Pointer) => {
+
+      // if not the player's turn return.
       if (gameState.turn !== Turn.player) {
         Notification.create('It\'s not your Turn.', 900);
         return;
@@ -132,10 +130,6 @@ export class Enemy extends Phaser.GameObjects.Zone {
       ship.life--;
       hit = true;
       transmission.emit('score.update');
-
-      // Sends the player's score to the enemy.
-      // transmission.transmit({type: 'enemy.score', data: {life: player.life}});
-      // Notification.create(player.life.toString(), 200);
     }
 
     return hit;
@@ -181,14 +175,5 @@ export class Enemy extends Phaser.GameObjects.Zone {
   private snap(v: number): number {
     return Math.floor(v / BoardConfig.gridSize) * BoardConfig.gridSize;
   }
-
-  //   const succes = ['🤗', '🤩', '😲', '😂', '🤣'];
-  //   const failure = ['🤔',  '🤨', '😒', '😓', '😔', '😕'];
-
-  //   const emoji = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
-
-  //   Notification.create(this.scene, emoji(hit ? succes : failure), 160, {backgroundColor: 'transparent', fontSize: '64px'});
-
-  // }
 
 }

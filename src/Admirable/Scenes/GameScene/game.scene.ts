@@ -26,7 +26,7 @@ export class GameScene extends Phaser.Scene {
     // console.log(flag);
     // this.input.setDefaultCursor('url("' + flag ? alrightThenCursor : notNowCursor + '") 11 11, pointer');
 
-    this.lifeLabel = new Phaser.GameObjects.Text(this, 13, this.sys.canvas.height - 80, '', {
+    this.lifeLabel = new Phaser.GameObjects.Text(this, 13, this.sys.canvas.height - 60, '', {
       fontFamily: 'Munro',
       fontSize: '20px',
       color: '#FFFFFF',
@@ -45,34 +45,39 @@ export class GameScene extends Phaser.Scene {
     player.dock.build(data.exported);
 
     const ew = this.sys.canvas.width / 2, eh = this.sys.canvas.height;
-    const e = Enemy.define(this, ew, 0, ew, eh);
+    const enemy = Enemy.define(this, ew, 0, ew, eh);
     this.showGrid();
     Cursor.attach(this);
     this.showScore();
 
     transmission.once('game.end', () => {
-      // transmission.removeAllListeners();
-      e.input.enabled = false;
+      // prevent any input for enemy zone.
+      enemy.input.enabled = false;
+
+      // set ready statuses false for setup
       gameState.isEnemyReady = false;
       gameState.isPlayerReady = false;
 
+      // determinate if the player lose the game.
       const lose: boolean = player.life === 0;
+
       Notification.create(lose ? 'YOU LOSE' : 'YOU WIN', 1000);
 
+      // if the player lost increase the local enemy score by one. Or increase the player score by one.
       if (lose) {
         gameState.enemyScore++;
       } else {
         gameState.playerScore++;
       }
 
+      // Redirect players to the setup scene to preparing for another game.
       setTimeout(() => {
-        // this.scene.stop();
-        e._clear();
+        // clear the enemy zone and remove all transmission events.
+        enemy._clear();
         this.scene.stop();
         this.scene.start('setup');
       }, 1000);
 
-      // transmission.off('game.end');
     });
 
     if (gameState.turn === Turn.player) {
