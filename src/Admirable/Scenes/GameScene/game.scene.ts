@@ -18,14 +18,15 @@ const transmission = Transmission.getInstance();
 
 export class GameScene extends Phaser.Scene {
 
-  private scoreLabel!: Phaser.GameObjects.Text;
+  private lifeLabel!: Phaser.GameObjects.Text;
   private indicator!: Phaser.GameObjects.Rectangle;
 
   public init(data: any): void {
     const flag = gameState.turn === Turn.player;
+    console.log(flag);
     this.input.setDefaultCursor('url("' + flag ? alrightThenCursor : notNowCursor + '") 11 11, pointer');
 
-    this.scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Life: ' + player.life, {
+    this.lifeLabel = new Phaser.GameObjects.Text(this, 13, this.sys.canvas.height - 30, 'Life: ' + player.life, {
       fontFamily: 'Munro',
       fontSize: '20px',
       color: '#FFFFFF'
@@ -85,11 +86,9 @@ export class GameScene extends Phaser.Scene {
 
     });
 
-    this.add.existing(this.scoreLabel);
-
-
     this.initTurnIndicator();
 
+    this.add.existing(this.lifeLabel);
   }
 
   private showGrid() {
@@ -123,7 +122,7 @@ export class GameScene extends Phaser.Scene {
 
   private showScore() {
     transmission.on('score.update', () => {
-      this.scoreLabel.setText('Life: ' + player.life.toString());
+      this.lifeLabel.setText('Life: ' + player.life.toString());
 
       if (player.life === 0) {
         transmission.sync({type: 'game.end'});

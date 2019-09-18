@@ -87,6 +87,10 @@ export class LobbyScene extends Phaser.Scene {
         const updater = setInterval(() => {
           network.updateLastSeen(transmission.peer.id);
         }, 60);
+
+        const remover = setInterval(() => {
+          network.clearOffline();
+        }, 120);
     });
 
   }
