@@ -17,7 +17,7 @@ export class Transmission extends Phaser.Events.EventEmitter {
     return Transmission.instance;
   }
 
-  private static instance: Transmission;
+  private static instance: Transmission | null;
 
   public connection!: any;
 
@@ -52,6 +52,11 @@ export class Transmission extends Phaser.Events.EventEmitter {
   private pIsConnected: boolean = false;
   public get isConnected() {
     return this.pIsConnected;
+  }
+
+  // Clear
+  public clear() {
+    Transmission.instance = null;
   }
 
   // Host method

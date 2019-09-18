@@ -1,11 +1,9 @@
 import { AdmirableScene } from '../admirable.scene';
 import { Button, MouseEvent } from '../../Objects/UI/Button';
-import { Input } from '../../Objects/UI/Input';
 import { Transmission } from '../../Objects/Transmission';
-import { Table } from '../../Objects/UI/Table';
-import { player } from '../../Objects/Player';
 import { Network } from '../../Objects/Network/network.object';
 import { Notification } from '../../Objects/UI/Notification';
+import { player } from '../../Objects/Player';
 import { gameState, Turn } from '../../Objects/GameState';
 
 const lobbyMusic = require('./Musics/admirable-lobby.ogg');
@@ -46,15 +44,11 @@ export class LobbyScene extends Phaser.Scene {
 
     const onlineList: any[] = [];
 
-    const scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Username: ' + data.username, {
+    const usernameLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Username: ' + data.username, {
       fontFamily: 'Munro',
       fontSize: '20px',
       color: '#FFFFFF'
     });
-
-    this.add.existing(scoreLabel);
-
-    console.log('Local ID: ' + transmission.peer.id);
 
     network.listPotentialEnemies(transmission.peer.id)
     .then((res) => {
@@ -65,7 +59,6 @@ export class LobbyScene extends Phaser.Scene {
         res.forEach((e) => {
             const button = new Button(this, `${e.username} - ${e.id}`, this.sys.canvas.width / 2, a * 50 + 50, 800, 50);
 
-            console.log('Remote ID: ' + e.id);
             button.on(MouseEvent.onDown, (i: any) => {
               transmission.join(e.id);
               this.scene.start('setup');
@@ -77,6 +70,7 @@ export class LobbyScene extends Phaser.Scene {
             a++;
         });
 
+        this.add.existing(usernameLabel);
     })
     .then(() => {
         transmission.peer.on('connection', (c: any) => {

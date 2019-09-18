@@ -7,6 +7,8 @@ import { Notification } from '../../Objects/UI/Notification';
 import { Transmission } from '../../Objects/Transmission';
 import { player } from '../../Objects/Player';
 import { gameState, Turn } from '../../Objects/GameState';
+const notNowCursor = require('../../../Assets/Cursors/not-now.png');
+const alrightThenCursor = require('../../../Assets/Cursors/alright-then.png');
 
 const transmission = Transmission.getInstance();
 
@@ -20,13 +22,14 @@ export class GameScene extends Phaser.Scene {
   private indicator!: Phaser.GameObjects.Rectangle;
 
   public init(data: any): void {
+    const flag = gameState.turn === Turn.player;
+    this.input.setDefaultCursor('url("' + flag ? alrightThenCursor : notNowCursor + '") 11 11, pointer');
+
     this.scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Life: ' + player.life, {
       fontFamily: 'Munro',
       fontSize: '20px',
       color: '#FFFFFF'
     });
-
-    this.add.existing(this.scoreLabel);
 
     console.log('GameScene initialized.');
     console.log('passed data: ', data);
@@ -71,14 +74,18 @@ export class GameScene extends Phaser.Scene {
       if (gameState.turn === Turn.player) {
         Notification.create('Maybe Next Time?', 800);
         gameState.turn = Turn.enemy;
+        this.input.setDefaultCursor('url("' + notNowCursor + '") 11 11, pointer');
       } else {
         Notification.create('It\'s Your Time To Shine!', 800);
         gameState.turn = Turn.player;
+        this.input.setDefaultCursor('url("' + alrightThenCursor + '") 11 11, pointer');
       }
 
       this.changeTurnIndicator();
 
     });
+
+    this.add.existing(this.scoreLabel);
 
 
     this.initTurnIndicator();
