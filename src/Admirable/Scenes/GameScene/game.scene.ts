@@ -17,6 +17,7 @@ const transmission = Transmission.getInstance();
 export class GameScene extends Phaser.Scene {
 
   private scoreLabel!: Phaser.GameObjects.Text;
+  private indicator!: Phaser.GameObjects.Rectangle;
 
   public init(data: any): void {
     this.scoreLabel = new Phaser.GameObjects.Text(this, 10, this.sys.canvas.height - 25, 'Life: ' + player.life, {
@@ -43,19 +44,19 @@ export class GameScene extends Phaser.Scene {
     this.showScore();
 
     transmission.once('game.end', () => {
-      transmission.removeAllListeners();
+      // transmission.removeAllListeners();
       e.input.enabled = false;
       gameState.isEnemyReady = false;
       gameState.isPlayerReady = false;
 
-      Notification.create(player.life === 0 ? 'YOU LOSE' : 'YOU WIN', 2000);
+      Notification.create(player.life === 0 ? 'YOU LOSE' : 'YOU WIN', 1000);
 
       setTimeout(() => {
         // this.scene.stop();
         e._clear();
         this.scene.stop();
         this.scene.start('setup');
-      }, 3000);
+      }, 1000);
 
       // transmission.off('game.end');
     });
@@ -75,7 +76,12 @@ export class GameScene extends Phaser.Scene {
         gameState.turn = Turn.player;
       }
 
+      this.changeTurnIndicator();
+
     });
+
+
+    this.initTurnIndicator();
 
   }
 
@@ -119,4 +125,33 @@ export class GameScene extends Phaser.Scene {
     });
 
   }
+
+  private initTurnIndicator() {
+    const strokeWeight = 8;
+    // this.indicator = this.add.rectangle(strokeWeight / 2, strokeWeight / 2, (this.sys.canvas.width / 2) - strokeWeight / 2, this.sys.canvas.height - strokeWeight).setOrigin(0);
+    this.indicator = this.add.rectangle(strokeWeight / 2, strokeWeight / 2, (this.sys.canvas.width) - strokeWeight / 2, this.sys.canvas.height - strokeWeight).setOrigin(0);
+    this.indicator.setStrokeStyle(strokeWeight);
+
+    // call once to determinate.
+    this.changeTurnIndicator();
+
+    this.tweens.add({
+      targets: this.indicator,
+      duration: 280,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine',
+      alpha: {
+        getStart: () => 1,
+        getEnd: () => 0.4,
+      },
+    });
+  }
+
+  private changeTurnIndicator() {
+    const flag = gameState.turn === Turn.player;
+    this.indicator.strokeColor = flag ? 0x00FF00 : 0xFF0000;
+    // this.indicator.setX(flag ? 4 : (this.sys.canvas.width / 2));
+  }
+
 }

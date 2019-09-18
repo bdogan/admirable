@@ -54,7 +54,7 @@ export class Network extends Phaser.Events.EventEmitter {
       });
   }
 
-  // List users except player and offline ones 
+  // List users except player and offline ones
   public listPotentialEnemies(selfId: string) {
     return this.listOnline().then((res: any[]) => {
       return res.filter((e) => e.id !== selfId && e.time > (Date.now() - (this.timeOut * 1000)));

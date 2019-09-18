@@ -98,7 +98,7 @@ export class Enemy extends Phaser.GameObjects.Zone {
 
       // If hit happened shake the enemy's screen.
       if (hit) {
-        this.scene.cameras.main.shake(160, 0.02, true);
+        this.scene.cameras.main.shake(200, 0.02, true);
       }
 
       // If miss, change the turn at the both sides.
@@ -112,6 +112,11 @@ export class Enemy extends Phaser.GameObjects.Zone {
       this.hitBox.setPosition(data.point.x, data.point.y);
       this.hitArea.fillStyle(data.hit ? 0xFF0000 : 0x000000, 1);
       this.hitArea.fillRectShape(this.hitBox);
+
+      if (data.hit) {
+        this.scene.cameras.main.shake(200, 0.01, true);
+      }
+
     });
 
     this.enemyCursor();
