@@ -15,6 +15,9 @@ class GameState {
   public isPlayerReady: boolean = false;
   public isEnemyReady: boolean = false;
 
+  public playerScore: number = 0;
+  public enemyScore: number = 0;
+
   constructor() {
     this.turn = Turn.enemy;
   }

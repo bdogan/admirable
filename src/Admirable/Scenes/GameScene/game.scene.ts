@@ -22,15 +22,18 @@ export class GameScene extends Phaser.Scene {
   private indicator!: Phaser.GameObjects.Rectangle;
 
   public init(data: any): void {
-    const flag = gameState.turn === Turn.player;
-    console.log(flag);
-    this.input.setDefaultCursor('url("' + flag ? alrightThenCursor : notNowCursor + '") 11 11, pointer');
+    // const flag = gameState.turn === Turn.player;
+    // console.log(flag);
+    // this.input.setDefaultCursor('url("' + flag ? alrightThenCursor : notNowCursor + '") 11 11, pointer');
 
-    this.lifeLabel = new Phaser.GameObjects.Text(this, 13, this.sys.canvas.height - 30, 'Life: ' + player.life, {
+    this.lifeLabel = new Phaser.GameObjects.Text(this, 13, this.sys.canvas.height - 80, '', {
       fontFamily: 'Munro',
       fontSize: '20px',
-      color: '#FFFFFF'
+      color: '#FFFFFF',
+      stroke: '#000000',
+      strokeThickness: 3,
     });
+    this.lifeLabel.setText(`Score: ${gameState.playerScore} - ${gameState.enemyScore}\nLife: ${player.life.toString()}`);
 
     console.log('GameScene initialized.');
     console.log('passed data: ', data);
@@ -53,7 +56,14 @@ export class GameScene extends Phaser.Scene {
       gameState.isEnemyReady = false;
       gameState.isPlayerReady = false;
 
-      Notification.create(player.life === 0 ? 'YOU LOSE' : 'YOU WIN', 1000);
+      const lose: boolean = player.life === 0;
+      Notification.create(lose ? 'YOU LOSE' : 'YOU WIN', 1000);
+
+      if (lose) {
+        gameState.enemyScore++;
+      } else {
+        gameState.playerScore++;
+      }
 
       setTimeout(() => {
         // this.scene.stop();
@@ -122,7 +132,7 @@ export class GameScene extends Phaser.Scene {
 
   private showScore() {
     transmission.on('score.update', () => {
-      this.lifeLabel.setText('Life: ' + player.life.toString());
+      this.lifeLabel.setText(`Score: ${gameState.playerScore} - ${gameState.enemyScore} \n Life: ${player.life.toString()}`);
 
       if (player.life === 0) {
         transmission.sync({type: 'game.end'});
