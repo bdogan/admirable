@@ -40,12 +40,39 @@ export class DemoScene extends Phaser.Scene {
       // connection.connection.send({type: 'peer.ready', data: {x: p.x, y: p.y}} as IPayload);
     });
 
-    const l =  new Button(this, 'change scene', 360, 400, 280, 48);
+    const l = new Button(this, 'change scene', 360, 400, 280, 48);
     this.add.existing(l);
     l.on(MouseEvent.onClick, () => {
       this.scene.start('setup');
     });
 
+    this.turnIndicator();
+
+  }
+
+  private turnIndicator() {
+    let flag = false;
+    const strokeWeight = 8;
+    const indicator = this.add.rectangle(strokeWeight / 2, strokeWeight / 2, (this.sys.canvas.width / 2) - strokeWeight / 2, this.sys.canvas.height - strokeWeight).setOrigin(0);
+    indicator.setStrokeStyle(strokeWeight);
+
+    setInterval(()=>{
+      indicator.strokeColor = flag ? 0x00FF00 : 0xFF0000;
+      indicator.setX(flag ? strokeWeight / 2 : (this.sys.canvas.width / 2));
+      flag = !flag;
+    }, 560);
+
+    this.tweens.add({
+      targets: indicator,
+      duration: 280,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine',
+      alpha: {
+        getStart: () => 1,
+        getEnd: () => 0.4,
+      },
+    });
   }
 
   /*
