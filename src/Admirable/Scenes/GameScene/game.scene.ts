@@ -38,19 +38,20 @@ export class GameScene extends Phaser.Scene {
 
     const ew = this.sys.canvas.width / 2, eh = this.sys.canvas.height;
     const e = Enemy.define(this, ew, 0, ew, eh);
-
     this.showGrid();
     Cursor.attach(this);
     this.showScore();
 
     transmission.once('game.end', () => {
-      Notification.create('Game Over! You\'ll be directed to setup.', 2000);
+
+      Notification.create(player.life === 0 ? 'YOU LOSE' : 'YOU WIN', 2000);
+
       setTimeout(() => {
         // this.scene.stop();
         e._clear();
         this.scene.stop();
         this.scene.start('setup');
-      }, 2000);
+      }, 3000);
 
       // transmission.off('game.end');
     });

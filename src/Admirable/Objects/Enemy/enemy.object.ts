@@ -38,9 +38,18 @@ export class Enemy extends Phaser.GameObjects.Zone {
   public _clear() {
     // this.destroy();
     // this.hitArea.clear();
-    transmission.off('enemy.hit');
-    transmission.off('player.onHit');
+    // transmission.off('enemy.hit');
+    // transmission.off('player.onHit');
+    // this.off('pointerdown');
     // this.hittedArea = [];
+
+    // The 4 row below is doesn't work as intended.
+    // transmission.removeListener('enemy.hit');
+    // transmission.removeListener('player.onHit');
+    // transmission.removeAllListeners('enemy.hit');
+    // transmission.removeAllListeners('player.onHit');
+    // and this is works but using this removes all listeners.
+    transmission.removeAllListeners();
     this.hitArea.clear();
     this.hittedArea = [];
     this.scene.children.remove(this);
@@ -50,7 +59,7 @@ export class Enemy extends Phaser.GameObjects.Zone {
     this.setInteractive();
 
     this.on('pointerdown', (p: Phaser.Input.Pointer) => {
-
+      console.log('HİT');
       const hitPoint = { x: this.snap(p.x), y: this.snap(p.y) } as IPoint;
 
       // Determinate if the area hitted before.
@@ -98,9 +107,9 @@ export class Enemy extends Phaser.GameObjects.Zone {
   }
 
   private hitControl(): boolean {
-    console.log('pop');
+    // console.log('called once');
     const ship = player.dock.ships.find((_ship) => Phaser.Geom.Rectangle.Overlaps(_ship.getBounds(), this.hitBox));
-    console.log('ship ', ship);
+
     let hit = false;
 
     if (ship) {

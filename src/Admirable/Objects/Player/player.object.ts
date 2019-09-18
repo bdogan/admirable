@@ -2,6 +2,7 @@ import { Dock } from '../Ship';
 import { transmission } from '../Transmission';
 
 export class Player {
+
   private _scene!: Phaser.Scene;
 
   public get scene(): Phaser.Scene {
@@ -30,4 +31,4 @@ export class Player {
   }
 }
 
-export const player = new Player();
+export const player = new Player();;
