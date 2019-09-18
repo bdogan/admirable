@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'Munro';
+  src:  url('src/Assets/Fonts/Munro/munro.woff') format('woff'),
+        url('src/Assets/Fonts/Munro/munro.eot?') format('eot'),
+        url('src/Assets/Fonts/Munro/munro.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(242, 242, 242);
+}
+
+div#admirable {
+  font-family: 'Munro';
+  display: inline-block;
+  transform: translate(-50%, -50%);
+  position: relative;
+  top: 50%;
+  left: 50%;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, .1), 0 16px 48px rgba(0, 0, 0, .1), 0 24px 60px rgba(0, 0, 0, .1);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+div#admirable>canvas {
+  display: block;
+}

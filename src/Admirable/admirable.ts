@@ -1,3 +1,4 @@
+import '../../style.css';
 import 'phaser';
 import { AdmirableGame } from './admirable.game';
 import { AdmirableConfig } from './admirable.config';
