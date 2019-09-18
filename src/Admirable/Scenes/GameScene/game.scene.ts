@@ -80,7 +80,6 @@ export class GameScene extends Phaser.Scene {
 
     });
 
-
     this.initTurnIndicator();
 
   }
@@ -129,7 +128,7 @@ export class GameScene extends Phaser.Scene {
   private initTurnIndicator() {
     const strokeWeight = 8;
     // this.indicator = this.add.rectangle(strokeWeight / 2, strokeWeight / 2, (this.sys.canvas.width / 2) - strokeWeight / 2, this.sys.canvas.height - strokeWeight).setOrigin(0);
-    this.indicator = this.add.rectangle(strokeWeight / 2, strokeWeight / 2, (this.sys.canvas.width) - strokeWeight / 2, this.sys.canvas.height - strokeWeight).setOrigin(0);
+    this.indicator = this.add.rectangle(strokeWeight / 2, strokeWeight / 2, (this.sys.canvas.width) - strokeWeight, this.sys.canvas.height - strokeWeight).setOrigin(0);
     this.indicator.setStrokeStyle(strokeWeight);
 
     // call once to determinate.

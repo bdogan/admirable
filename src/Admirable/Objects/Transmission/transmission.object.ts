@@ -129,4 +129,3 @@ export class Transmission extends Phaser.Events.EventEmitter {
 }
 
 export const transmission = Transmission.getInstance();
-

@@ -81,6 +81,11 @@ export class LobbyScene extends Phaser.Scene {
     .then(() => {
         transmission.peer.on('connection', (c: any) => {
           // Notification.create('An Enemy Connected');
+          // alert(transmission.peer.id);
+          // alert(transmission.remoteId);
+          // delete these pears from storage
+          network.deleteById(transmission.peer.id);
+          network.deleteById(transmission.remoteId);
 
           // host goes first:
           gameState.turn = Turn.player;
