@@ -48,7 +48,7 @@ export class LobbyScene extends Phaser.Scene {
 
     this.add.existing(scoreLabel);
 
-    console.log(network.username);
+    console.log('Local ID: ' + transmission.peer.id);
 
     network.listPotentialEnemies(transmission.peer.id)
     .then((res) => {
@@ -59,7 +59,8 @@ export class LobbyScene extends Phaser.Scene {
         res.forEach((e) => {
             const button = new Button(this, `${e.username} - ${e.id}`, this.sys.canvas.width / 2, a * 50 + 50, 800, 50);
 
-            button.on(MouseEvent.onDown, (e: any) => {
+            console.log('Remote ID: ' + e.id);
+            button.on(MouseEvent.onDown, (i: any) => {
               transmission.join(e.id);
               this.scene.start('setup');
             });
