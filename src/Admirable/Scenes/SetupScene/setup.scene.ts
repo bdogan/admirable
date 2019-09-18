@@ -37,6 +37,11 @@ export class SetupScene extends Phaser.Scene {
         this.readyButton.emit('player.ready');
       }
     });
+
+    transmission.peer.on('error', (err) => {
+      transmission.clear();
+      this.scene.start('lobby');
+    });
   }
 
   public preload(): void {
@@ -129,12 +134,11 @@ export class SetupScene extends Phaser.Scene {
     }
 
     // Draw horizontal lines through y-axis.
-
     for (let y = 0, row = (height / gap); y < row; y++) {
       const dY = (y * gap);
       grid.lineBetween(0, dY, width, dY);
     }
-    // midline
+    // Midline
     grid.lineStyle(1, 0x00A8E8, 1);
     grid.lineBetween(width, 0, width, height);
 
