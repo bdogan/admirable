@@ -13,7 +13,7 @@ export class Network extends Phaser.Events.EventEmitter {
   private static instance: Network;
   private url: string;
   private onlineUrl: string;
-  private timeOut: number = 120; // Seconds
+  private timeOut: number = 60; // Seconds
 
   private pId!: string;
   public get id(): string {

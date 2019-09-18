@@ -34,7 +34,7 @@ export class HostScene extends Phaser.Scene {
       // If connected
       if (transmission.connection) {
         this.status.text = 'Connected to: ' + transmission.remoteId;
-        this.flipCoin();
+        // this.flipCoin();
         // Change scene after 1 minutes
         setTimeout(() => {
           this.scene.start('setup');
@@ -55,22 +55,6 @@ export class HostScene extends Phaser.Scene {
         this.scene.start('menu');
       }, 3000);
     });
-
-  }
-
-  /**
-   * Decide who goes first. Host flip's the coin when a peer connected.
-   */
-  private flipCoin(): void {
-    const coin: boolean = Math.random() < 0.5;
-
-    // if true, host goes first.
-    if (coin) {
-      gameState.turn = Turn.player;
-    }
-
-    // notify the peer about who goes first.
-    transmission.transmit({type: 'game.turn', data: {turn: gameState.turn}});
 
   }
 

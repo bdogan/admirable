@@ -61,6 +61,11 @@ export class Enemy extends Phaser.GameObjects.Zone {
     this.setInteractive();
 
     this.on('pointerdown', (p: Phaser.Input.Pointer) => {
+      if (gameState.turn !== Turn.player) {
+        Notification.create('It\'s not your Turn.', 900);
+        return;
+      }
+
       const hitPoint = { x: this.snap(p.x), y: this.snap(p.y) } as IPoint;
 
       // Determinate if the area hitted before.
@@ -95,6 +100,11 @@ export class Enemy extends Phaser.GameObjects.Zone {
       if (hit) {
         this.scene.cameras.main.shake(160, 0.02, true);
       }
+
+      // If miss, change the turn at the both sides.
+      if (!hit) {
+        transmission.sync({type: 'game.changeTurn'});
+      }
     });
 
     // Player's onHit method to draw rectangle according to hit result.
@@ -120,7 +130,7 @@ export class Enemy extends Phaser.GameObjects.Zone {
 
       // Sends the player's score to the enemy.
       // transmission.transmit({type: 'enemy.score', data: {life: player.life}});
-      Notification.create(player.life.toString(), 200);
+      // Notification.create(player.life.toString(), 200);
     }
 
     return hit;

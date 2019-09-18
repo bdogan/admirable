@@ -1,4 +1,5 @@
 import { Peer } from '../P2P';
+import { gameState, Turn } from '../GameState';
 
 export interface IPayload {
   type: string;
@@ -128,3 +129,4 @@ export class Transmission extends Phaser.Events.EventEmitter {
 }
 
 export const transmission = Transmission.getInstance();
+

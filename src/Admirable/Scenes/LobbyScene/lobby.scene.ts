@@ -5,6 +5,8 @@ import { Transmission } from '../../Objects/Transmission';
 import { Table } from '../../Objects/UI/Table';
 import { player } from '../../Objects/Player';
 import { Network } from '../../Objects/Network/network.object';
+import { Notification } from '../../Objects/UI/Notification';
+import { gameState, Turn } from '../../Objects/GameState';
 
 const lobbyMusic = require('./Musics/admirable-lobby.ogg');
 
@@ -20,6 +22,10 @@ export class LobbyScene extends Phaser.Scene {
 
   public preload(): void {
     this.load.audio('lobby_music', lobbyMusic);
+  }
+
+  public init() {
+    player.scene = this;
   }
 
   // Create
@@ -74,6 +80,14 @@ export class LobbyScene extends Phaser.Scene {
     })
     .then(() => {
         transmission.peer.on('connection', (c: any) => {
+          // Notification.create('An Enemy Connected');
+
+          // host goes first:
+          gameState.turn = Turn.player;
+
+
+          // Doesn't work here...
+          // this.flipCoin();
           this.scene.start('setup');
         });
 
@@ -83,4 +97,22 @@ export class LobbyScene extends Phaser.Scene {
     });
 
   }
+
+//   /**
+//    * Decide who goes first. Host flip's the coin when a peer connected.
+//    */
+//   private flipCoin(): void {
+
+//     const coin: boolean = Math.random() < 0.5;
+
+//     // if true, host goes first.
+//     if (coin) {
+//       gameState.turn = Turn.player;
+//     }
+
+//     // notify the peer about who goes first.
+//     transmission.transmit({type: 'game.turn', data: {turn: gameState.turn}});
+
+//   }
+
 }

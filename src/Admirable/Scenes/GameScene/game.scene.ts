@@ -43,6 +43,8 @@ export class GameScene extends Phaser.Scene {
     this.showScore();
 
     transmission.once('game.end', () => {
+      transmission.removeAllListeners();
+      e.input.enabled = false;
       gameState.isEnemyReady = false;
       gameState.isPlayerReady = false;
 
@@ -56,6 +58,23 @@ export class GameScene extends Phaser.Scene {
       }, 3000);
 
       // transmission.off('game.end');
+    });
+
+    if (gameState.turn === Turn.player) {
+      Notification.create('You\'re going first.', 800);
+    } else {
+      Notification.create('You\'re going second.', 800);
+    }
+
+    transmission.on('game.changeTurn', () => {
+      if (gameState.turn === Turn.player) {
+        Notification.create('Maybe Next Time?', 800);
+        gameState.turn = Turn.enemy;
+      } else {
+        Notification.create('It\'s Your Time To Shine!', 800);
+        gameState.turn = Turn.player;
+      }
+
     });
 
   }
