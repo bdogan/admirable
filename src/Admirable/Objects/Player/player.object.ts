@@ -24,6 +24,22 @@ export class Player {
     return this.dock.life;
   }
 
+  public get remaining(): string {
+
+    let str = '';
+
+    // find the remaining ships.
+    const aliveShips = this.dock.ships.filter((ships) => ships.life !== 0);
+
+    const map = aliveShips.reduce((a, b) => a.set(b.extent, a.get(b.extent) + 1 || 1), new Map());
+
+    for (const [key, value] of map.entries()) {
+      str += `${value} x ${key}\n`;
+    }
+
+    return str;
+  }
+
   constructor() {
     // transmission.on('player.hit', () => {
     //   console.log('test');

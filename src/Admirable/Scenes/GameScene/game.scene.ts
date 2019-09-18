@@ -18,6 +18,7 @@ const transmission = Transmission.getInstance();
 
 export class GameScene extends Phaser.Scene {
 
+  private remainingLabel!: Phaser.GameObjects.Text;
   private lifeLabel!: Phaser.GameObjects.Text;
   private indicator!: Phaser.GameObjects.Rectangle;
 
@@ -34,6 +35,19 @@ export class GameScene extends Phaser.Scene {
       strokeThickness: 3,
     });
     this.lifeLabel.setText(`Score: ${gameState.playerScore} - ${gameState.enemyScore}\nLife: ${player.life.toString()}`);
+
+    // top right.
+    this.remainingLabel = new Phaser.GameObjects.Text(this, this.sys.canvas.width, 0, '', {
+      fontFamily: 'Munro',
+      fontSize: '20px',
+      color: '#FFFFFF',
+      stroke: '#000000',
+      strokeThickness: 3,
+      align: 'right'
+    }).setOrigin(1, 0);
+
+    // just update the score info once the game initialized to uppdate life label and remaining label
+    transmission.transmit({type: 'score.update'});
 
     console.log('GameScene initialized.');
     console.log('passed data: ', data);
@@ -101,9 +115,20 @@ export class GameScene extends Phaser.Scene {
 
     });
 
+    // when score updated, send
+    transmission.on('score.update', () => {
+      transmission.transmit({type: 'enemy.remaining', data: {value: player.remaining}});
+    });
+
+    transmission.on('enemy.remaining', (d: {value: string}) => {
+      console.log(d.value);
+      this.remainingLabel.setText(d.value);
+    });
+
     this.initTurnIndicator();
 
     this.add.existing(this.lifeLabel);
+    this.add.existing(this.remainingLabel);
   }
 
   private showGrid() {
