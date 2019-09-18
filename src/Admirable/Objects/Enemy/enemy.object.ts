@@ -48,7 +48,7 @@ export class Enemy extends Phaser.GameObjects.Zone {
     // transmission.removeListener('player.onHit');
     // transmission.removeAllListeners('enemy.hit');
     // transmission.removeAllListeners('player.onHit');
-    // and this is works but using this removes all listeners.
+    // and this works but using this removes all listeners.
     transmission.removeAllListeners();
     this.hitArea.clear();
     this.hittedArea = [];

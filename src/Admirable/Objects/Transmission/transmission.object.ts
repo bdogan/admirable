@@ -106,6 +106,10 @@ export class Transmission extends Phaser.Events.EventEmitter {
     this.pLocalId = this.pPeer.id;
   }
 
+/**
+ * Send's the data to the otherside of the wire.
+ * @param data data to be transfered.
+ */
   public transmit(data: IPayload) {
     // console.log(this.connection);
     // if (this.connection) {
@@ -114,7 +118,7 @@ export class Transmission extends Phaser.Events.EventEmitter {
   }
 
   /**
-   * Triggers the given emit at the both sides.
+   * Triggers the given event at the both sides of the wire.
    * @param data data to be emitted by the both sides.
    */
   public sync(data: IPayload) {
