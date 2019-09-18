@@ -85,7 +85,6 @@ export class LobbyScene extends Phaser.Scene {
           // host goes first:
           gameState.turn = Turn.player;
 
-
           // Doesn't work here...
           // this.flipCoin();
           this.scene.start('setup');
