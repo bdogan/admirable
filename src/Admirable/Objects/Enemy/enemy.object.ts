@@ -18,8 +18,10 @@ export class Enemy extends Phaser.GameObjects.Zone {
   // Collection of the previously hitted grid area's.
   private hittedArea: IPoint[] = [];
 
+  // Graphic object to show hitted areas on the scren.
   private hitArea: Phaser.GameObjects.Graphics;
 
+  // Hitting object.
   private hitBox: Phaser.Geom.Rectangle;
 
   private offset: number = this.scene.sys.canvas.width / 2;
@@ -59,7 +61,6 @@ export class Enemy extends Phaser.GameObjects.Zone {
     this.setInteractive();
 
     this.on('pointerdown', (p: Phaser.Input.Pointer) => {
-      console.log('HİT');
       const hitPoint = { x: this.snap(p.x), y: this.snap(p.y) } as IPoint;
 
       // Determinate if the area hitted before.
@@ -82,6 +83,7 @@ export class Enemy extends Phaser.GameObjects.Zone {
 
       // Enemy checks the hit.
       const hit = this.hitControl();
+
       // Enemy sends the hit result back to the player.
       transmission.transmit({ type: 'player.onHit', data: {hit, point: data} as IOnHit });
 
@@ -97,7 +99,6 @@ export class Enemy extends Phaser.GameObjects.Zone {
 
     // Player's onHit method to draw rectangle according to hit result.
     transmission.on('player.onHit', (data: IOnHit) => {
-      console.log('hitted');
       this.hitBox.setPosition(data.point.x, data.point.y);
       this.hitArea.fillStyle(data.hit ? 0xFF0000 : 0x000000, 1);
       this.hitArea.fillRectShape(this.hitBox);
@@ -116,6 +117,9 @@ export class Enemy extends Phaser.GameObjects.Zone {
       ship.life--;
       hit = true;
       transmission.emit('score.update');
+
+      // Sends the player's score to the enemy.
+      // transmission.transmit({type: 'enemy.score', data: {life: player.life}});
       Notification.create(player.life.toString(), 200);
     }
 

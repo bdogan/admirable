@@ -12,6 +12,9 @@ class GameState {
   public player: Player = player;
   public turn: Turn;
 
+  public isPlayerReady: boolean = false;
+  public isEnemyReady: boolean = false;
+
   constructor() {
     this.turn = Turn.enemy;
   }

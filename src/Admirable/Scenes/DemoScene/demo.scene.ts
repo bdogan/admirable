@@ -46,10 +46,6 @@ export class DemoScene extends Phaser.Scene {
       this.scene.start('setup');
     });
 
-    // connection.on('enemy.ready', (d: IPayload) => {
-    //   console.log('enemy is ready with this info ', d);
-    // });
-
   }
 
   /*

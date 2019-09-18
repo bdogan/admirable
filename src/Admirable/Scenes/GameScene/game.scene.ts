@@ -43,6 +43,8 @@ export class GameScene extends Phaser.Scene {
     this.showScore();
 
     transmission.once('game.end', () => {
+      gameState.isEnemyReady = false;
+      gameState.isPlayerReady = false;
 
       Notification.create(player.life === 0 ? 'YOU LOSE' : 'YOU WIN', 2000);
 

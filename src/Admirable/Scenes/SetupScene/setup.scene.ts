@@ -7,6 +7,7 @@ import { Dock, IExport } from '../../Objects/Ship';
 import { Transmission } from '../../Objects/Transmission';
 import { IPayload } from '../../Objects/Transmission/transmission.object';
 import { Player, player } from '../../Objects/Player';
+import { gameState } from '../../Objects/GameState';
 
 const transmission = Transmission.getInstance();
 
@@ -20,8 +21,8 @@ const shipBottomImg = require('../../Objects/Ship/Images/ship_bottom.png');
 
 export class SetupScene extends Phaser.Scene {
 
-  private isEnemyReady: boolean = false;
-  private readyClicked: boolean = false;
+  // private isEnemyReady: boolean = false;
+  // private readyClicked: boolean = false;
 
   private readyButton!: Button;
 
@@ -30,9 +31,9 @@ export class SetupScene extends Phaser.Scene {
 
     transmission.on('enemy.ready', () => {
       Notification.create('Enemy is ready.');
-      this.isEnemyReady = true;
+      gameState.isEnemyReady = true;
 
-      if (this.readyClicked) {
+      if (gameState.isPlayerReady) {
         this.readyButton.emit('player.ready');
       }
     });
@@ -83,13 +84,13 @@ export class SetupScene extends Phaser.Scene {
         return;
       }
 
-      this.readyClicked = true;
+      gameState.isPlayerReady = true;
       this.readyButton.disable();
 
       transmission.transmit({type: 'enemy.ready'} as IPayload);
 
-      if (!this.isEnemyReady) {
-        Notification.create('Enemy is not ready!');
+      if (!gameState.isEnemyReady) {
+        Notification.create('Waiting enemy to be ready.', 800);
         return;
       }
 
