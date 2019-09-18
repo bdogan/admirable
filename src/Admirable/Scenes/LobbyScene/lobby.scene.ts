@@ -90,7 +90,7 @@ export class LobbyScene extends Phaser.Scene {
 
         const remover = setInterval(() => {
           network.clearOffline();
-        }, 120);
+        }, 240);
     });
 
   }
