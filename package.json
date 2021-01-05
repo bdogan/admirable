@@ -32,7 +32,7 @@
   "dependencies": {
     "@types/node": "^12.7.3",
     "@types/peerjs": "0.0.30",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "peer": "^0.2.10",
     "peerjs": "^1.0.4",
     "phaser": "^3.19.0"
